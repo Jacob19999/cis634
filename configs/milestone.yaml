@@ -1,0 +1,44 @@
+# Phase 2 milestone benchmark: the four systems from the proposal.
+name: milestone
+data_dir: data/processed
+cache_dir: cache
+results_dir: results
+device: auto            # cuda | mps | cpu | auto
+depth: 100              # reports retrieved per query
+chunking: {max_words: 150, overlap_sentences: 1}
+
+systems:
+  - name: bm25
+    type: bm25
+    params: {k1: 1.2, b: 0.75, stopwords: english, doc_mode: chunk_max}
+
+  - name: minilm
+    type: dense
+    params:
+      model: sentence-transformers/all-MiniLM-L6-v2
+      max_seq_length: 256
+      doc_mode: chunk_max
+
+  - name: e5-small
+    type: dense
+    params:
+      model: intfloat/e5-small-v2
+      query_prefix: "query: "
+      passage_prefix: "passage: "
+      max_seq_length: 512
+      doc_mode: chunk_max
+
+  - name: hybrid-bm25-e5
+    type: hybrid
+    params: {components: [bm25, e5-small], method: rrf, k: 60, depth: 1000}
+
+  - name: hybrid-bm25-minilm
+    type: hybrid
+    params: {components: [bm25, minilm], method: rrf, k: 60, depth: 1000}
+
+evaluation:
+  synopsis: {split: validation, n_queries: 1000, seed: 13}
+  topical:
+    queries: data/queries/topical_v1.yaml
+    human_qrels: [data/qrels/human_v1.tsv]   # used automatically once it exists
+  contrast: {path: data/contrast/contrast_v1.jsonl}

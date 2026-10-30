@@ -1,0 +1,387 @@
+# Topical query set v1 (milestone). Each query is a short description of an operational
+# issue written the way a safety analyst might phrase it -- deliberately NOT copying the
+# ASRS coding vocabulary.
+#
+# `silver` derives provisional graded relevance labels from NASA analyst fields so all
+# systems can be scored automatically before human labels exist:
+#   grade 2 = same issue (specific mechanism), grade 1 = related (same event family).
+# A rule is a list of clauses (OR); each clause maps a report field to a case-insensitive
+# regex, and all fields in a clause must match (AND). Fields: anomaly, synopsis,
+# human_factors, comm_breakdown, flight_phase, result, detector, primary_problem,
+# contributing_factors, reporter_function.
+# Silver labels are a proxy. Gold labels come from blind human judging of pooled results
+# (see `asrsbench pool`).
+#
+# split: dev queries may be used for design decisions; test queries are only reported.
+
+queries:
+  # ---------------- Altitude ----------------------------------------------------------
+  - qid: T01
+    facet: altitude
+    split: dev
+    text: The crew followed an incorrect altitude because two clearances sounded similar.
+    silver:
+      "2":
+        - {anomaly: "Deviation - Altitude", synopsis: "call ?sign|another (aircraft|flight)|intended for|meant for|similar|other aircraft'?s? clearance"}
+      "1":
+        - {anomaly: "Deviation - Altitude"}
+  - qid: T02
+    facet: altitude
+    split: test
+    text: The pilots set the wrong number in the altitude window and flew past the level they were cleared to.
+    silver:
+      "2":
+        - {anomaly: "Altitude Overshoot|Excursion From Assigned Altitude", synopsis: "set|select|MCP|alerter|altitude window|FCU|enter"}
+      "1":
+        - {anomaly: "Deviation - Altitude"}
+  - qid: T03
+    facet: altitude
+    split: dev
+    text: The airplane did not make a published crossing restriction on the arrival.
+    silver:
+      "2":
+        - {anomaly: "Crossing Restriction Not Met"}
+      "1":
+        - {anomaly: "Deviation - Altitude"}
+  - qid: T04
+    facet: altitude
+    split: test
+    text: The aircraft leveled off below the altitude it was cleared to climb to.
+    silver:
+      "2":
+        - {anomaly: "Altitude Undershoot"}
+      "1":
+        - {anomaly: "Deviation - Altitude"}
+  - qid: T05
+    facet: altitude
+    split: dev
+    text: While the crew was distracted the airplane climbed through its assigned altitude.
+    silver:
+      "2":
+        - {anomaly: "Altitude Overshoot|Excursion From Assigned Altitude", human_factors: "Distraction"}
+      "1":
+        - {anomaly: "Deviation - Altitude"}
+  - qid: T06
+    facet: altitude
+    split: test
+    text: The pilot read back the wrong altitude and the controller did not catch the mistake.
+    silver:
+      "2":
+        - {anomaly: "Deviation - Altitude", synopsis: "read ?-?back|hear ?-?back"}
+      "1":
+        - {anomaly: "Deviation - Altitude"}
+        - {synopsis: "read ?-?back|hear ?-?back"}
+  - qid: T07
+    facet: altitude
+    split: dev
+    text: The autopilot did not capture the selected altitude and the aircraft kept descending.
+    silver:
+      "2":
+        - {anomaly: "Deviation - Altitude", synopsis: "autopilot|auto-?pilot|automation|FMS|FMC|VNAV|capture|autoflight|flight director"}
+      "1":
+        - {anomaly: "Deviation - Altitude"}
+  - qid: T08
+    facet: altitude
+    split: test
+    text: An incorrect barometric setting caused the aircraft to fly at the wrong height.
+    silver:
+      "2":
+        - {synopsis: "altimeter|barometric|\\bbaro\\b|QNH|QFE|29\\.92"}
+      "1":
+        - {anomaly: "Deviation - Altitude"}
+  # ---------------- Clearance and communication ---------------------------------------
+  - qid: T09
+    facet: communication
+    split: dev
+    text: Two flights with nearly identical call signs on the same frequency caused confusion over who was cleared.
+    silver:
+      "2":
+        - {synopsis: "similar call ?sign|call ?sign (confusion|similarit)|same call ?sign|call ?signs? (were|was|are|is) similar"}
+      "1":
+        - {synopsis: "call ?sign"}
+  - qid: T10
+    facet: communication
+    split: test
+    text: The flight was out of radio contact with air traffic control for a long time.
+    silver:
+      "2":
+        - {synopsis: "(loss|lost|losing) (of )?(comm|radio|contact)|NORDO|no radio|comm(unication)?s? (loss|failure)|out of (radio )?contact"}
+      "1":
+        - {synopsis: "frequency|radio|communicat"}
+  - qid: T11
+    facet: clearance
+    split: dev
+    text: The pilots taxied onto an active runway without permission from the tower.
+    silver:
+      "2":
+        - {anomaly: "Ground Incursion Runway"}
+      "1":
+        - {anomaly: "Ground Incursion"}
+  - qid: T12
+    facet: clearance
+    split: test
+    text: A programming mistake in the flight management computer sent the aircraft along a different route than the one it was cleared for.
+    silver:
+      "2":
+        - {anomaly: "Track / Heading", synopsis: "FMS|FMC|program|load|database|route|CDU"}
+      "1":
+        - {anomaly: "Track / Heading"}
+  - qid: T13
+    facet: clearance
+    split: dev
+    text: The crew misunderstood the ground controller's instructions and taxied the wrong way.
+    silver:
+      "2":
+        - {anomaly: "Ground Incursion Taxiway"}
+        - {synopsis: "wrong (taxiway|way|direction)|taxi(ed)? (instructions|clearance)", flight_phase: "Taxi"}
+      "1":
+        - {anomaly: "Procedural Clearance", flight_phase: "Taxi"}
+  - qid: T14
+    facet: communication
+    split: test
+    text: Non-standard wording or a heavy accent from the controller made the instruction hard to understand.
+    silver:
+      "2":
+        - {synopsis: "phraseology|accent|language|english proficien|non-?standard"}
+      "1":
+        - {human_factors: "Communication Breakdown", synopsis: "ATC|controller|clearance|instruction"}
+  - qid: T15
+    facet: heading
+    split: dev
+    text: After mishearing a vector, the aircraft turned onto the wrong heading.
+    silver:
+      "2":
+        - {anomaly: "Track / Heading", synopsis: "heading|turn|vector"}
+      "1":
+        - {anomaly: "Track / Heading"}
+  - qid: T16
+    facet: heading
+    split: test
+    text: The airplane flew through the final approach course instead of intercepting it.
+    silver:
+      "2":
+        - {synopsis: "(overshot|overshoot|through|past|blew through|failed to intercept|did not intercept).{0,30}(localizer|final|course|LOC|centerline)|localizer overshoot"}
+      "1":
+        - {anomaly: "Track / Heading", flight_phase: "Approach"}
+  - qid: T17
+    facet: clearance
+    split: dev
+    text: A controller's instruction put two aircraft in conflict and separation was lost.
+    silver:
+      "2":
+        - {anomaly: "Airborne Conflict|NMAC", reporter_function: "Enroute|Approach|Departure|Local|Supervisor|Handoff"}
+      "1":
+        - {anomaly: "Airborne Conflict|NMAC"}
+  - qid: T18
+    facet: clearance
+    split: test
+    text: The pilot entered controlled or restricted airspace without first getting a clearance.
+    silver:
+      "2":
+        - {anomaly: "Airspace Violation"}
+      "1":
+        - {synopsis: "airspace"}
+  - qid: T19
+    facet: clearance
+    split: dev
+    text: The crew could not hold the speed that approach control had assigned.
+    silver:
+      "2":
+        - {anomaly: "Deviation - Speed"}
+      "1":
+        - {synopsis: "speed"}
+  # ---------------- Traffic conflicts -------------------------------------------------
+  - qid: T20
+    facet: conflict
+    split: test
+    text: The collision avoidance system commanded a climb because of nearby traffic.
+    silver:
+      "2":
+        - {synopsis: "\\bRA\\b|resolution advisor"}
+        - {detector: "Automation Aircraft RA"}
+      "1":
+        - {synopsis: "TCAS|\\bTA\\b|traffic advisor"}
+        - {anomaly: "Airborne Conflict|NMAC"}
+  - qid: T21
+    facet: conflict
+    split: dev
+    text: A near collision with a small plane in the traffic pattern at an uncontrolled field.
+    silver:
+      "2":
+        - {anomaly: "NMAC|Airborne Conflict", synopsis: "pattern|CTAF|non-?towered|uncontrolled|downwind|base|final|untowered"}
+      "1":
+        - {anomaly: "NMAC|Airborne Conflict"}
+  - qid: T22
+    facet: conflict
+    split: test
+    text: A drone was seen flying very close to the airplane while it was on approach.
+    silver:
+      "2":
+        - {synopsis: "\\bUAS\\b|drone|unmanned|\\bUAV\\b|quad-?copter"}
+      "1":
+        - {anomaly: "Inflight Event / Encounter Object"}
+  # ---------------- Aircraft and equipment --------------------------------------------
+  - qid: T23
+    facet: equipment
+    split: dev
+    text: Smoke and a burning smell in the cabin forced the crew to divert to the nearest airport.
+    silver:
+      "2":
+        - {anomaly: "Smoke / Fire / Fumes / Odor", result: "Diverted|Landed in Emergency|Returned To Departure|Landed As Precaution"}
+      "1":
+        - {anomaly: "Smoke / Fire / Fumes / Odor"}
+  - qid: T24
+    facet: equipment
+    split: test
+    text: The cabin lost pressure at cruise altitude and the pilots made a rapid emergency descent.
+    silver:
+      "2":
+        - {synopsis: "pressuri[sz]|cabin altitude|depressuri[sz]|decompress"}
+      "1":
+        - {synopsis: "emergency descent|oxygen|pack"}
+  - qid: T25
+    facet: equipment
+    split: dev
+    text: One engine failed shortly after takeoff and the crew returned to land.
+    silver:
+      "2":
+        - {synopsis: "engine (fail|shut|flame|loss)|(lost|loss of) (an |the |power on (the |an )?)?engine|engine power loss|in-?flight shutdown", flight_phase: "Takeoff|Initial Climb|Climb"}
+      "1":
+        - {synopsis: "engine (fail|shut|flame|loss|fire)|in-?flight shutdown|(lost|loss of) (an |the )?engine"}
+  - qid: T26
+    facet: equipment
+    split: test
+    text: The landing gear would not come down normally and the crew used the alternate extension procedure.
+    silver:
+      "2":
+        - {synopsis: "gear", anomaly: "Equipment Problem"}
+      "1":
+        - {synopsis: "gear"}
+  - qid: T27
+    facet: equipment
+    split: dev
+    text: Birds hit the aircraft during the takeoff roll and caused damage.
+    silver:
+      "2":
+        - {synopsis: "bird"}
+      "1":
+        - {anomaly: "Encounter Object"}
+  - qid: T28
+    facet: fuel
+    split: test
+    text: The flight ran low on fuel and declared a fuel emergency before landing.
+    silver:
+      "2":
+        - {anomaly: "Fuel Issue", synopsis: "minimum fuel|fuel emergency|low fuel|emergency.*fuel|fuel.*emergency|fuel state|reserve"}
+      "1":
+        - {anomaly: "Fuel Issue"}
+  - qid: T29
+    facet: maintenance
+    split: dev
+    text: The airplane was dispatched with a deferred maintenance item that should have kept it on the ground.
+    silver:
+      "2":
+        - {anomaly: "MEL / CDL"}
+      "1":
+        - {anomaly: "Procedural Maintenance"}
+  # ---------------- Approach, landing and handling ------------------------------------
+  - qid: T30
+    facet: approach
+    split: test
+    text: The approach was not stable but the crew kept going and landed instead of going around.
+    silver:
+      "2":
+        - {anomaly: "Unstabilized Approach"}
+      "1":
+        - {synopsis: "go[- ]?around|missed approach"}
+  - qid: T31
+    facet: weather
+    split: dev
+    text: Turbulence from a heavy jet ahead caused a sudden roll on final.
+    silver:
+      "2":
+        - {anomaly: "Wake Vortex Encounter"}
+      "1":
+        - {anomaly: "Turbulence"}
+  - qid: T32
+    facet: weather
+    split: test
+    text: Severe turbulence in cruise injured a flight attendant who was standing in the aisle.
+    silver:
+      "2":
+        - {anomaly: "Turbulence", synopsis: "injur|hurt|attendant"}
+      "1":
+        - {anomaly: "Weather / Turbulence"}
+  - qid: T33
+    facet: terrain
+    split: dev
+    text: The aircraft got too close to the ground and the terrain warning went off.
+    silver:
+      "2":
+        - {anomaly: "CFTT / CFIT", synopsis: "GPWS|EGPWS|TAWS|terrain|pull ?up|sink rate|glide ?slope warning|too low"}
+      "1":
+        - {anomaly: "CFTT / CFIT"}
+  - qid: T34
+    facet: landing
+    split: test
+    text: On landing the airplane veered off the side of the runway.
+    silver:
+      "2":
+        - {anomaly: "Ground Excursion Runway"}
+      "1":
+        - {anomaly: "Loss Of Aircraft Control", flight_phase: "Landing"}
+  - qid: T35
+    facet: procedure
+    split: dev
+    text: The load sheet was wrong, so the takeoff was performed with incorrect weight data.
+    silver:
+      "2":
+        - {anomaly: "Weight And Balance"}
+      "1":
+        - {synopsis: "\\bweight|load ?sheet|load (manifest|plan)|\\bW&B\\b|\\bTOW\\b|performance data"}
+  # ---------------- Cabin and human factors -------------------------------------------
+  - qid: T36
+    facet: cabin
+    split: test
+    text: A passenger's laptop battery caught fire in the overhead bin.
+    silver:
+      "2":
+        - {synopsis: "lithium|battery|laptop|phone|\\bPED\\b|e-?cig|vape|power bank|charger", anomaly: "Smoke / Fire|Hazardous"}
+      "1":
+        - {anomaly: "Smoke / Fire / Fumes / Odor|Hazardous Material"}
+  - qid: T37
+    facet: cabin
+    split: dev
+    text: An unruly passenger refused to obey the flight attendants' instructions.
+    silver:
+      "2":
+        - {anomaly: "Passenger Misconduct"}
+      "1":
+        - {synopsis: "passenger"}
+  - qid: T38
+    facet: weather
+    split: test
+    text: A visual flight rules pilot flew into clouds and lost sight of the ground.
+    silver:
+      "2":
+        - {anomaly: "VFR In IMC"}
+      "1":
+        - {synopsis: "\\bIMC\\b|cloud|instrument (meteorological )?conditions|inadvertent"}
+  - qid: T39
+    facet: human
+    split: dev
+    text: The crew was exhausted after a long duty day and made errors as a result.
+    silver:
+      "2":
+        - {human_factors: "Fatigue"}
+      "1":
+        - {synopsis: "fatigue|tired|rest|duty"}
+  - qid: T40
+    facet: human
+    split: test
+    text: Workload during a busy descent caused the crew to miss a step on the checklist.
+    silver:
+      "2":
+        - {human_factors: "Workload", synopsis: "checklist"}
+      "1":
+        - {synopsis: "checklist"}

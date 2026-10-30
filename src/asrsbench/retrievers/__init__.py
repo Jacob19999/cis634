@@ -20,12 +20,15 @@ TYPES = {"bm25": BM25Retriever, "dense": DenseRetriever, "hybrid": HybridRetriev
 
 
 def build_systems(specs: list[dict], unit_sets: dict[str, Units], device: str = "auto",
-                  cache_dir: str = "cache") -> dict[str, Retriever]:
+                  cache_dir: str = "cache",
+                  existing: dict[str, Retriever] | None = None) -> dict[str, Retriever]:
     """Instantiate and index every system in ``specs``.
 
     ``unit_sets`` maps a doc_mode ("chunk_max" / "whole") to the units to index.
+    ``existing`` holds already-built systems that hybrids may reference; the returned dict
+    contains them plus the new ones.
     """
-    systems: dict[str, Retriever] = {}
+    systems: dict[str, Retriever] = dict(existing or {})
     for spec in specs:
         kind, name = spec["type"], spec["name"]
         params = dict(spec.get("params", {}))
