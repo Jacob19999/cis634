@@ -95,6 +95,29 @@ systems:
 
 Then run `asrsbench run configs/my_run.yaml`. Results are written to `results/my_run/`.
 
-## Results
+## Results (Phase 2 milestone)
 
-See `results/<run>/summary.md`. The milestone run is in `results/milestone/`.
+Full tables with 95% CIs: [results/milestone/summary.md](results/milestone/summary.md). The write-up is in [reports/milestone/main.pdf](reports/milestone/main.pdf).
+
+| System | Synopsis MRR@10 | Synopsis R@100 | Topical nDCG@10 (silver) | Contrast, overlap-controlled |
+|---|---|---|---|---|
+| BM25 | **0.425** | 0.753 | 0.632 | 0.53 |
+| MiniLM | 0.268 | 0.648 | 0.593 | 0.70 |
+| E5-small | 0.241 | 0.607 | 0.438 | **0.85** |
+| BM25 + E5 (RRF) | 0.378 | 0.759 | 0.633 | – |
+| BM25 + MiniLM (RRF) | 0.380 | **0.786** | **0.706** | – |
+
+Early findings:
+- **BM25 is the strongest single system**, which is the opposite of what we expected. Its lead holds on synopses that share no identifiers with their narrative.
+- **Fusion helps.** BM25 + MiniLM is best on topical queries (+0.074 nDCG@10 over BM25, p = 0.002).
+- **Surface overlap beats meaning.** When the edited sentence keeps the original's words, every system prefers it (accuracy ≤ 0.17). With overlap controlled, the encoders catch most negation, number and direction edits, but event order stays near chance.
+- **E5 is pulled toward short texts.** Short units make up 9.9% of its top-50 results but only 0.9% of the index.
+
+## Phase 2 status
+
+- [x] Data downloaded, cleaned, grouped by incident, chunked (`asrsbench prepare`)
+- [x] BM25, MiniLM, E5 and hybrids scored on all tracks (`configs/milestone.yaml`)
+- [x] 40 topical queries with silver labels; 100-item meaning-change set
+- [x] Blind judging pools for human labels (`data/qrels/pool_v1/`)
+- [ ] Human relevance judgments (both annotators) → `asrsbench labels ...` → `data/qrels/human_v1.tsv`
+- [ ] Extended encoders and ablations (`configs/extended.yaml`)
