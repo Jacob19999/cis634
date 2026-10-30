@@ -7,6 +7,7 @@ Pipeline (``asrsbench prepare``):
    query design and silver relevance labels.
 3. Normalise text. The ASRS export replaced every comma with a semicolon
    ("10;000 FT", "IAF; we set"), which corrupts numbers -- one of our contrast categories.
+   Editorial placeholders standing in for an empty second narrative are dropped.
 4. Group records that describe the same incident (shared accession numbers or identical
    narratives) with union-find, so an incident is never split across train/test.
 5. Split each narrative into overlapping, sentence-aligned chunks that fit the encoders'
@@ -76,6 +77,25 @@ def normalize_text(text: str | None) -> str:
     text = _NUM_SEMI.sub(",", text)
     text = _SEMI_SPACE.sub(",", text)
     return _WS.sub(" ", text).strip()
+
+
+# ASRS editors replace an uninformative second narrative with a bracketed note such as
+# "[Report narrative contained no additional information.]". These are boilerplate, not
+# reporter text, and dense models match generic queries to them.
+_PLACEHOLDER = re.compile(
+    r"no (substantive )?(additional|new) (information|info|details)|"
+    r"no additional information (was )?(provided|included|contained)",
+    re.IGNORECASE,
+)
+
+
+_SELF_REFERENCE = re.compile(r"^\[|narr?ative|report", re.IGNORECASE)
+
+
+def is_placeholder(text: str, max_words: int = 25) -> bool:
+    """Short editorial note about the narrative itself (bracketed or naming the report)."""
+    return (bool(text) and len(text.split()) <= max_words and bool(_PLACEHOLDER.search(text))
+            and bool(_SELF_REFERENCE.search(text)))
 
 
 def _clean_id(x) -> str:
@@ -148,10 +168,15 @@ def split_sentences(text: str) -> list[str]:
 class ChunkConfig:
     max_words: int = 150
     overlap_sentences: int = 1
+    # A leftover tail shorter than this is absorbed into the previous chunk instead of
+    # becoming its own fragment (short fragments attract spuriously high dense scores
+    # under max-over-chunks aggregation). 0 disables merging (v1 behaviour).
+    min_tail_words: int = 40
 
     @property
     def tag(self) -> str:
-        return f"w{self.max_words}o{self.overlap_sentences}"
+        tag = f"w{self.max_words}o{self.overlap_sentences}"
+        return tag + (f"m{self.min_tail_words}" if self.min_tail_words else "")
 
 
 def chunk_text(text: str, cfg: ChunkConfig) -> list[str]:
@@ -159,7 +184,8 @@ def chunk_text(text: str, cfg: ChunkConfig) -> list[str]:
 
     Consecutive windows share ``cfg.overlap_sentences`` sentences so an event that spans a
     boundary is still visible in one chunk. A single sentence longer than the window is
-    hard-split on words.
+    hard-split on words. If fewer than ``cfg.min_tail_words`` words would remain after a
+    window, they are appended to it (so a chunk holds at most max_words + min_tail_words).
     """
     sents: list[list[str]] = []
     for s in split_sentences(text):
@@ -176,6 +202,8 @@ def chunk_text(text: str, cfg: ChunkConfig) -> list[str]:
         while end < len(sents) and (n + len(sents[end]) <= cfg.max_words or end == start):
             n += len(sents[end])
             end += 1
+        if 0 < sum(len(s) for s in sents[end:]) < cfg.min_tail_words:
+            end = len(sents)
         chunks.append(" ".join(w for s in sents[start:end] for w in s))
         if end >= len(sents):
             break
@@ -220,6 +248,8 @@ def clean_reports(raw: pd.DataFrame) -> pd.DataFrame:
              if c not in free_text and c not in ("acn", "accession_1", "accession_2", "split")]
     for c in free_text:
         df[c] = df[c].map(normalize_text)
+    df["narrative_2_placeholder"] = df["narrative_2"].map(is_placeholder)
+    df.loc[df["narrative_2_placeholder"], "narrative_2"] = ""
     # Coded fields use "; " as a list separator, so only tidy whitespace there.
     for c in coded:
         df[c] = df[c].fillna("").astype(str).map(lambda s: _WS.sub(" ", s).strip())
@@ -251,6 +281,7 @@ def corpus_stats(reports: pd.DataFrame, chunks: pd.DataFrame, cfg: ChunkConfig) 
         "n_reports_in_multi_report_groups": int(len(multi)),
         "n_groups_crossing_splits": int((crossing > 1).sum()),
         "share_with_second_narrative": round(float((reports["narrative_2"] != "").mean()), 4),
+        "n_placeholder_second_narratives_removed": int(reports["narrative_2_placeholder"].sum()),
         "words_per_report": {
             "mean": round(float(reports["n_words"].mean()), 1),
             "median": float(reports["n_words"].median()),
@@ -261,7 +292,8 @@ def corpus_stats(reports: pd.DataFrame, chunks: pd.DataFrame, cfg: ChunkConfig) 
         "synopsis_words_mean": round(float(reports["synopsis"].str.split().str.len().mean()), 1),
         "date_range": [str(reports["date"].min()), str(reports["date"].max())],
         "n_focus_reports": int(reports["focus"].sum()),
-        "chunking": {"max_words": cfg.max_words, "overlap_sentences": cfg.overlap_sentences},
+        "chunking": {"max_words": cfg.max_words, "overlap_sentences": cfg.overlap_sentences,
+                     "min_tail_words": cfg.min_tail_words},
         "n_chunks": int(len(chunks)),
         "chunks_per_report": {
             "mean": round(float(cpd.mean()), 2),
@@ -269,6 +301,7 @@ def corpus_stats(reports: pd.DataFrame, chunks: pd.DataFrame, cfg: ChunkConfig) 
             "max": int(cpd.max()),
         },
         "words_per_chunk_mean": round(float(chunks["text"].str.split().str.len().mean()), 1),
+        "share_chunks_under_30_words": round(float((chunks["text"].str.split().str.len() < 30).mean()), 4),
     }
 
 

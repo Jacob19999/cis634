@@ -14,6 +14,7 @@ def main(argv: list[str] | None = None) -> None:
     pr.add_argument("--out", default="data/processed")
     pr.add_argument("--max-words", type=int, default=150)
     pr.add_argument("--overlap-sentences", type=int, default=1)
+    pr.add_argument("--min-tail-words", type=int, default=40)
 
     rn = sub.add_parser("run", help="benchmark the systems in a config on its tracks")
     rn.add_argument("config")
@@ -43,7 +44,7 @@ def main(argv: list[str] | None = None) -> None:
     if args.cmd == "prepare":
         from .data import ChunkConfig, prepare
 
-        stats = prepare(args.out, ChunkConfig(args.max_words, args.overlap_sentences))
+        stats = prepare(args.out, ChunkConfig(args.max_words, args.overlap_sentences, args.min_tail_words))
         print(json.dumps(stats, indent=2))
     elif args.cmd == "run":
         from .benchmark import run_benchmark
