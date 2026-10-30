@@ -20,7 +20,7 @@ import pandas as pd
 import yaml
 
 from .benchmark import read_run
-from .data import load_reports
+from .data import ChunkConfig, load_reports
 from .tracks import write_qrels_tsv
 
 GRADING_GUIDE = (
@@ -35,7 +35,8 @@ def build_pool(run_dir: str | Path, queries_path: str | Path, out_dir: str | Pat
                data_dir: str = "data/processed", seed: int = 0) -> dict[str, Path]:
     run_dir, out_dir = Path(run_dir), Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
-    runs = pd.concat([read_run(p) for p in sorted((run_dir / "runs" / "topical").glob("*.tsv"))])
+    runs = pd.concat([read_run(p) for p in sorted((run_dir / "runs" / "topical").glob("*.tsv"))],
+                     ignore_index=True)
     runs = runs[runs["rank"] <= depth]
     queries = pd.DataFrame(yaml.safe_load(Path(queries_path).read_text())["queries"])
     queries = queries[["qid", "text"]].rename(columns={"text": "query"})
@@ -43,15 +44,16 @@ def build_pool(run_dir: str | Path, queries_path: str | Path, out_dir: str | Pat
     # One row per (query, report); keep the passage from the best-ranked occurrence.
     pool = (runs.sort_values("rank").drop_duplicates(["qid", "acn"])
             .loc[:, ["qid", "acn", "unit_id"]])
-    pool["n_systems"] = runs.groupby(["qid", "acn"])["system"].transform("nunique").reindex(pool.index)
 
     reports = load_reports(data_dir).set_index("acn")
-    chunks_path = next(Path(data_dir).glob("chunks_*.parquet"))
-    passages = pd.read_parquet(chunks_path).set_index("chunk_id")["text"]
+    # Passages come from the chunking the run was made with.
+    run_cfg = yaml.safe_load((run_dir / "config.yaml").read_text())
+    chunk_tag = ChunkConfig(**run_cfg.get("chunking", {})).tag
+    passages = pd.read_parquet(Path(data_dir) / f"chunks_{chunk_tag}.parquet").set_index("chunk_id")["text"]
     pool["matched_passage"] = pool["unit_id"].map(passages).fillna(
         pool["acn"].map(reports["narrative"]).str.slice(0, 1200))
     pool["narrative"] = pool["acn"].map(reports["narrative"])
-    pool = pool.merge(queries, on="qid").drop(columns=["unit_id", "n_systems"])
+    pool = pool.merge(queries, on="qid").drop(columns=["unit_id"])
 
     rng = np.random.default_rng(seed)
     pool = pool.iloc[rng.permutation(len(pool))]  # hide system order
@@ -59,9 +61,10 @@ def build_pool(run_dir: str | Path, queries_path: str | Path, out_dir: str | Pat
     pool.insert(0, "item_id", [f"J{i:05d}" for i in range(len(pool))])
     pool["grade"] = ""
     pool["notes"] = ""
+    pool = pool[["item_id", "qid", "query", "acn", "grade", "notes", "matched_passage", "narrative"]]
 
     qids = sorted(pool["qid"].unique())
-    shared = set(rng.choice(qids, size=max(1, int(round(overlap * len(qids)))), replace=False))
+    shared = {str(q) for q in rng.choice(qids, size=max(1, int(round(overlap * len(qids)))), replace=False)}
     half = [q for q in qids if q not in shared]
     a_only, b_only = set(half[::2]), set(half[1::2])
     paths = {}
