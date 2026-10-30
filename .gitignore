@@ -17,3 +17,13 @@ cache/
 
 # Per-run raw outputs (summary tables in results/ are committed)
 results/**/runs/
+
+# LaTeX build artefacts (main.pdf is committed)
+reports/**/*.aux
+reports/**/*.log
+reports/**/*.bbl
+reports/**/*.blg
+reports/**/*.fdb_latexmk
+reports/**/*.fls
+reports/**/*.out
+reports/**/page-*.png
