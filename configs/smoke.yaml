@@ -2,7 +2,7 @@
 name: smoke
 device: auto
 depth: 20
-chunking: {max_words: 150, overlap_sentences: 1}
+chunking: {max_words: 150, overlap_sentences: 1, min_tail_words: 40}
 systems:
   - {name: bm25, type: bm25}
   - {name: minilm, type: dense, params: {model: sentence-transformers/all-MiniLM-L6-v2}}

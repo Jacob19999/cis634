@@ -40,8 +40,7 @@ def contrast_figure(run: Path, out: Path) -> None:
             for x, v in zip(xs, vals):
                 ax.text(x, v + 0.015, f"{v:.2f}".lstrip("0") if v < 1 else "1", ha="center",
                         va="bottom", fontsize=5.5, color=INK)
-        ax.axhline(0.5, color=MUTED, lw=0.8, ls=(0, (3, 2)), zorder=1)
-        ax.text(len(CATEGORIES) - 0.5, 0.515, "chance", ha="right", va="bottom", fontsize=6, color=MUTED)
+        ax.axhline(0.5, color=MUTED, lw=0.8, ls=(0, (3, 2)), zorder=1, label="Chance")
         ax.set_xticks(range(len(CATEGORIES)), [lbl for _, lbl in CATEGORIES])
         ax.set_ylim(0, 1.08)
         ax.set_title(title, fontsize=7.5, color=INK, loc="left")
@@ -49,7 +48,7 @@ def contrast_figure(run: Path, out: Path) -> None:
         ax.spines[["top", "right"]].set_visible(False)
         ax.tick_params(length=0)
     axes[0].set_ylabel("Accuracy")
-    axes[0].legend(loc="upper left", frameon=False, fontsize=6.5, ncol=3, handlelength=1, columnspacing=1)
+    axes[0].legend(loc="upper left", frameon=False, fontsize=6.5, ncol=4, handlelength=1.4, columnspacing=1)
     fig.tight_layout(pad=0.3, w_pad=1.0)
     fig.savefig(out / "contrast.pdf")
     fig.savefig(out / "contrast.png", dpi=200)

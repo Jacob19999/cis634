@@ -5,7 +5,7 @@ cache_dir: cache
 results_dir: results
 device: auto            # cuda | mps | cpu | auto
 depth: 100              # reports retrieved per query
-chunking: {max_words: 150, overlap_sentences: 1}
+chunking: {max_words: 150, overlap_sentences: 1, min_tail_words: 40}
 
 systems:
   - name: bm25

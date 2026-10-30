@@ -1,0 +1,16 @@
+id,category,original,paraphrase,changed,margin
+ORD04,event_order,The controller issued the turn after the aircraft had passed the fix.,The aircraft was already past the fix when the turn instruction came.,The controller issued the turn before the aircraft had passed the fix.,-0.0143665075
+DIR08,direction,The left engine failed on takeoff.,We lost the number one engine during the takeoff.,The right engine failed on takeoff.,-0.012512445
+NEG22,negation,The passenger was not wearing a seatbelt.,The passenger's seatbelt was unfastened.,The passenger was wearing a seatbelt.,-0.011373043
+ORD20,event_order,We started the engines and then the ground crew removed the chocks.,The chocks were pulled by the ground crew once the engines were running.,The ground crew removed the chocks and then we started the engines.,-0.008336127
+ORD25,event_order,The bird strike happened before rotation.,We hit the bird while still on the runway prior to rotating.,The bird strike happened after rotation.,-0.00726068
+ORD18,event_order,The aircraft was refueled before the maintenance inspection.,The maintenance inspection took place after refueling.,The aircraft was refueled after the maintenance inspection.,-0.006482482
+ORD15,event_order,We switched frequencies before acknowledging the altitude change.,The altitude change was acknowledged only after we had changed frequency.,We acknowledged the altitude change before switching frequencies.,-0.005522847
+NEG23,negation,The aircraft did not stop before the hold short line.,The airplane rolled past the hold short line.,The aircraft stopped before the hold short line.,-0.005502343
+ORD23,event_order,The controller amended the clearance after we had programmed the FMS.,We had already loaded the FMS when the controller changed the clearance.,The controller amended the clearance before we had programmed the FMS.,-0.004843831
+ORD02,event_order,We received the clearance and then started the descent.,The descent began only after the clearance was issued.,We started the descent and then received the clearance.,-0.0027311444
+DIR06,direction,"The traffic was at our two o'clock, passing from right to left.",The other airplane appeared ahead off our right side and crossed toward our left.,"The traffic was at our two o'clock, passing from left to right.",-0.0025431514
+ORD22,event_order,"The flight attendant reported the odor, then the pilots donned oxygen masks.",The pilots put on oxygen masks after the flight attendant reported the odor.,"The pilots donned oxygen masks, then the flight attendant reported the odor.",-0.0018986464
+NUM13,altitude,The airspeed decayed to 120 knots on final.,On final approach our speed dropped to one hundred twenty knots.,The airspeed decayed to 140 knots on final.,-0.0015474558
+ORD14,event_order,The autopilot disconnected and then the aircraft began to roll.,The airplane started rolling once the autopilot had disconnected.,The aircraft began to roll and then the autopilot disconnected.,-0.0009171963
+ORD01,event_order,"The aircraft leveled off, then turned.","After leveling off, it turned.","The aircraft turned, then leveled off.",-0.0007506609
