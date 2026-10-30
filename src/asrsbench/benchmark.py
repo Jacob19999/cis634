@@ -85,6 +85,8 @@ def _summarise(per_query: pd.DataFrame, metrics: list[str]) -> pd.DataFrame:
     for (system, source), g in per_query.groupby(["system", "labels"], sort=False):
         row = {"system": system, "labels": source, "n_queries": len(g)}
         for m in metrics:
+            if g[m].isna().all():
+                continue
             vals = g[m].to_numpy(dtype=float)
             lo, hi = bootstrap_ci(vals)
             row[m] = np.nanmean(vals)
@@ -116,19 +118,31 @@ def run_retrieval_track(name: str, qs: QuerySet, systems: dict[str, Retriever], 
         _write_run(out / "runs" / name / f"{sname}.tsv", qids, results, sname)
         run = {q: list(r.doc_ids) for q, r in zip(qids, results)}
         for source, qrels in qs.qrels.items():
-            pq = evaluate_run(run, qrels, qs.metrics)
+            # judged@10 only matters for incomplete (human) judgments
+            metrics = [m for m in qs.metrics if m != "judged@10" or source.startswith("human")]
+            pq = evaluate_run(run, qrels, metrics)
             pq.insert(0, "labels", source)
             pq.insert(0, "system", sname)
             frames.append(pq.rename_axis("qid").reset_index())
-        print(f"  [{name}] {sname}: {len(qids)} queries in {timings[sname][f'query_seconds_{name}']}s")
+        print(f"  [{name}] {sname}: {len(qids)} queries in {timings[sname][f'query_seconds_{name}']}s", flush=True)
     per_query = pd.concat(frames, ignore_index=True)
     if "facet" in qs.queries:
         per_query = per_query.merge(qs.queries[["qid", "facet", "split"]], on="qid", how="left")
     per_query.to_csv(out / f"per_query_{name}.csv", index=False)
-    summary = _summarise(per_query, qs.metrics)
+    summary = _summarise(per_query, [m for m in qs.metrics if m in per_query])
     summary.to_csv(out / f"metrics_{name}.csv", index=False)
     _significance(per_query, PRIMARY_METRIC[name]).to_csv(out / f"significance_{name}.csv", index=False)
     return summary
+
+
+CONTRAST_CONDITIONS = {
+    # The proposal's test: the changed sentence is a minimal edit of the anchor, so word
+    # overlap favours it; passing requires meaning to outweigh surface similarity.
+    "original_anchor": ("original", "paraphrase", "changed"),
+    # Controlled test: original and changed are equally far (lexically) from the anchor,
+    # so only the meaning-bearing edit separates them.
+    "paraphrase_anchor": ("paraphrase", "original", "changed"),
+}
 
 
 def run_contrast(path: str, systems: dict[str, Retriever], out: Path) -> pd.DataFrame:
@@ -137,16 +151,19 @@ def run_contrast(path: str, systems: dict[str, Retriever], out: Path) -> pd.Data
     for sname, system in systems.items():
         if not system.supports_pairs:
             continue
-        s_para = system.pair_scores(items["original"].tolist(), items["paraphrase"].tolist())
-        s_chg = system.pair_scores(items["original"].tolist(), items["changed"].tolist())
-        passed = np.where(s_para > s_chg, 1.0, np.where(s_para == s_chg, 0.5, 0.0))
-        frames.append(items[["id", "category"]].assign(system=sname, score_paraphrase=s_para,
-                                                       score_changed=s_chg, passed=passed))
-        for cat, g in [("all", None), *items.groupby("category")]:
-            p = passed if g is None else passed[g.index]
-            lo, hi = wilson_ci(p.sum(), len(p))
-            rows.append({"system": sname, "category": cat, "n": len(p), "accuracy": p.mean(),
-                         "acc_lo": lo, "acc_hi": hi, "ties": int((p == 0.5).sum())})
+        for cond, (anchor, pos, neg) in CONTRAST_CONDITIONS.items():
+            s_pos = system.pair_scores(items[anchor].tolist(), items[pos].tolist())
+            s_neg = system.pair_scores(items[anchor].tolist(), items[neg].tolist())
+            passed = np.where(s_pos > s_neg, 1.0, np.where(np.isclose(s_pos, s_neg), 0.5, 0.0))
+            frames.append(items[["id", "category"]].assign(
+                system=sname, condition=cond, score_same_meaning=s_pos, score_changed=s_neg,
+                margin=s_pos - s_neg, passed=passed))
+            for cat, g in [("all", None), *items.groupby("category")]:
+                p = passed if g is None else passed[g.index]
+                lo, hi = wilson_ci(p.sum(), len(p))
+                rows.append({"system": sname, "condition": cond, "category": cat, "n": len(p),
+                             "accuracy": p.mean(), "acc_lo": lo, "acc_hi": hi,
+                             "ties": int((p == 0.5).sum())})
     pd.concat(frames).to_csv(out / "contrast_items.csv", index=False)
     summary = pd.DataFrame(rows)
     summary.to_csv(out / "metrics_contrast.csv", index=False)
@@ -154,7 +171,7 @@ def run_contrast(path: str, systems: dict[str, Retriever], out: Path) -> pd.Data
 
 
 def _fmt_table(df: pd.DataFrame, metrics: list[str], ci: bool = True) -> str:
-    cols = [c for c in df.columns if c not in metrics and not c.endswith(("_lo", "_hi"))]
+    cols = [c for c in ("system", "labels", "n_queries") if c in df.columns]
     head = "| " + " | ".join(cols + metrics) + " |"
     sep = "|" + "---|" * (len(cols) + len(metrics))
     lines = [head, sep]
@@ -183,11 +200,16 @@ def write_summary(out: Path, run_name: str, tables: dict, meta: dict) -> None:
                "P@10 counts grade-2 (same issue); P@10_lenient counts grade >= 1. `silver` labels come from analyst fields.", "",
                _fmt_table(tables["topical"], ["nDCG@10", "P@10", "P@10_lenient", "MRR@10"]), ""]
     if "contrast" in tables:
-        wide = tables["contrast"].pivot(index="system", columns="category", values="accuracy")
-        wide = wide[["all"] + [c for c in wide.columns if c != "all"]].reset_index()
         md += ["## Meaning-change (contrast) test", "",
-               "Accuracy = share of items where sim(original, paraphrase) > sim(original, changed). Chance = 0.5; ties count 0.5.", "",
-               _fmt_table(wide, [c for c in wide.columns if c != "system"], ci=False), ""]
+               "Accuracy = share of items where the anchor is more similar to the same-meaning "
+               "sentence than to the meaning-changed one. Chance = 0.5; ties count 0.5.",
+               "`original_anchor` (proposal): anchor = original; the changed version is a one-word edit of it.",
+               "`paraphrase_anchor` (controlled): anchor = paraphrase; original and changed overlap it equally.", ""]
+        for cond, c in tables["contrast"].groupby("condition", sort=False):
+            wide = c.pivot(index="system", columns="category", values="accuracy")
+            wide = wide.reindex(c["system"].unique())
+            wide = wide[["all"] + [k for k in wide.columns if k != "all"]].reset_index()
+            md += [f"### {cond}", "", _fmt_table(wide, [k for k in wide.columns if k != "system"], ci=False), ""]
     md += ["## Timings (seconds)", "", "```", json.dumps(meta["timings"], indent=1), "```", ""]
     (out / "summary.md").write_text("\n".join(md))
 
@@ -212,7 +234,7 @@ def run_benchmark(config_path: str, run_name: str | None = None, tracks: list[st
         t = time.time()
         systems = build_systems([spec], unit_sets, cfg["device"], cfg["cache_dir"], systems)
         timings[spec["name"]] = {"index_seconds": round(time.time() - t, 2)}
-        print(f"indexed {spec['name']} in {timings[spec['name']]['index_seconds']}s")
+        print(f"indexed {spec['name']} in {timings[spec['name']]['index_seconds']}s", flush=True)
     timings["_total_index_seconds"] = round(time.time() - t0, 2)
 
     tables = {}

@@ -1,0 +1,59 @@
+{
+  "asrsbench_version": "0.1.0",
+  "python": "3.12.0",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "n_reports": 47723,
+  "n_units": {
+    "chunk_max": 149959
+  },
+  "device": "mps",
+  "systems": {
+    "bm25": {
+      "name": "bm25",
+      "class": "BM25Retriever",
+      "doc_mode": "chunk_max",
+      "k1": 1.2,
+      "b": 0.75,
+      "stopwords": "english",
+      "stem": true
+    },
+    "minilm": {
+      "name": "minilm",
+      "class": "DenseRetriever",
+      "doc_mode": "chunk_max",
+      "model": "sentence-transformers/all-MiniLM-L6-v2",
+      "query_prefix": "",
+      "passage_prefix": "",
+      "max_seq_length": "model default",
+      "device": "mps",
+      "encode_seconds": null
+    },
+    "hybrid": {
+      "name": "hybrid",
+      "class": "HybridRetriever",
+      "method": "rrf",
+      "k": 60,
+      "weights": [
+        0.5,
+        0.5
+      ],
+      "depth": 100,
+      "components": [
+        "bm25",
+        "minilm"
+      ]
+    }
+  },
+  "timings": {
+    "bm25": {
+      "index_seconds": 6.35
+    },
+    "minilm": {
+      "index_seconds": 3.85
+    },
+    "hybrid": {
+      "index_seconds": 0.0
+    },
+    "_total_index_seconds": 10.2
+  }
+}
