@@ -1,0 +1,210 @@
+{
+  "asrsbench_version": "0.1.0",
+  "python": "3.12.0",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "n_reports": 47723,
+  "n_units": {
+    "chunk_max": 136842,
+    "whole": 47723
+  },
+  "device": "mps",
+  "systems": {
+    "bm25": {
+      "name": "bm25",
+      "class": "BM25Retriever",
+      "doc_mode": "chunk_max",
+      "k1": 1.2,
+      "b": 0.75,
+      "stopwords": "english",
+      "stem": true
+    },
+    "bm25-keepneg": {
+      "name": "bm25-keepneg",
+      "class": "BM25Retriever",
+      "doc_mode": "chunk_max",
+      "k1": 1.2,
+      "b": 0.75,
+      "stopwords": "english_keep_negation",
+      "stem": true
+    },
+    "bm25-whole": {
+      "name": "bm25-whole",
+      "class": "BM25Retriever",
+      "doc_mode": "whole",
+      "k1": 1.2,
+      "b": 0.75,
+      "stopwords": "english",
+      "stem": true
+    },
+    "minilm": {
+      "name": "minilm",
+      "class": "DenseRetriever",
+      "doc_mode": "chunk_max",
+      "model": "sentence-transformers/all-MiniLM-L6-v2",
+      "query_prefix": "",
+      "passage_prefix": "",
+      "max_seq_length": 256,
+      "device": "mps",
+      "encode_seconds": null
+    },
+    "minilm-whole": {
+      "name": "minilm-whole",
+      "class": "DenseRetriever",
+      "doc_mode": "whole",
+      "model": "sentence-transformers/all-MiniLM-L6-v2",
+      "query_prefix": "",
+      "passage_prefix": "",
+      "max_seq_length": 256,
+      "device": "mps",
+      "encode_seconds": null
+    },
+    "e5-small": {
+      "name": "e5-small",
+      "class": "DenseRetriever",
+      "doc_mode": "chunk_max",
+      "model": "intfloat/e5-small-v2",
+      "query_prefix": "query: ",
+      "passage_prefix": "passage: ",
+      "max_seq_length": 512,
+      "device": "mps",
+      "encode_seconds": null
+    },
+    "e5-small-whole": {
+      "name": "e5-small-whole",
+      "class": "DenseRetriever",
+      "doc_mode": "whole",
+      "model": "intfloat/e5-small-v2",
+      "query_prefix": "query: ",
+      "passage_prefix": "passage: ",
+      "max_seq_length": 512,
+      "device": "mps",
+      "encode_seconds": null
+    },
+    "bge-small": {
+      "name": "bge-small",
+      "class": "DenseRetriever",
+      "doc_mode": "chunk_max",
+      "model": "BAAI/bge-small-en-v1.5",
+      "query_prefix": "Represent this sentence for searching relevant passages: ",
+      "passage_prefix": "",
+      "max_seq_length": 512,
+      "device": "mps",
+      "encode_seconds": null
+    },
+    "mpnet": {
+      "name": "mpnet",
+      "class": "DenseRetriever",
+      "doc_mode": "chunk_max",
+      "model": "sentence-transformers/all-mpnet-base-v2",
+      "query_prefix": "",
+      "passage_prefix": "",
+      "max_seq_length": 384,
+      "device": "mps",
+      "encode_seconds": 1015.5924308300018
+    },
+    "e5-base": {
+      "name": "e5-base",
+      "class": "DenseRetriever",
+      "doc_mode": "chunk_max",
+      "model": "intfloat/e5-base-v2",
+      "query_prefix": "query: ",
+      "passage_prefix": "passage: ",
+      "max_seq_length": 512,
+      "device": "mps",
+      "encode_seconds": 891.6131250858307
+    },
+    "hybrid-bm25-e5": {
+      "name": "hybrid-bm25-e5",
+      "class": "HybridRetriever",
+      "method": "rrf",
+      "k": 60,
+      "weights": [
+        0.5,
+        0.5
+      ],
+      "depth": 1000,
+      "components": [
+        "bm25",
+        "e5-small"
+      ]
+    },
+    "hybrid-bm25-bge": {
+      "name": "hybrid-bm25-bge",
+      "class": "HybridRetriever",
+      "method": "rrf",
+      "k": 60,
+      "weights": [
+        0.5,
+        0.5
+      ],
+      "depth": 1000,
+      "components": [
+        "bm25",
+        "bge-small"
+      ]
+    }
+  },
+  "timings": {
+    "bm25": {
+      "index_seconds": 6.33,
+      "query_seconds_synopsis": 2.71,
+      "query_seconds_topical": 0.08
+    },
+    "bm25-keepneg": {
+      "index_seconds": 6.13,
+      "query_seconds_synopsis": 2.74,
+      "query_seconds_topical": 0.09
+    },
+    "bm25-whole": {
+      "index_seconds": 5.05,
+      "query_seconds_synopsis": 1.45,
+      "query_seconds_topical": 0.05
+    },
+    "minilm": {
+      "index_seconds": 4.06,
+      "query_seconds_synopsis": 2.31,
+      "query_seconds_topical": 0.13
+    },
+    "minilm-whole": {
+      "index_seconds": 0.01,
+      "query_seconds_synopsis": 1.68,
+      "query_seconds_topical": 0.07
+    },
+    "e5-small": {
+      "index_seconds": 0.78,
+      "query_seconds_synopsis": 2.66,
+      "query_seconds_topical": 0.1
+    },
+    "e5-small-whole": {
+      "index_seconds": 0.01,
+      "query_seconds_synopsis": 2.08,
+      "query_seconds_topical": 0.07
+    },
+    "bge-small": {
+      "index_seconds": 0.65,
+      "query_seconds_synopsis": 2.71,
+      "query_seconds_topical": 0.09
+    },
+    "mpnet": {
+      "index_seconds": 1016.71,
+      "query_seconds_synopsis": 4.59,
+      "query_seconds_topical": 0.18
+    },
+    "e5-base": {
+      "index_seconds": 915.86,
+      "query_seconds_synopsis": 4.17,
+      "query_seconds_topical": 0.15
+    },
+    "hybrid-bm25-e5": {
+      "index_seconds": 0.0,
+      "query_seconds_synopsis": 7.82,
+      "query_seconds_topical": 0.28
+    },
+    "hybrid-bm25-bge": {
+      "index_seconds": 0.0,
+      "query_seconds_synopsis": 7.98,
+      "query_seconds_topical": 0.28
+    },
+    "_total_index_seconds": 1955.6
+  }
+}

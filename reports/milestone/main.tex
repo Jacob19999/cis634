@@ -29,7 +29,7 @@ queries. The second uses 40 analyst-style issue descriptions with graded relevan
 derived from NASA's coding (``silver'' labels). The third is a 100-item test of whether
 meaning-changing edits (negation, numbers, direction, event order) fool the models.
 Contrary to our expectation, BM25 is the strongest single system (MRR@10 0.425 vs.\ 0.268
-for MiniLM). Fusing BM25 with MiniLM gives the best topical ranking (nDCG@10 0.706 vs.\
+for MiniLM), and three further encoders (BGE-small, MPNet, E5-base) do not close the gap. Fusing BM25 with MiniLM gives the best topical ranking (nDCG@10 0.706 vs.\
 0.632, $p{=}0.002$). When word overlap is controlled, E5 tells a same-meaning sentence from
 a minimally edited one 85\% of the time. Yet every system prefers the edited sentence when
 it shares more words (at most 17\% correct), and event order stays near chance.
@@ -129,7 +129,9 @@ randomization tests \cite{smucker2007significance}.
 \subsection{Experimental details}
 No model is trained. We ran everything on an Apple M1 Max (PyTorch MPS backend) with
 batch size 128. Indexing all chunks takes 6\,s for BM25, 3.2\,min for MiniLM and 5.3\,min
-for E5. Answering 1,000 queries takes under 3\,s per single system and 8\,s per hybrid. Configs, per-query
+for E5. Answering 1,000 queries takes under 3\,s per single system and 8\,s per hybrid.
+A second config (\texttt{extended.yaml}) adds three encoders and the ablations in
+Table~\ref{tab:ext}; base-size models need batch size 32 to stay within GPU memory. Configs, per-query
 scores and run files are in the repository, so every number below can be regenerated
 with \texttt{asrsbench run configs/milestone.yaml}.
 
@@ -186,9 +188,42 @@ focus area, are the hardest for the encoders (nDCG@10: BM25 0.535, MiniLM 0.444,
 \textbf{E5 is pulled toward short texts.} E5 trails MiniLM on retrieval despite being the
 newer retrieval model. Its similarity scores for short units are \emph{lower} on average
 but much more spread out (mean per-query z-score $-0.83$ for units under 30 words).
-Because MaxP takes a maximum over many chunks, that upper tail wins: short units supply
-9.9\% of E5's top-50 results but only 0.9\% of the index, and MiniLM shows almost no
-such effect.
+That upper tail wins the ranking: short units supply 9.9\% of E5's top-50 results but
+only 0.9\% of the index, and MiniLM shows almost no such effect. Scoring whole reports
+instead of best chunks does not help E5 (Table~\ref{tab:ext}), so the bias concerns short
+reports themselves, not the maximum over chunks.
+
+\begin{table}[t]
+\centering
+\caption{Additional encoders and ablations (same tracks as Table~\ref{tab:main}).
+``Whole'': one vector per report instead of best chunk. Contrast: overlap-controlled accuracy.}
+\label{tab:ext}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+ & Synopsis & Topical & \multicolumn{2}{c}{Contrast}\\
+\cmidrule(l){4-5}
+System & MRR@10 & nDCG@10 & all & order\\
+\midrule
+BM25, whole report & \textbf{.458} & .621 & .53 & .50\\
+BM25, keep negation      & .428 & .626 & .49 & .50\\
+MiniLM, whole report & .271 & .615 & .70 & .40\\
+E5-small, whole report & .255 & .410 & .85 & .60\\
+BGE-small (33M)          & .287 & .611 & .85 & .60\\
+MPNet (110M)             & .257 & .622 & .85 & \textbf{.72}\\
+E5-base (110M)           & .280 & .452 & .82 & .52\\
+BM25+BGE (RRF)           & .393 & \textbf{.658} & -- & --\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{More encoders and ablations (Table~\ref{tab:ext}).} No frozen encoder comes
+within 0.13 MRR@10 of BM25 on synopses, including the two base-size models. On topical
+queries MPNet and BGE-small tie BM25 ($p{=}0.74$ and $0.53$), while E5-base is as weak as
+E5-small, so the E5 behaviour is a property of the model family rather than its size.
+Whole-report scoring changes no dense model significantly on topical queries but helps
+BM25 on synopses (0.458, $p<0.001$), plausibly because a synopsis summarises details
+from the whole narrative rather than from one passage.
 
 \textbf{Meaning-change test (Fig.~\ref{fig:contrast}).} In the proposal's condition, all
 systems prefer the one-word edit over the true paraphrase (accuracy 5--17\%). Surface
@@ -197,7 +232,8 @@ a frozen encoder would rank ``descended'' above ``maintained altitude'' as a mat
 ``did not descend''. With overlap controlled, the encoders do encode much of the meaning:
 E5 0.85 and MiniLM 0.70 overall, with numbers at 0.96 for both. Event order remains the
 weak spot (MiniLM 0.40, E5 0.60), which fits mean pooling being largely order-insensitive.
-BM25 scores 0.22 on negation, partly because the standard stopword list deletes ``not''.
+BM25 scores 0.22 on negation. Keeping ``not'' in the index makes it worse (0.08), because
+the paraphrases express negation with other words (``maintained altitude'').
 
 \subsection{A pre-processing finding}\label{sec:prep-finding}
 In our first run (v1, without placeholder removal or tail merging), 18.5\% of E5's top-10
@@ -205,7 +241,7 @@ matched passages had fewer than 30 words, against 3.7\% of all chunks. Many were
 placeholders such as ``[Narrative \#2 contains no additional information.]''. Pre-processing
 v2 cut short units to 0.9\% of the index, yet E5's topical score barely moved (0.444 to
 0.438). The bias therefore comes from genuinely short reports, not just from the
-artifacts, which motivates the calibration work below.
+artifacts.
 
 \section{Future work}
 \begin{enumerate}
@@ -214,11 +250,9 @@ top-10 of every system into blind, shuffled judging sheets. Both of us will judg
 25\% overlap and report Cohen's $\kappa$, and we will extend the set toward the proposed
 50--80 queries. Silver labels come from codes and synopsis keywords, so they may favour
 lexical matches; the human labels will test that.
-\item \textbf{Length bias and report scoring.} We are running a whole-report versus
-best-chunk scoring ablation. Next we will test score calibration, which normalises each
-unit's score against its typical similarity to queries.
-\item \textbf{More encoders.} The configuration already includes bge-small, all-mpnet-base
-and e5-base, and a BM25 variant that keeps negation words; those runs are in progress.
+\item \textbf{Length bias.} Whole-report scoring did not remove E5's preference for
+short reports. Next we will test score calibration, which normalises each unit's score
+against its typical similarity to queries, and fusion weights tuned on dev queries only.
 \item \textbf{Stretch goals}, in the proposal's order: report versions (B), a small
 fine-tune on near-miss pairs split by incident group (D), and ADS-B tracks (C).
 \end{enumerate}

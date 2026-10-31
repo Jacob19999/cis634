@@ -111,7 +111,9 @@ Early findings:
 - **BM25 is the strongest single system**, which is the opposite of what we expected. Its lead holds on synopses that share no identifiers with their narrative.
 - **Fusion helps.** BM25 + MiniLM is best on topical queries (+0.074 nDCG@10 over BM25, p = 0.002).
 - **Surface overlap beats meaning.** When the edited sentence keeps the original's words, every system prefers it (accuracy ≤ 0.17). With overlap controlled, the encoders catch most negation, number and direction edits, but event order stays near chance.
-- **E5 is pulled toward short texts.** Short units make up 9.9% of its top-50 results but only 0.9% of the index.
+- **E5 is pulled toward short texts.** Short units make up 9.9% of its top-50 results but only 0.9% of the index. Scoring whole reports instead of the best chunk doesn't fix it.
+
+Extended run ([results/extended/summary.md](results/extended/summary.md)): BGE-small, MPNet and E5-base don't close the gap on synopses (best dense MRR@10 is 0.287, against 0.458 for BM25 on whole reports). MPNet and BGE only tie BM25 on topical queries. Keeping "not" in BM25 makes negation accuracy worse (0.08), because paraphrases express negation with other words.
 
 ## Phase 2 status
 
@@ -120,4 +122,5 @@ Early findings:
 - [x] 40 topical queries with silver labels; 100-item meaning-change set
 - [x] Blind judging pools for human labels (`data/qrels/pool_v1/`)
 - [ ] Human relevance judgments (both annotators) → `asrsbench labels ...` → `data/qrels/human_v1.tsv`
-- [ ] Extended encoders and ablations (`configs/extended.yaml`)
+- [x] Extended encoders and ablations (`configs/extended.yaml`)
+- [x] Milestone report draft (`reports/milestone/main.pdf`)
