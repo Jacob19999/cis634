@@ -28,11 +28,14 @@ on three evaluation tracks. The first track uses 1,000 analyst synopses as parap
 queries. The second uses 40 analyst-style issue descriptions with graded relevance labels
 derived from NASA's coding (``silver'' labels). The third is a 100-item test of whether
 meaning-changing edits (negation, numbers, direction, event order) fool the models.
-Contrary to our expectation, BM25 is the strongest single system (MRR@10 0.425 vs.\ 0.268
-for MiniLM), and three further encoders (BGE-small, MPNet, E5-base) do not close the gap. Fusing BM25 with MiniLM gives the best topical ranking (nDCG@10 0.706 vs.\
-0.632, $p{=}0.002$). When word overlap is controlled, E5 tells a same-meaning sentence from
-a minimally edited one 85\% of the time. Yet every system prefers the edited sentence when
-it shares more words (at most 17\% correct), and event order stays near chance.
+Contrary to our expectation, BM25 is the strongest single system at finding the report a
+synopsis summarises (MRR@10 0.425 vs.\ 0.268 for MiniLM), and three further encoders
+(BGE-small, MPNet, E5-base) do not close the gap; on topical queries BM25 and MiniLM do not
+differ significantly. Fusing BM25 with MiniLM gives the best topical ranking (nDCG@10 0.706
+vs.\ 0.630, $p{=}0.0015$) but ranks synopsis targets lower than BM25 alone. When word
+overlap is controlled, E5 tells a same-meaning sentence from a minimally edited one 85\% of
+the time. Yet every system prefers the edited sentence when it shares more words (at most
+24\% correct), and event order stays near chance.
 \end{abstract}
 
 \section{Introduction}
@@ -45,7 +48,7 @@ enough to search a whole archive. They are trained on general English, however, 
 blur details such as negation or event order that decide the meaning of a safety report
 \cite{ettinger2020bert}. Our research question is: \emph{can a frozen sentence embedding
 retrieve ASRS reports that describe the same issue when the wording differs, and does the
-ranking fail under negation, altitude, direction or event-order changes?} By this
+ranking fail under negation, number (e.g.\ altitude), direction or event-order changes?} By this
 milestone the data pipeline, all four proposed systems, and an evaluation harness are
 implemented, and we have first results on all three evaluation tracks.
 
@@ -74,8 +77,9 @@ $s(d)=\sum_{r}1/(60+\mathrm{rank}_r(d))$, over the top 1,000 reports of each com
 We wrote the data pipeline, the BM25 implementation, MaxP scoring and fusion, a config
 format in which adding a model takes one YAML entry, the query set and its labeling
 rules, the meaning-change test set, and all evaluation code (about 1,400 lines of Python,
-with 20 unit tests). We reuse sentence-transformers, Hugging Face \texttt{datasets},
-scikit-learn and PyStemmer, and the two pretrained checkpoints.
+with 22 unit tests). We reuse sentence-transformers, Hugging Face \texttt{datasets},
+scikit-learn and PyStemmer, and the six pretrained checkpoints in Tables~\ref{tab:main}
+and~\ref{tab:ext}.
 
 \section{Experiments}
 \subsection{Data and pre-processing}
@@ -86,8 +90,8 @@ analyst synopsis (27 words), and NASA analyst codes. We search the narratives on
 Pre-processing went through two versions; the steps of the current one (v2) are:
 \begin{enumerate}
 \item \textbf{Comma repair.} The export replaced every comma with a semicolon
-(``10;000~FT'', ``IAF; we set''). We restore commas in the free text, which is
-essential for the numeric test category. The coded fields keep ``;'' as their list separator.
+(``10;000~FT'', ``IAF; we set''). We restore commas in the free text so that numbers
+and clauses read as normal English. The coded fields keep ``;'' as their list separator.
 \item \textbf{Placeholder removal.} 2,906 second narratives (26\%) are editorial notes,
 e.g.\ ``[Report narrative contained no additional information.]''. We drop them (see
 \S\ref{sec:prep-finding}).
@@ -97,21 +101,26 @@ groups cross the official splits. Retrieving a sibling report counts as correct,
 planned fine-tuning will split by group.
 \item \textbf{Chunking.} Narratives contain no paragraph breaks, so we pack sentences
 into windows of at most 150 words with a one-sentence overlap. A leftover tail under 40
-words is merged into the previous window. This gives 136,842 chunks (2.9 per report;
+words is merged into the previous window (so a few windows reach 189 words). This gives 136,842 chunks (2.9 per report;
 150 WordPiece tokens on average, 99th percentile 222), which fit MiniLM's 256-token limit.
 \end{enumerate}
 
 \subsection{Evaluation}
 \textbf{Synopsis track (automatic).} The query is the analyst's synopsis of one of 1,000
-validation-split reports (seed 13). Synopses are written separately from the narrative,
-so they are natural paraphrases. The relevant set is the summarised report plus its
-incident siblings. Metrics: MRR@10 and Recall@$k$.
+validation-split reports (seed 13). Analysts write the synopsis after reading the
+narrative, so it restates the report in shorter, different words, but not entirely: after
+stemming, 53\% of a synopsis's content words occur in its own narrative (15\% in a random
+one), so this track also rewards word overlap. The relevant set is the summarised report
+plus its incident siblings. Metrics: MRR@10 and Recall@$k$.
 \textbf{Topical track.} We wrote 40 analyst-style queries (20 dev, 20 test) over 15 event
 types, 19 of them in the proposal's focus area (altitude, clearance, communication,
-heading). Until the human labels are done, each query has a rule over NASA's codes that
-assigns \emph{silver} grades. A report gets grade~2 (same issue) when the event type and
-the specific mechanism both match, e.g.\ anomaly \emph{Altitude Overshoot} and human
-factor \emph{Distraction}. It gets grade~1 (related) when only the event family matches.
+heading). Until the human labels are done, each query has a rule that assigns
+\emph{silver} grades from NASA's codes and, for 24 of the 40 queries, from keywords in the
+analyst synopsis. A report gets grade~2 (same issue) when the event type and the specific
+mechanism both match, e.g.\ anomaly \emph{Altitude Overshoot} and human factor
+\emph{Distraction}. It gets grade~1 (related) when only the event family matches. Grade~2
+sets are broad (median 725 reports per query), closer to ``same event code'' than to
+``same incident'', and the synopsis keywords may favour lexical matching.
 Metrics are P@10 (grade~2), lenient P@10 (grade~$\ge$1) and nDCG@10 with linear gains
 \cite{jarvelin2002ndcg}.
 \textbf{Meaning-change test.} We wrote 100 items, 25 per category, each made of an
@@ -120,7 +129,9 @@ changes. For example, the negation item ``The crew did not descend'' has the par
 ``The crew maintained altitude'' and the edit ``The crew descended''. The proposal's
 condition anchors on the \emph{original}. Since the edit shares almost all of the
 original's words, we added a controlled condition that anchors on the \emph{paraphrase},
-which overlaps the original and the edit about equally. An item passes when
+which overlaps the original and the edit about equally (word Jaccard 0.29 for both). The
+exception is direction: the paraphrase keeps the original's ``left'' or ``right'', so word
+overlap alone can pass those items. An item passes when
 $\mathrm{sim}(\text{anchor},\text{same meaning})>\mathrm{sim}(\text{anchor},\text{edited})$;
 chance is 50\%.
 All retrieval means carry 95\% bootstrap intervals, and systems are compared with paired
@@ -128,18 +139,21 @@ randomization tests \cite{smucker2007significance}.
 
 \subsection{Experimental details}
 No model is trained. We ran everything on an Apple M1 Max (PyTorch MPS backend) with
-batch size 128. Indexing all chunks takes 6\,s for BM25, 3.2\,min for MiniLM and 5.3\,min
+batch size 128. Indexing all chunks takes 7\,s for BM25, 2.6\,min for MiniLM and 4.8\,min
 for E5. Answering 1,000 queries takes under 3\,s per single system and 8\,s per hybrid.
-A second config (\texttt{extended.yaml}) adds three encoders and the ablations in
-Table~\ref{tab:ext}; base-size models need batch size 32 to stay within GPU memory. Configs, per-query
-scores and run files are in the repository, so every number below can be regenerated
-with \texttt{asrsbench run configs/milestone.yaml}.
+A second config adds three encoders, BGE-small \cite{xiao2023cpack}, all-mpnet-base-v2
+\cite{song2020mpnet} and e5-base-v2 \cite{wang2022e5}, and the ablations in
+Table~\ref{tab:ext}; base-size models need batch size 32 to stay within GPU memory. Configs
+and per-query scores are in the repository; \texttt{asrsbench run} regenerates
+Table~\ref{tab:main} and Fig.~\ref{fig:contrast} from \texttt{configs/milestone.yaml} and
+Table~\ref{tab:ext} from \texttt{configs/extended.yaml}; \texttt{scripts/analysis.py}
+computes the error analyses below.
 
 \subsection{Results}
 \begin{table}[t]
 \centering
 \caption{Retrieval results (95\% CI half-width $\approx$0.03 for synopsis, $\approx$0.08 for topical).
-Topical labels are silver (from analyst codes).}
+Topical labels are silver (from analyst codes and synopsis keywords).}
 \label{tab:main}
 \setlength{\tabcolsep}{3.2pt}
 \begin{tabular}{@{}lccccc@{}}
@@ -148,8 +162,8 @@ Topical labels are silver (from analyst codes).}
 \cmidrule(lr){2-3}\cmidrule(l){4-6}
 System & MRR@10 & R@100 & nDCG@10 & P@10 & P@10$_{\ge1}$\\
 \midrule
-BM25            & \textbf{.425} & .753 & .632 & .537 & .705\\
-MiniLM          & .268 & .648 & .593 & .468 & .740\\
+BM25            & \textbf{.425} & .753 & .630 & .537 & .703\\
+MiniLM          & .268 & .648 & .591 & .463 & .740\\
 E5-small        & .241 & .607 & .438 & .352 & .505\\
 BM25+E5 (RRF)     & .378 & .759 & .633 & .537 & .707\\
 BM25+MiniLM (RRF) & .380 & \textbf{.786} & \textbf{.706} & \textbf{.585} & \textbf{.798}\\
@@ -162,41 +176,50 @@ BM25+MiniLM (RRF) & .380 & \textbf{.786} & \textbf{.706} & \textbf{.585} & \text
 \includegraphics[width=\textwidth]{figures/contrast.pdf}
 \caption{Meaning-change test (25 items per category; 95\% Wilson interval $\approx\pm0.19$).
 (a) The edited sentence shares nearly all words with the anchor, and every system is fooled.
-(b) With word overlap balanced, the encoders mostly detect negation, number and direction
-changes, but not event order.}
+(b) With word overlap balanced, the encoders mostly detect negation and number changes, but
+not event order. Direction items can be passed by word overlap alone (BM25 0.78).}
 \label{fig:contrast}
 \end{figure*}
 
-\textbf{Keyword search is the strongest single system (Table~\ref{tab:main}).} We
-expected the opposite. On synopsis queries BM25 ranks the right report first 36\% of the
+\textbf{Keyword search is the strongest single system on synopsis queries
+(Table~\ref{tab:main}).} We expected the opposite. On synopsis queries BM25 ranks the right report first 36\% of the
 time, against 21\% for MiniLM and 19\% for E5 (all pairwise MRR differences $p<0.02$). We checked
-whether exact identifiers explain this. Only 34\% of synopses repeat an identifier from their
+whether exact identifiers explain this. Only 29\% of synopses repeat an identifier from their
 narrative (an airport code, aircraft type or runway). These help every system, but BM25
-still leads on the other 66\% (MRR@10 0.299 vs.\ 0.181). This agrees with the BEIR finding
+still leads on the other 71\% (MRR@10 0.321 vs.\ 0.196). This agrees with the BEIR finding
 that BM25 is a strong zero-shot baseline outside the encoders' training domain
 \cite{thakur2021beir}. A likely factor is that ASRS text is full of abbreviations
-(FL240, LNAV/VNAV, RA) that general-English encoders have rarely seen.
+(FL240, LNAV/VNAV, RA) that general-English encoders have rarely seen; aviation-specific
+models such as Aviation-BERT \cite{chandra2023aviationbert} and SafeAeroBERT
+\cite{andrade2023safeaerobert} target this gap, but we have not tested them. On topical
+queries BM25 and MiniLM do not differ significantly (nDCG@10 0.630 vs.\ 0.591,
+$p{=}0.29$).
 
 \textbf{The two signals are complementary.} BM25+MiniLM fusion improves topical
-nDCG@10 by 0.074 over BM25 ($p{=}0.002$) and by 0.113 over MiniLM ($p<0.001$), and it
-has the best Recall@100 on synopses. MiniLM beats BM25 on lenient P@10 (0.740 vs.\ 0.705)
-but not on strict P@10 (0.468 vs.\ 0.537). It finds reports of the right event family
+nDCG@10 by 0.076 over BM25 ($p{=}0.0015$) and by 0.115 over MiniLM ($p<0.001$), and it
+has the best Recall@100 on synopses. It costs early precision there, though: it ranks the
+target report first less often than BM25 alone (MRR@10 0.380 vs.\ 0.425, $p<0.001$). MiniLM beats BM25 on lenient P@10 (0.740 vs.\ 0.703)
+but not on strict P@10 (0.463 vs.\ 0.537). It finds reports of the right event family
 but often not the right mechanism. The best (BM25+MiniLM) and worst (E5) systems are the
-same on the dev and test query halves. Altitude queries, the proposal's
-focus area, are the hardest for the encoders (nDCG@10: BM25 0.535, MiniLM 0.444, E5 0.159).
+same on the dev and test query halves; on the test half BM25 and MiniLM are level (0.548
+vs.\ 0.543). Altitude queries, the proposal's
+focus area, are the hardest for the encoders (nDCG@10: BM25 0.535, MiniLM 0.440, E5 0.159).
 
-\textbf{E5 is pulled toward short texts.} E5 trails MiniLM on retrieval despite being the
-newer retrieval model. Its similarity scores for short units are \emph{lower} on average
-but much more spread out (mean per-query z-score $-0.83$ for units under 30 words).
-That upper tail wins the ranking: short units supply 9.9\% of E5's top-50 results but
-only 0.9\% of the index, and MiniLM shows almost no such effect. Scoring whole reports
-instead of best chunks does not help E5 (Table~\ref{tab:ext}), so the bias concerns short
-reports themselves, not the maximum over chunks.
+\textbf{E5 favours short texts, but that explains little of its gap.} E5 trails MiniLM on
+retrieval despite being the newer retrieval model. Its similarity scores for short units
+are \emph{lower} on average but 1.7 times as spread out (mean per-query z-score $-0.83$
+for units under 30 words). That upper tail reaches the top: on topical queries, short units
+fill 17.5\% of E5's top-10 results (MiniLM 7.3\%) but only 0.9\% of the index. These hits
+are only slightly less relevant than E5's other top-10 hits (grade~2: 30\% vs.\ 36\%), so
+even if they were as good as the rest, E5's P@10 would rise by about 0.01, against a gap
+of 0.11 to MiniLM.
 
 \begin{table}[t]
 \centering
 \caption{Additional encoders and ablations (same tracks as Table~\ref{tab:main}).
-``Whole'': one vector per report instead of best chunk. Contrast: overlap-controlled accuracy.}
+``Whole'': one vector per report instead of best chunk, truncated at the encoder's input
+limit (MiniLM 256 tokens, cutting 59\% of reports; E5 512, cutting 24\%). Contrast:
+overlap-controlled accuracy.}
 \label{tab:ext}
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{@{}lcccc@{}}
@@ -209,39 +232,45 @@ BM25, whole report & \textbf{.458} & .621 & .53 & .50\\
 BM25, keep negation      & .428 & .626 & .49 & .50\\
 MiniLM, whole report & .271 & .615 & .70 & .40\\
 E5-small, whole report & .255 & .410 & .85 & .60\\
-BGE-small (33M)          & .287 & .611 & .85 & .60\\
-MPNet (110M)             & .257 & .622 & .85 & \textbf{.72}\\
-E5-base (110M)           & .280 & .452 & .82 & .52\\
-BM25+BGE (RRF)           & .393 & \textbf{.658} & -- & --\\
+BGE-small (33M)          & .287 & .610 & .85 & .60\\
+MPNet (110M)             & .257 & .622 & .85 & .72\\
+E5-base (110M)           & .280 & .451 & .82 & .52\\
+BM25+BGE (RRF)           & .393 & .658 & -- & --\\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \textbf{More encoders and ablations (Table~\ref{tab:ext}).} No frozen encoder comes
 within 0.13 MRR@10 of BM25 on synopses, including the two base-size models. On topical
-queries MPNet and BGE-small tie BM25 ($p{=}0.74$ and $0.53$), while E5-base is as weak as
-E5-small, so the E5 behaviour is a property of the model family rather than its size.
-Whole-report scoring changes no dense model significantly on topical queries but helps
-BM25 on synopses (0.458, $p<0.001$), plausibly because a synopsis summarises details
-from the whole narrative rather than from one passage.
+queries MPNet and BGE-small are not significantly different from BM25 ($p{=}0.77$ and
+$0.53$), while E5-base is as weak as E5-small, so the E5 behaviour is a property of the
+model family rather than its size. Whole-report scoring changes no dense model
+significantly on topical queries but helps BM25 on synopses (0.458, $p<0.001$), plausibly
+because a synopsis summarises details from the whole narrative rather than from one
+passage. For the encoders this ablation also truncates long reports, so it does not
+isolate the effect of best-chunk scoring.
 
-\textbf{Meaning-change test (Fig.~\ref{fig:contrast}).} In the proposal's condition, all
-systems prefer the one-word edit over the true paraphrase (accuracy 5--17\%). Surface
+\textbf{Meaning-change test (Fig.~\ref{fig:contrast}).} In the proposal's condition, every
+non-fusion system in Tables~\ref{tab:main}--\ref{tab:ext} prefers the one-word edit over
+the true paraphrase (accuracy 5--24\%); only MPNet passes more than half of the negation items
+(0.60). Surface
 overlap dominates similarity for both keyword and embedding methods, so on this evidence
 a frozen encoder would rank ``descended'' above ``maintained altitude'' as a match for
 ``did not descend''. With overlap controlled, the encoders do encode much of the meaning:
-E5 0.85 and MiniLM 0.70 overall, with numbers at 0.96 for both. Event order remains the
-weak spot (MiniLM 0.40, E5 0.60), which fits mean pooling being largely order-insensitive.
+E5 0.85 and MiniLM 0.70 overall, with numbers at 0.96 for both (BM25 0.60). Direction
+says less, since BM25 also passes 0.78 of it. Event order remains the weak spot (MiniLM
+0.40, E5 0.60, both within the $\pm0.19$ interval around chance). Mean pooling alone does
+not explain this: BGE-small, which uses the [CLS] token instead, also scores 0.60.
 BM25 scores 0.22 on negation. Keeping ``not'' in the index makes it worse (0.08), because
 the paraphrases express negation with other words (``maintained altitude'').
 
 \subsection{A pre-processing finding}\label{sec:prep-finding}
 In our first run (v1, without placeholder removal or tail merging), 18.5\% of E5's top-10
-matched passages had fewer than 30 words, against 3.7\% of all chunks. Many were
-placeholders such as ``[Narrative \#2 contains no additional information.]''. Pre-processing
-v2 cut short units to 0.9\% of the index, yet E5's topical score barely moved (0.444 to
-0.438). The bias therefore comes from genuinely short reports, not just from the
-artifacts.
+matched passages on topical queries had fewer than 30 words, against 3.7\% of all chunks.
+Many were placeholders such as ``[Narrative \#2 contains no additional information.]''.
+Pre-processing v2 cut short units to 0.9\% of the index, yet their share of E5's top-10
+barely fell (to 17.5\%) and its topical score barely moved (0.444 to 0.438). The short hits
+are therefore mostly genuinely short reports, not artifacts.
 
 \section{Future work}
 \begin{enumerate}
@@ -250,14 +279,15 @@ top-10 of every system into blind, shuffled judging sheets. Both of us will judg
 25\% overlap and report Cohen's $\kappa$, and we will extend the set toward the proposed
 50--80 queries. Silver labels come from codes and synopsis keywords, so they may favour
 lexical matches; the human labels will test that.
-\item \textbf{Length bias.} Whole-report scoring did not remove E5's preference for
-short reports. Next we will test score calibration, which normalises each unit's score
+\item \textbf{Length bias.} E5's preference for short reports survived pre-processing
+v2. Next we will test score calibration, which normalises each unit's score
 against its typical similarity to queries, and fusion weights tuned on dev queries only.
 \item \textbf{Stretch goals}, in the proposal's order: report versions (B), a small
 fine-tune on near-miss pairs split by incident group (D), and ADS-B tracks (C).
 \end{enumerate}
-The held-out topical test queries and the synopsis test split will be scored once, for
-the final report (Nov.~30). The talk on Nov.~23 will present the four-system comparison
+The synopsis test split is still unused and will be scored once, for the final report
+(Nov.~30). The 20 topical test queries are already scored in Table~\ref{tab:main}, so the
+queries we add for human labelling will serve as the held-out topical set. The talk on Nov.~23 will present the four-system comparison
 and failure examples.
 
 \bibliographystyle{IEEEtran}

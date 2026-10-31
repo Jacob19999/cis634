@@ -54,7 +54,7 @@ Source: [`elihoole/asrs-aviation-reports`](https://huggingface.co/datasets/eliho
 | Step | What and why |
 |---|---|
 | Field selection | We keep the reporter narratives (1 or 2 per record; 23.5% have a second reporter), the analyst synopsis, and the analyst codes (anomaly, human factors, communication breakdown, flight phase, result, detector, primary problem). Only the narratives are searched. |
-| Comma repair | The ASRS export turned every comma into a semicolon: `10;000 FT`, `IAF; we set`. We restore the commas in the free text. Numbers are one of our test categories, so this matters. The coded fields keep `;` as their list separator. |
+| Comma repair | The ASRS export turned every comma into a semicolon: `10;000 FT`, `IAF; we set`. We restore the commas in the free text so numbers and clauses read as normal English. The coded fields keep `;` as their list separator. |
 | Incident grouping | Union-find over shared accession numbers and identical narratives. This gives 47,687 incident groups: 70 reports belong to multi-report groups, and 13 of those groups cross the official splits. Retrieving a sibling report counts as correct, and any fine-tuning (Extension D) must split by group. |
 | Placeholder removal | 2,906 second narratives (26% of them) are editorial notes such as "[Report narrative contained no additional information.]". These are dropped. In v1 they were indexed, and dense models matched generic queries to them. |
 | Chunking | The narratives have no paragraph breaks, so "paragraphs" are sentence-aligned windows of at most 150 words with a 1-sentence overlap. A leftover tail under 40 words is merged into the previous window. This gives 136,842 chunks (2.9 per report), and only 0.9% are under 30 words (3.7% in v1). A chunk averages 150 word-piece tokens (99th percentile 222), so it fits MiniLM's 256-token limit; 0.02% are truncated. |
@@ -76,8 +76,8 @@ Every system scores *units*. A unit is either a chunk (`doc_mode: chunk_max`) or
 
 | Track | Queries | Relevance | Metrics |
 |---|---|---|---|
-| `synopsis` | NASA analyst synopses of 1,000 validation-split reports. The synopsis is written separately from the narrative, so it is a natural paraphrase. | The summarised report, plus any other report of the same incident | MRR@10, R@1/10/100 |
-| `topical` | 40 analyst-style issue descriptions (`data/queries/topical_v1.yaml`), split into 20 dev and 20 test | Grades 2/1/0. *Silver* labels are derived from analyst codes (rule per query); *human* labels come from blind pooled judging | nDCG@10, P@10 (grade 2), P@10 lenient (grade ≥ 1), MRR@10 |
+| `synopsis` | NASA analyst synopses of 1,000 validation-split reports. Analysts write it after reading the narrative, in shorter, different words, though about half its content words also occur in the narrative. | The summarised report, plus any other report of the same incident | MRR@10, R@1/10/100 |
+| `topical` | 40 analyst-style issue descriptions (`data/queries/topical_v1.yaml`), split into 20 dev and 20 test | Grades 2/1/0. *Silver* labels are derived from analyst codes and, for 24 queries, synopsis keywords (rule per query); *human* labels come from blind pooled judging | nDCG@10, P@10 (grade 2), P@10 lenient (grade ≥ 1), MRR@10 |
 | `contrast` | 100 items: 25 each of negation, numbers (altitude/speed), direction, and event order (`data/contrast/contrast_v1.jsonl`) | An item passes if sim(original, paraphrase) > sim(original, changed) | accuracy per category (chance = 0.5) |
 
 95% bootstrap confidence intervals are attached to every mean. A paired randomization test compares each pair of systems on the primary metric of each track.
@@ -101,19 +101,19 @@ Full tables with 95% CIs: [results/milestone/summary.md](results/milestone/summa
 
 | System | Synopsis MRR@10 | Synopsis R@100 | Topical nDCG@10 (silver) | Contrast, overlap-controlled |
 |---|---|---|---|---|
-| BM25 | **0.425** | 0.753 | 0.632 | 0.53 |
-| MiniLM | 0.268 | 0.648 | 0.593 | 0.70 |
+| BM25 | **0.425** | 0.753 | 0.630 | 0.53 |
+| MiniLM | 0.268 | 0.648 | 0.591 | 0.70 |
 | E5-small | 0.241 | 0.607 | 0.438 | **0.85** |
 | BM25 + E5 (RRF) | 0.378 | 0.759 | 0.633 | – |
 | BM25 + MiniLM (RRF) | 0.380 | **0.786** | **0.706** | – |
 
 Early findings:
-- **BM25 is the strongest single system**, which is the opposite of what we expected. Its lead holds on synopses that share no identifiers with their narrative.
-- **Fusion helps.** BM25 + MiniLM is best on topical queries (+0.074 nDCG@10 over BM25, p = 0.002).
-- **Surface overlap beats meaning.** When the edited sentence keeps the original's words, every system prefers it (accuracy ≤ 0.17). With overlap controlled, the encoders catch most negation, number and direction edits, but event order stays near chance.
-- **E5 is pulled toward short texts.** Short units make up 9.9% of its top-50 results but only 0.9% of the index. Scoring whole reports instead of the best chunk doesn't fix it.
+- **BM25 is the strongest single system on synopsis queries**, which is the opposite of what we expected. Its lead holds on synopses that share no identifiers with their narrative. On topical queries BM25 and MiniLM are not significantly different (p = 0.29).
+- **Fusion helps on topical queries.** BM25 + MiniLM is best there (+0.076 nDCG@10 over BM25, p = 0.0015), but on synopses it ranks the target first less often than BM25 alone (MRR@10 0.380 vs. 0.425).
+- **Surface overlap beats meaning.** When the edited sentence keeps the original's words, every system prefers it (accuracy ≤ 0.24). With overlap controlled, the encoders catch most negation and number edits, but event order stays near chance. Direction edits are passed by word overlap alone (BM25 0.78).
+- **E5 favours short texts, but that explains little of its gap.** Short units fill 17.5% of its topical top-10 but only 0.9% of the index; they are only slightly less relevant than its other hits, so they cost it about 0.01 P@10 of a 0.11 gap to MiniLM. Analyses: `python scripts/analysis.py results/milestone` → `results/milestone/analysis.json`.
 
-Extended run ([results/extended/summary.md](results/extended/summary.md)): BGE-small, MPNet and E5-base don't close the gap on synopses (best dense MRR@10 is 0.287, against 0.458 for BM25 on whole reports). MPNet and BGE only tie BM25 on topical queries. Keeping "not" in BM25 makes negation accuracy worse (0.08), because paraphrases express negation with other words.
+Extended run ([results/extended/summary.md](results/extended/summary.md)): BGE-small, MPNet and E5-base don't close the gap on synopses (best dense MRR@10 is 0.287, against 0.458 for BM25 on whole reports). On topical queries MPNet and BGE are not significantly different from BM25. Keeping "not" in BM25 makes negation accuracy worse (0.08), because paraphrases express negation with other words.
 
 ## Phase 2 status
 
