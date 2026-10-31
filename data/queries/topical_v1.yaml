@@ -6,7 +6,7 @@
 # systems can be scored automatically before human labels exist:
 #   grade 2 = same issue (specific mechanism), grade 1 = related (same event family).
 # A rule is a list of clauses (OR); each clause maps a report field to a case-insensitive
-# regex, and all fields in a clause must match (AND). Fields: anomaly, synopsis,
+# regex matched at word starts, and all fields in a clause must match (AND). Fields: anomaly, synopsis,
 # human_factors, comm_breakdown, flight_phase, result, detector, primary_problem,
 # contributing_factors, reporter_function.
 # Silver labels are a proxy. Gold labels come from blind human judging of pooled results
