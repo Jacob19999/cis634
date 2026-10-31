@@ -1,4 +1,6 @@
 # Extended benchmark: more frozen encoders + ablations from the proposal.
+# Base-size models use batch_size 32: at 128 our 32 GB M1 Max ran out of GPU memory and
+# swapped (the MPNet pass slowed to ~2 min per batch).
 #  - "best paragraph vs whole report": doc_mode whole truncates at the model's max length
 #  - BM25 that keeps negation words (standard stopword lists delete "not", "no", "never")
 name: extended
@@ -28,10 +30,10 @@ systems:
              query_prefix: "Represent this sentence for searching relevant passages: ", pair_prefix: ""}
   - name: mpnet
     type: dense
-    params: {model: sentence-transformers/all-mpnet-base-v2, max_seq_length: 384}
+    params: {model: sentence-transformers/all-mpnet-base-v2, max_seq_length: 384, batch_size: 32}
   - name: e5-base
     type: dense
-    params: {model: intfloat/e5-base-v2, query_prefix: "query: ", passage_prefix: "passage: ", max_seq_length: 512}
+    params: {model: intfloat/e5-base-v2, query_prefix: "query: ", passage_prefix: "passage: ", max_seq_length: 512, batch_size: 32}
 
   - {name: hybrid-bm25-e5, type: hybrid, params: {components: [bm25, e5-small], method: rrf, k: 60, depth: 1000}}
   - {name: hybrid-bm25-bge, type: hybrid, params: {components: [bm25, bge-small], method: rrf, k: 60, depth: 1000}}

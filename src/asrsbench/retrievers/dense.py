@@ -19,6 +19,23 @@ import numpy as np
 from .base import Retriever, Units
 
 
+# Systems that use the same checkpoint (e.g. chunk vs whole-report variants) share one
+# loaded model instead of each holding a copy in (GPU) memory.
+_MODEL_CACHE: dict[tuple, object] = {}
+
+
+def _free_accelerator_memory(device: str) -> None:
+    import gc
+
+    import torch
+
+    gc.collect()
+    if device == "mps":
+        torch.mps.empty_cache()
+    elif device == "cuda":
+        torch.cuda.empty_cache()
+
+
 def resolve_device(device: str = "auto") -> str:
     if device != "auto":
         return device
@@ -52,11 +69,15 @@ class DenseRetriever(Retriever):
     @property
     def model(self):
         if self._model is None:
-            from sentence_transformers import SentenceTransformer
+            key = (self.model_name, self.device, self.max_seq_length)
+            if key not in _MODEL_CACHE:
+                from sentence_transformers import SentenceTransformer
 
-            self._model = SentenceTransformer(self.model_name, device=self.device)
-            if self.max_seq_length:
-                self._model.max_seq_length = self.max_seq_length
+                model = SentenceTransformer(self.model_name, device=self.device)
+                if self.max_seq_length:
+                    model.max_seq_length = self.max_seq_length
+                _MODEL_CACHE[key] = model
+            self._model = _MODEL_CACHE[key]
         return self._model
 
     def encode(self, texts: list[str], prefix: str = "", show_progress: bool = False) -> np.ndarray:
@@ -81,6 +102,7 @@ class DenseRetriever(Retriever):
         t0 = time.time()
         self.E = self.encode(units.texts, self.passage_prefix, show_progress=True)
         self.encode_seconds = time.time() - t0
+        _free_accelerator_memory(self.device)
         path.parent.mkdir(parents=True, exist_ok=True)
         np.save(path, self.E)
 
