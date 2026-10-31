@@ -62,9 +62,11 @@ def _clause_mask(reports: pd.DataFrame, clause: dict[str, str]) -> np.ndarray:
     for fld, pattern in clause.items():
         if fld not in RULE_FIELDS:
             raise ValueError(f"unknown silver-rule field {fld!r}")
+        # Match at word starts: "enter" must not hit "Center", but the stem "pressuri[sz]"
+        # still matches "pressurization".
         with warnings.catch_warnings():  # rules may use capture groups; we only need matches
             warnings.simplefilter("ignore", UserWarning)
-            hit = reports[fld].str.contains(pattern, flags=re.IGNORECASE, regex=True)
+            hit = reports[fld].str.contains(rf"\b(?:{pattern})", flags=re.IGNORECASE, regex=True)
         mask &= hit.to_numpy()
     return mask
 

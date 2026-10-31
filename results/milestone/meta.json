@@ -26,7 +26,7 @@
       "passage_prefix": "",
       "max_seq_length": 256,
       "device": "mps",
-      "encode_seconds": 188.34645986557007
+      "encode_seconds": 154.27397203445435
     },
     "e5-small": {
       "name": "e5-small",
@@ -37,7 +37,7 @@
       "passage_prefix": "passage: ",
       "max_seq_length": 512,
       "device": "mps",
-      "encode_seconds": 316.5067329406738
+      "encode_seconds": 285.04879212379456
     },
     "hybrid-bm25-e5": {
       "name": "hybrid-bm25-e5",
@@ -72,30 +72,30 @@
   },
   "timings": {
     "bm25": {
-      "index_seconds": 6.28,
-      "query_seconds_synopsis": 2.74,
+      "index_seconds": 6.53,
+      "query_seconds_synopsis": 2.8,
       "query_seconds_topical": 0.09
     },
     "minilm": {
-      "index_seconds": 191.71,
-      "query_seconds_synopsis": 2.32,
+      "index_seconds": 158.38,
+      "query_seconds_synopsis": 2.33,
       "query_seconds_topical": 0.11
     },
     "e5-small": {
-      "index_seconds": 317.52,
-      "query_seconds_synopsis": 2.58,
-      "query_seconds_topical": 0.11
+      "index_seconds": 285.35,
+      "query_seconds_synopsis": 2.61,
+      "query_seconds_topical": 0.09
     },
     "hybrid-bm25-e5": {
       "index_seconds": 0.0,
-      "query_seconds_synopsis": 7.93,
-      "query_seconds_topical": 0.3
+      "query_seconds_synopsis": 8.27,
+      "query_seconds_topical": 0.29
     },
     "hybrid-bm25-minilm": {
       "index_seconds": 0.0,
-      "query_seconds_synopsis": 7.58,
+      "query_seconds_synopsis": 8.05,
       "query_seconds_topical": 0.27
     },
-    "_total_index_seconds": 515.51
+    "_total_index_seconds": 450.27
   }
 }

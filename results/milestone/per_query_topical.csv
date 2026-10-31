@@ -17,7 +17,7 @@ T15,bm25,silver,0.6,0.8,0.7679662582305478,1.0,heading,dev
 T16,bm25,silver,0.1,0.6,0.40320315648761446,1.0,heading,test
 T17,bm25,silver,0.7,0.8,0.6410457898283652,1.0,clearance,dev
 T18,bm25,silver,0.5,0.6,0.6672725558566865,1.0,clearance,test
-T19,bm25,silver,0.5,0.7,0.6002133926261689,1.0,clearance,dev
+T19,bm25,silver,0.5,0.6,0.5451904510516489,1.0,clearance,dev
 T20,bm25,silver,0.4,1.0,0.7409499202625778,1.0,conflict,test
 T21,bm25,silver,0.7,0.9,0.8466406592581396,1.0,conflict,dev
 T22,bm25,silver,1.0,1.0,1.0,1.0,conflict,test
@@ -40,7 +40,7 @@ T38,bm25,silver,0.2,0.4,0.3599232974063217,1.0,weather,test
 T39,bm25,silver,0.9,0.9,0.9363792118010481,1.0,human,dev
 T40,bm25,silver,0.0,0.0,0.0,0.0,human,test
 T01,minilm,silver,0.0,0.8,0.4102614474570913,1.0,altitude,dev
-T02,minilm,silver,0.2,1.0,0.575698670548005,1.0,altitude,test
+T02,minilm,silver,0.1,1.0,0.5425715588208105,1.0,altitude,test
 T03,minilm,silver,0.4,0.5,0.33577623357909714,0.25,altitude,dev
 T04,minilm,silver,0.0,0.9,0.46818960590052405,1.0,altitude,test
 T05,minilm,silver,0.0,0.4,0.2770716054811479,1.0,altitude,dev
@@ -53,7 +53,7 @@ T11,minilm,silver,0.4,0.4,0.31561692740233804,0.25,clearance,dev
 T12,minilm,silver,0.1,0.8,0.4227033777380571,0.5,clearance,test
 T13,minilm,silver,0.7,0.7,0.6969179698201173,1.0,clearance,dev
 T14,minilm,silver,0.2,0.6,0.3017938709600875,0.25,communication,test
-T15,minilm,silver,0.7,1.0,0.8735794864074112,1.0,heading,dev
+T15,minilm,silver,0.6,1.0,0.8404523746802167,1.0,heading,dev
 T16,minilm,silver,0.2,0.5,0.36398855705094996,1.0,heading,test
 T17,minilm,silver,0.7,0.9,0.8437354423892267,1.0,clearance,dev
 T18,minilm,silver,0.3,0.3,0.29727159644205703,0.5,clearance,test

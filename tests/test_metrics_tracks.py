@@ -61,6 +61,12 @@ def test_silver_rules_take_highest_matching_grade():
     assert silver_qrels(REPORTS, rules) == {"1": 2, "2": 1, "4": 1}
 
 
+def test_silver_patterns_match_at_word_starts():
+    reports = REPORTS.assign(synopsis=["Center issued a clearance.", "Crew entered the wrong altitude.",
+                                       "Cabin pressurization failed.", "No match here."])
+    assert silver_qrels(reports, {"2": [{"synopsis": "enter|pressuri[sz]"}]}) == {"2": 2, "3": 2}
+
+
 def test_silver_rejects_unknown_fields():
     with pytest.raises(ValueError):
         silver_qrels(REPORTS, {"2": [{"narrative": "x"}]})

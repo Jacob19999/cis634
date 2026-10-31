@@ -27,16 +27,16 @@ P@10 counts grade-2 (same issue); P@10_lenient counts grade >= 1. `silver` label
 
 | system | labels | n_queries | nDCG@10 | P@10 | P@10_lenient | MRR@10 |
 |---|---|---|---|---|---|---|
-| bm25 | silver | 40 | 0.632 [0.555, 0.710] | 0.537 [0.450, 0.625] | 0.705 [0.630, 0.777] | 0.838 [0.746, 0.922] |
-| bm25-keepneg | silver | 40 | 0.626 [0.549, 0.705] | 0.528 [0.443, 0.615] | 0.703 [0.628, 0.775] | 0.843 [0.752, 0.925] |
+| bm25 | silver | 40 | 0.630 [0.554, 0.708] | 0.537 [0.450, 0.625] | 0.703 [0.628, 0.775] | 0.838 [0.746, 0.922] |
+| bm25-keepneg | silver | 40 | 0.626 [0.548, 0.704] | 0.528 [0.443, 0.615] | 0.700 [0.627, 0.772] | 0.843 [0.752, 0.925] |
 | bm25-whole | silver | 40 | 0.621 [0.543, 0.699] | 0.528 [0.438, 0.620] | 0.700 [0.622, 0.775] | 0.850 [0.764, 0.928] |
-| minilm | silver | 40 | 0.593 [0.513, 0.674] | 0.468 [0.370, 0.568] | 0.740 [0.663, 0.812] | 0.786 [0.689, 0.879] |
+| minilm | silver | 40 | 0.591 [0.511, 0.672] | 0.463 [0.365, 0.563] | 0.740 [0.663, 0.812] | 0.786 [0.689, 0.879] |
 | minilm-whole | silver | 40 | 0.615 [0.542, 0.687] | 0.478 [0.388, 0.570] | 0.720 [0.640, 0.793] | 0.887 [0.812, 0.954] |
 | e5-small | silver | 40 | 0.438 [0.349, 0.528] | 0.352 [0.260, 0.448] | 0.505 [0.417, 0.593] | 0.713 [0.597, 0.823] |
 | e5-small-whole | silver | 40 | 0.410 [0.324, 0.497] | 0.340 [0.253, 0.428] | 0.483 [0.388, 0.575] | 0.640 [0.525, 0.751] |
-| bge-small | silver | 40 | 0.611 [0.533, 0.690] | 0.472 [0.373, 0.575] | 0.733 [0.655, 0.805] | 0.895 [0.807, 0.969] |
+| bge-small | silver | 40 | 0.610 [0.531, 0.689] | 0.470 [0.370, 0.573] | 0.733 [0.655, 0.805] | 0.895 [0.807, 0.969] |
 | mpnet | silver | 40 | 0.622 [0.545, 0.699] | 0.478 [0.378, 0.580] | 0.742 [0.677, 0.805] | 0.900 [0.825, 0.963] |
-| e5-base | silver | 40 | 0.452 [0.366, 0.542] | 0.362 [0.275, 0.455] | 0.557 [0.473, 0.642] | 0.661 [0.560, 0.762] |
+| e5-base | silver | 40 | 0.451 [0.365, 0.541] | 0.360 [0.273, 0.453] | 0.557 [0.473, 0.642] | 0.661 [0.560, 0.762] |
 | hybrid-bm25-e5 | silver | 40 | 0.633 [0.560, 0.707] | 0.537 [0.453, 0.625] | 0.707 [0.635, 0.778] | 0.883 [0.812, 0.950] |
 | hybrid-bm25-bge | silver | 40 | 0.658 [0.581, 0.734] | 0.543 [0.450, 0.635] | 0.765 [0.690, 0.832] | 0.850 [0.762, 0.929] |
 
@@ -81,65 +81,65 @@ Accuracy = share of items where the anchor is more similar to the same-meaning s
 ```
 {
  "bm25": {
-  "index_seconds": 6.33,
-  "query_seconds_synopsis": 2.71,
+  "index_seconds": 6.91,
+  "query_seconds_synopsis": 2.75,
   "query_seconds_topical": 0.08
  },
  "bm25-keepneg": {
-  "index_seconds": 6.13,
-  "query_seconds_synopsis": 2.74,
+  "index_seconds": 6.45,
+  "query_seconds_synopsis": 2.8,
   "query_seconds_topical": 0.09
  },
  "bm25-whole": {
-  "index_seconds": 5.05,
-  "query_seconds_synopsis": 1.45,
+  "index_seconds": 5.24,
+  "query_seconds_synopsis": 1.48,
   "query_seconds_topical": 0.05
  },
  "minilm": {
-  "index_seconds": 4.06,
-  "query_seconds_synopsis": 2.31,
+  "index_seconds": 3.4,
+  "query_seconds_synopsis": 2.36,
   "query_seconds_topical": 0.13
  },
  "minilm-whole": {
-  "index_seconds": 0.01,
-  "query_seconds_synopsis": 1.68,
-  "query_seconds_topical": 0.07
+  "index_seconds": 0.02,
+  "query_seconds_synopsis": 1.61,
+  "query_seconds_topical": 0.06
  },
  "e5-small": {
-  "index_seconds": 0.78,
-  "query_seconds_synopsis": 2.66,
-  "query_seconds_topical": 0.1
+  "index_seconds": 0.27,
+  "query_seconds_synopsis": 2.67,
+  "query_seconds_topical": 0.09
  },
  "e5-small-whole": {
   "index_seconds": 0.01,
-  "query_seconds_synopsis": 2.08,
+  "query_seconds_synopsis": 1.98,
   "query_seconds_topical": 0.07
  },
  "bge-small": {
-  "index_seconds": 0.65,
-  "query_seconds_synopsis": 2.71,
-  "query_seconds_topical": 0.09
+  "index_seconds": 0.36,
+  "query_seconds_synopsis": 3.24,
+  "query_seconds_topical": 0.1
  },
  "mpnet": {
-  "index_seconds": 1016.71,
-  "query_seconds_synopsis": 4.59,
-  "query_seconds_topical": 0.18
+  "index_seconds": 0.55,
+  "query_seconds_synopsis": 5.11,
+  "query_seconds_topical": 0.21
  },
  "e5-base": {
-  "index_seconds": 915.86,
-  "query_seconds_synopsis": 4.17,
-  "query_seconds_topical": 0.15
+  "index_seconds": 0.45,
+  "query_seconds_synopsis": 4.72,
+  "query_seconds_topical": 0.14
  },
  "hybrid-bm25-e5": {
   "index_seconds": 0.0,
-  "query_seconds_synopsis": 7.82,
+  "query_seconds_synopsis": 7.79,
   "query_seconds_topical": 0.28
  },
  "hybrid-bm25-bge": {
   "index_seconds": 0.0,
-  "query_seconds_synopsis": 7.98,
+  "query_seconds_synopsis": 7.87,
   "query_seconds_topical": 0.28
  },
- "_total_index_seconds": 1955.6
+ "_total_index_seconds": 23.64
 }
 ```
