@@ -97,7 +97,7 @@ Then run `asrsbench run configs/my_run.yaml`. Results are written to `results/my
 
 ## Results (Phase 2 milestone)
 
-Full tables with 95% CIs: [results/milestone/summary.md](results/milestone/summary.md). The write-up is in [reports/milestone/main.pdf](reports/milestone/main.pdf).
+Full tables with 95% CIs: [results/milestone/summary.md](results/milestone/summary.md). The write-up is in [reports/milestone/phase 2 jacob tang Aarambh.pdf](reports/milestone/phase%202%20jacob%20tang%20Aarambh.pdf).
 
 | System | Synopsis MRR@10 | Synopsis R@100 | Topical nDCG@10 (silver) | Contrast, overlap-controlled |
 |---|---|---|---|---|
@@ -123,4 +123,4 @@ Extended run ([results/extended/summary.md](results/extended/summary.md)): BGE-s
 - [x] Blind judging pools for human labels (`data/qrels/pool_v1/`)
 - [ ] Human relevance judgments (both annotators) → `asrsbench labels ...` → `data/qrels/human_v1.tsv`
 - [x] Extended encoders and ablations (`configs/extended.yaml`)
-- [x] Milestone report draft (`reports/milestone/main.pdf`)
+- [x] Milestone report (`reports/milestone/phase 2 jacob tang Aarambh.pdf`, built from `main.tex`)
