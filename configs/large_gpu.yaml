@@ -1,0 +1,43 @@
+# Multi-billion-parameter embedders: too slow for the M1 Max (Qwen3-4B ~12 h to index), so
+# run this on a CUDA GPU, e.g. Colab with an A100 or L4:
+#   !pip install -e . && asrsbench prepare && asrsbench run configs/large_gpu.yaml
+# Rough index cost: 4B ~20M tokens x 8 GFLOP/token; an A100 needs ~20-40 min, a T4 several hours.
+# Also tests long context: one vector per whole report (BM25 gains most from whole reports,
+# but the encoders in configs/extended.yaml truncated them at 256-512 tokens). 2048 tokens
+# covers > 99% of reports (p95 = 810 words).
+# Qwen3 uses the model card's generic instruction: on the M1 run (configs/large.yaml) our
+# aviation-specific instruction was worse on synopses (MRR@10 0.303 vs 0.371).
+name: large_gpu
+device: auto
+depth: 100
+chunking: {max_words: 150, overlap_sentences: 1, min_tail_words: 40}
+
+systems:
+  - {name: bm25, type: bm25, params: {stopwords: english}}
+  - {name: bm25-whole, type: bm25, params: {doc_mode: whole}}
+
+  - name: qwen3-0.6b-generic
+    type: dense
+    params: &qwen3 {model: Qwen/Qwen3-Embedding-0.6B, max_seq_length: 512, batch_size: 32, dtype: float16,
+                    query_prefix: "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+                    pair_prefix: "Instruct: Retrieve semantically similar text\nQuery:"}
+  - name: qwen3-0.6b-whole
+    type: dense
+    params: {<<: *qwen3, max_seq_length: 2048, batch_size: 8, doc_mode: whole}
+  - name: qwen3-4b
+    type: dense
+    params: {<<: *qwen3, model: Qwen/Qwen3-Embedding-4B, batch_size: 16}
+  - name: qwen3-8b
+    type: dense
+    params: {<<: *qwen3, model: Qwen/Qwen3-Embedding-8B, batch_size: 16}
+
+  - {name: hybrid-bm25-qwen3-generic, type: hybrid, params: {components: [bm25, qwen3-0.6b-generic], method: rrf, k: 60, depth: 1000}}
+  - {name: hybrid-bm25-qwen3-4b, type: hybrid, params: {components: [bm25, qwen3-4b], method: rrf, k: 60, depth: 1000}}
+  - {name: hybrid-bm25-qwen3-8b, type: hybrid, params: {components: [bm25, qwen3-8b], method: rrf, k: 60, depth: 1000}}
+
+evaluation:
+  synopsis: {split: validation, n_queries: 1000, seed: 13}
+  topical:
+    queries: data/queries/topical_v1.yaml
+    human_qrels: [data/qrels/human_v1.tsv]
+  contrast: {path: data/contrast/contrast_v1.jsonl}

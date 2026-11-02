@@ -23,19 +23,20 @@
 Safety analysts need to find past NASA ASRS reports that describe the same operational
 problem as a new one, even when pilots word it differently. We built one pipeline that
 indexes all 47,723 reports in a public ASRS release and scores keyword search (BM25),
-two frozen sentence encoders (all-MiniLM-L6-v2 and e5-small-v2), and rank-fusion hybrids
-on three evaluation tracks. The first track uses 1,000 analyst synopses as paraphrase
+frozen sentence encoders from 22M to 0.6B parameters, and rank-fusion hybrids on three
+evaluation tracks. The first track uses 1,000 analyst synopses as paraphrase
 queries. The second uses 40 analyst-style issue descriptions with graded relevance labels
 derived from NASA's coding (``silver'' labels). The third is a 100-item test of whether
 meaning-changing edits (negation, numbers, direction, event order) fool the models.
 Contrary to our expectation, BM25 is the strongest single system at finding the report a
-synopsis summarises (MRR@10 0.425 vs.\ 0.268 for MiniLM), and three further encoders
-(BGE-small, MPNet, E5-base) do not close the gap; on topical queries BM25 and MiniLM do not
-differ significantly. Fusing BM25 with MiniLM gives the best topical ranking (nDCG@10 0.706
-vs.\ 0.630, $p{=}0.0015$) but ranks synopsis targets lower than BM25 alone. When word
-overlap is controlled, E5 tells a same-meaning sentence from a minimally edited one 85\% of
-the time. Yet every system prefers the edited sentence when it shares more words (at most
-24\% correct), and event order stays near chance.
+synopsis summarises (MRR@10 0.425 vs.\ 0.268 for MiniLM). Larger encoders narrow the gap
+(best: Qwen3-Embedding-0.6B, 0.371), and only fusing Qwen3 with BM25 beats BM25 (0.446,
+$p{=}0.018$). On topical queries Qwen3 is the only encoder to beat BM25 (nDCG@10 0.746 vs.\
+0.630, $p<0.001$). A graph over NASA's anomaly codes would lift MRR@10 to 0.643 with
+perfect query linking, but a learned linker gains only 0.010. When word
+overlap is controlled, the best encoders tell a same-meaning sentence from a minimally
+edited one 85--89\% of the time. Yet every system prefers the edited sentence when it
+shares more words (at most 35\% correct), and event order stays near chance.
 \end{abstract}
 
 \section{Introduction}
@@ -72,14 +73,26 @@ s(q,d)=\max_{c\in d}\cos\big(f(q),f(c)\big),
 returning $\arg\max_c$ as the matched passage shown to the analyst.
 \textbf{Hybrids} fuse two report rankings with reciprocal rank fusion \cite{cormack2009rrf},
 $s(d)=\sum_{r}1/(60+\mathrm{rank}_r(d))$, over the top 1,000 reports of each component.
+\textbf{Taxonomy graph.} Graph-based retrieval (GraphRAG \cite{edge2024graphrag}) links
+documents through shared entities, and ASRS already has such a graph: each report links to the anomaly codes NASA's analysts assigned to it (63 codes used at least
+20 times; 2.6 per report). A classifier (TF-IDF, one-vs-rest logistic regression on train-split synopses)
+links a query to the graph by predicting each code's probability, and we rerank BM25's
+top 100 by
+\begin{equation}
+s(q,d)=z\big(\mathrm{BM25}(q,d)\big)+\lambda\,z\big(\log P(Y_d\mid q)\big),
+\end{equation}
+where $\log P(Y_d\mid q)$ is the log-likelihood of $d$'s code set under these
+independent per-code probabilities and $z$ standardises over the 100 candidates. $\lambda$
+is tuned on 1,000 held-out train-split synopses. An \emph{oracle} variant links the query
+to the target report's own codes, which bounds what perfect linking could give.
 
 \subsection{What is ours}
-We wrote the data pipeline, the BM25 implementation, MaxP scoring and fusion, a config
-format in which adding a model takes one YAML entry, the query set and its labeling
-rules, the meaning-change test set, and all evaluation code (about 1,400 lines of Python,
-with 22 unit tests). We reuse sentence-transformers, Hugging Face \texttt{datasets},
-scikit-learn and PyStemmer, and the six pretrained checkpoints in Tables~\ref{tab:main}
-and~\ref{tab:ext}.
+We wrote the data pipeline, the BM25 implementation, MaxP scoring and fusion, the
+taxonomy-graph reranker, a config format in which adding a model takes one YAML entry,
+the query set and its labeling rules, the meaning-change test set, and all evaluation
+code (about 1,400 lines of Python, with 22 unit tests). We reuse sentence-transformers,
+Hugging Face \texttt{datasets}, scikit-learn and PyStemmer, and the nine pretrained
+checkpoints in Tables~\ref{tab:main} and~\ref{tab:ext}.
 
 \section{Experiments}
 \subsection{Data and pre-processing}
@@ -143,11 +156,16 @@ batch size 128. Indexing all chunks takes 7\,s for BM25, 2.6\,min for MiniLM and
 for E5. Answering 1,000 queries takes under 3\,s per single system and 8\,s per hybrid.
 A second config adds three encoders, BGE-small \cite{xiao2023cpack}, all-mpnet-base-v2
 \cite{song2020mpnet} and e5-base-v2 \cite{wang2022e5}, and the ablations in
-Table~\ref{tab:ext}; base-size models need batch size 32 to stay within GPU memory. Configs
+Table~\ref{tab:ext}; base-size models need batch size 32 to stay within GPU memory. A
+third adds BGE-base/-large, e5-large-v2 and Qwen3-Embedding-0.6B \cite{zhang2025qwen3emb},
+which pools the last token and takes a query-side instruction; we compare the model card's
+generic instruction with our own aviation-specific one. Qwen3 runs in half precision
+(cosine $\ge$0.998 to full precision). On an idle GPU, indexing takes about 45\,min for BGE-large
+and 105\,min for Qwen3, so the 4B and 8B models (about 12\,h) are left for a CUDA GPU. Configs
 and per-query scores are in the repository; \texttt{asrsbench run} regenerates
 Table~\ref{tab:main} and Fig.~\ref{fig:contrast} from \texttt{configs/milestone.yaml} and
-Table~\ref{tab:ext} from \texttt{configs/extended.yaml}; \texttt{scripts/analysis.py}
-computes the error analyses below.
+Table~\ref{tab:ext} from \texttt{configs/extended.yaml} and \texttt{large.yaml}, and
+\texttt{scripts/} the analyses.
 
 \subsection{Results}
 \begin{table}[t]
@@ -197,7 +215,7 @@ $p{=}0.29$).
 
 \textbf{The two signals are complementary.} BM25+MiniLM fusion improves topical
 nDCG@10 by 0.076 over BM25 ($p{=}0.0015$) and by 0.115 over MiniLM ($p<0.001$), and it
-has the best Recall@100 on synopses. It costs early precision there, though: it ranks the
+has the best Recall@100 on synopses in Table~\ref{tab:main}. It costs early precision there, though: it ranks the
 target report first less often than BM25 alone (MRR@10 0.380 vs.\ 0.425, $p<0.001$). MiniLM beats BM25 on lenient P@10 (0.740 vs.\ 0.703)
 but not on strict P@10 (0.463 vs.\ 0.537). It finds reports of the right event family
 but often not the right mechanism. The best (BM25+MiniLM) and worst (E5) systems are the
@@ -216,10 +234,9 @@ of 0.11 to MiniLM.
 
 \begin{table}[t]
 \centering
-\caption{Additional encoders and ablations (same tracks as Table~\ref{tab:main}).
-``Whole'': one vector per report instead of best chunk, truncated at the encoder's input
-limit (MiniLM 256 tokens, cutting 59\% of reports; E5 512, cutting 24\%). Contrast:
-overlap-controlled accuracy.}
+\caption{More encoders, ablations and the taxonomy graph. ``Whole'': one vector per
+report, truncated at the input limit (MiniLM 256 tokens, cutting 59\% of reports; E5 512,
+24\%). Graph oracle: upper bound. Contrast: overlap-controlled.}
 \label{tab:ext}
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{@{}lcccc@{}}
@@ -232,35 +249,57 @@ BM25, whole report & \textbf{.458} & .621 & .53 & .50\\
 BM25, keep negation      & .428 & .626 & .49 & .50\\
 MiniLM, whole report & .271 & .615 & .70 & .40\\
 E5-small, whole report & .255 & .410 & .85 & .60\\
+\midrule
+MPNet (110M)             & .257 & .622 & .85 & \textbf{.72}\\
 BGE-small (33M)          & .287 & .610 & .85 & .60\\
-MPNet (110M)             & .257 & .622 & .85 & .72\\
+BGE-base (110M)          & .308 & .583 & .82 & .56\\
+BGE-large (335M)         & .336 & .623 & .88 & .64\\
 E5-base (110M)           & .280 & .451 & .82 & .52\\
-BM25+BGE (RRF)           & .393 & .658 & -- & --\\
+E5-large (335M)          & .299 & .556 & \textbf{.89} & .64\\
+Qwen3 (0.6B), generic instr.  & .371 & \textbf{.746} & .86 & .48\\
+Qwen3 (0.6B), aviation instr. & .303 & .728 & .86 & .48\\
+\midrule
+BM25+BGE-large (RRF)     & .419 & .680 & -- & --\\
+BM25+Qwen3 (RRF)         & .446 & \textbf{.746} & -- & --\\
+BM25 + graph (oracle)    & .435 (.643) & -- & -- & --\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\textbf{More encoders and ablations (Table~\ref{tab:ext}).} No frozen encoder comes
-within 0.13 MRR@10 of BM25 on synopses, including the two base-size models. On topical
-queries MPNet and BGE-small are not significantly different from BM25 ($p{=}0.77$ and
-$0.53$), while E5-base is as weak as E5-small, so the E5 behaviour is a property of the
-model family rather than its size. Whole-report scoring changes no dense model
+\textbf{Larger encoders narrow the gap but do not close it (Table~\ref{tab:ext}).}
+Synopsis MRR@10 rises with size in both families ($p<0.001$ small vs.\ large), and Qwen3 is the best encoder (0.371), yet all stay below BM25 (Qwen3
+$-0.054$, $p<0.001$). Fused with BM25, Qwen3 is the first system to beat BM25 on chunks
+(0.446 vs.\ 0.425, $p{=}0.018$; Recall@100 0.805 vs.\ 0.753) and ties it on whole reports
+($p{=}0.23$). On topical queries Qwen3 beats BM25 (0.746 vs.\ 0.630, $p<0.001$) although
+silver labels may favour lexical matches, while BGE-large, MPNet and BGE-small only tie it
+($p\ge0.53$). E5's topical weakness shrinks with scale (E5-large $+0.105$ over E5-base,
+$p<0.001$). Our aviation-specific instruction hurt Qwen3 on synopses (0.303 vs.\ 0.371 with
+the generic one, $p<0.001$). We made both choices on validation data; the test split must
+confirm them. Whole-report scoring changes no dense model
 significantly on topical queries but helps BM25 on synopses (0.458, $p<0.001$), plausibly
 because a synopsis summarises details from the whole narrative rather than from one
 passage. For the encoders this ablation also truncates long reports, so it does not
 isolate the effect of best-chunk scoring.
 
+\textbf{The graph helps only as much as queries can be linked to it.} With oracle
+linking it would raise synopsis MRR@10 from 0.425 to 0.643. The learned linker gets a synopsis's exact code set right for only 21\% of queries,
+and the rerank gains 0.010 ($p{=}0.013$; whole reports $+0.012$, $p{=}0.002$). The topical
+track cannot test the graph, as its silver labels come from the same codes. This fits Han
+et al.\ \cite{han2025ragvsgraphrag}: graph retrieval wins on multi-hop questions, plain
+retrieval on single-hop lookups like ours.
+
 \textbf{Meaning-change test (Fig.~\ref{fig:contrast}).} In the proposal's condition, every
 non-fusion system in Tables~\ref{tab:main}--\ref{tab:ext} prefers the one-word edit over
-the true paraphrase (accuracy 5--24\%); only MPNet passes more than half of the negation items
-(0.60). Surface
+the true paraphrase (accuracy 5--35\%). Negation gains most from size (Qwen3 0.80,
+BGE-large 0.68; smaller encoders 0.20--0.60). Surface
 overlap dominates similarity for both keyword and embedding methods, so on this evidence
-a frozen encoder would rank ``descended'' above ``maintained altitude'' as a match for
-``did not descend''. With overlap controlled, the encoders do encode much of the meaning:
+a small frozen encoder would rank ``descended'' above ``maintained altitude'' as a match
+for ``did not descend''. With overlap controlled, the encoders do encode much of the meaning:
 E5 0.85 and MiniLM 0.70 overall, with numbers at 0.96 for both (BM25 0.60). Direction
 says less, since BM25 also passes 0.78 of it. Event order remains the weak spot (MiniLM
 0.40, E5 0.60, both within the $\pm0.19$ interval around chance). Mean pooling alone does
-not explain this: BGE-small, which uses the [CLS] token instead, also scores 0.60.
+not explain this: BGE-small, which uses the [CLS] token instead, also scores 0.60, and
+scale does not help (BGE-large and E5-large 0.64, Qwen3 0.48).
 BM25 scores 0.22 on negation. Keeping ``not'' in the index makes it worse (0.08), because
 the paraphrases express negation with other words (``maintained altitude'').
 
@@ -274,20 +313,22 @@ are therefore mostly genuinely short reports, not artifacts.
 
 \section{Future work}
 \begin{enumerate}
-\item \textbf{Human labels (next two weeks).} \texttt{asrsbench pool} already merges the
-top-10 of every system into blind, shuffled judging sheets. Both of us will judge with a
+\item \textbf{Human labels (next two weeks).} \texttt{asrsbench pool} merges the
+top-10 of every system into blind, shuffled judging sheets (to be rebuilt with Qwen3). Both of us will judge with a
 25\% overlap and report Cohen's $\kappa$, and we will extend the set toward the proposed
 50--80 queries. Silver labels come from codes and synopsis keywords, so they may favour
 lexical matches; the human labels will test that.
 \item \textbf{Length bias.} E5's preference for short reports survived pre-processing
 v2. Next we will test score calibration, which normalises each unit's score
 against its typical similarity to queries, and fusion weights tuned on dev queries only.
-\item \textbf{Stretch goals}, in the proposal's order: report versions (B), a small
+\item \textbf{Stretch goals}: Qwen3-4B/8B and untruncated whole-report Qwen3 on a CUDA
+GPU, a better query-to-code linker for the graph, and, in the proposal's order, report
+versions (B), a small
 fine-tune on near-miss pairs split by incident group (D), and ADS-B tracks (C).
 \end{enumerate}
 The synopsis test split is still unused and will be scored once, for the final report
 (Nov.~30). The 20 topical test queries are already scored in Table~\ref{tab:main}, so the
-queries we add for human labelling will serve as the held-out topical set. The talk on Nov.~23 will present the four-system comparison
+queries we add for human labelling will serve as the held-out topical set. The talk on Nov.~23 will present the system comparison
 and failure examples.
 
 \bibliographystyle{IEEEtran}

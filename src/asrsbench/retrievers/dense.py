@@ -56,9 +56,13 @@ class DenseRetriever(Retriever):
     def __init__(self, name: str, model: str, query_prefix: str = "", passage_prefix: str = "",
                  pair_prefix: str | None = None, max_seq_length: int | None = None,
                  batch_size: int = 128, device: str = "auto", cache_dir: str = "cache",
-                 **kw):
+                 dtype: str | None = None, trust_remote_code: bool = False, **kw):
         super().__init__(name, **kw)
         self.model_name = model
+        # Weight precision, e.g. "float16". Half precision is 1.5x faster for Qwen3-0.6B on
+        # Apple MPS; embeddings keep cosine >= 0.998 with float32.
+        self.dtype = dtype
+        self.trust_remote_code = trust_remote_code
         self.query_prefix, self.passage_prefix = query_prefix, passage_prefix
         # Symmetric sentence-vs-sentence scoring (contrast test). E5's card recommends the
         # "query: " prefix on both sides for similarity tasks.
@@ -74,11 +78,15 @@ class DenseRetriever(Retriever):
     def model(self):
         """Load the model on first use, shared by systems with the same checkpoint."""
         if self._model is None:
-            key = (self.model_name, self.device, self.max_seq_length)
+            key = (self.model_name, self.device, self.max_seq_length, self.dtype)
             if key not in _MODEL_CACHE:
+                import torch
                 from sentence_transformers import SentenceTransformer
 
-                model = SentenceTransformer(self.model_name, device=self.device)
+                model_kwargs = {"dtype": getattr(torch, self.dtype)} if self.dtype else {}
+                model = SentenceTransformer(self.model_name, device=self.device,
+                                            model_kwargs=model_kwargs,
+                                            trust_remote_code=self.trust_remote_code)
                 if self.max_seq_length:
                     model.max_seq_length = self.max_seq_length
                 _MODEL_CACHE[key] = model
@@ -94,8 +102,11 @@ class DenseRetriever(Retriever):
 
     def _cache_path(self, units: Units) -> Path:
         """Cache file named after the model, prefix, max length and the unit set."""
-        key = json.dumps([self.model_name, self.passage_prefix, self.model.max_seq_length,
-                          units.tag, len(units), units.texts[0], units.texts[-1]])
+        parts = [self.model_name, self.passage_prefix, self.model.max_seq_length,
+                 units.tag, len(units), units.texts[0], units.texts[-1]]
+        if self.dtype:  # only when set, so float32 caches written before this option stay valid
+            parts.append(self.dtype)
+        key = json.dumps(parts)
         digest = hashlib.sha1(key.encode()).hexdigest()[:12]
         slug = re.sub(r"[^A-Za-z0-9]+", "-", self.model_name).strip("-")
         return self.cache_dir / f"{slug}__{units.tag}__{digest}.npy"
@@ -129,4 +140,5 @@ class DenseRetriever(Retriever):
         return {**super().describe(), "model": self.model_name,
                 "query_prefix": self.query_prefix, "passage_prefix": self.passage_prefix,
                 "max_seq_length": self.max_seq_length or "model default", "device": self.device,
+                "dtype": self.dtype or "float32",
                 "encode_seconds": self.encode_seconds}

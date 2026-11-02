@@ -1,0 +1,140 @@
+name: large
+device: auto
+depth: 100
+chunking:
+  max_words: 150
+  overlap_sentences: 1
+  min_tail_words: 40
+systems:
+- name: bm25
+  type: bm25
+  params:
+    stopwords: english
+- name: bm25-whole
+  type: bm25
+  params:
+    doc_mode: whole
+- name: bge-small
+  type: dense
+  params:
+    model: BAAI/bge-small-en-v1.5
+    max_seq_length: 512
+    query_prefix: 'Represent this sentence for searching relevant passages: '
+    pair_prefix: ''
+- name: bge-base
+  type: dense
+  params:
+    model: BAAI/bge-base-en-v1.5
+    max_seq_length: 512
+    batch_size: 32
+    query_prefix: 'Represent this sentence for searching relevant passages: '
+    pair_prefix: ''
+- name: bge-large
+  type: dense
+  params:
+    model: BAAI/bge-large-en-v1.5
+    max_seq_length: 512
+    batch_size: 32
+    query_prefix: 'Represent this sentence for searching relevant passages: '
+    pair_prefix: ''
+- name: e5-small
+  type: dense
+  params:
+    model: intfloat/e5-small-v2
+    query_prefix: 'query: '
+    passage_prefix: 'passage: '
+    max_seq_length: 512
+- name: e5-base
+  type: dense
+  params:
+    model: intfloat/e5-base-v2
+    query_prefix: 'query: '
+    passage_prefix: 'passage: '
+    max_seq_length: 512
+    batch_size: 32
+- name: e5-large
+  type: dense
+  params:
+    model: intfloat/e5-large-v2
+    query_prefix: 'query: '
+    passage_prefix: 'passage: '
+    max_seq_length: 512
+    batch_size: 32
+- name: qwen3-0.6b
+  type: dense
+  params:
+    model: Qwen/Qwen3-Embedding-0.6B
+    max_seq_length: 512
+    batch_size: 32
+    dtype: float16
+    query_prefix: 'Instruct: Given a short description of an aviation safety event,
+      retrieve passages from pilot and controller incident reports that describe it
+
+      Query:'
+    pair_prefix: 'Instruct: Retrieve semantically similar text
+
+      Query:'
+- name: qwen3-0.6b-generic
+  type: dense
+  params:
+    model: Qwen/Qwen3-Embedding-0.6B
+    max_seq_length: 512
+    batch_size: 32
+    dtype: float16
+    query_prefix: 'Instruct: Given a web search query, retrieve relevant passages
+      that answer the query
+
+      Query:'
+    pair_prefix: 'Instruct: Retrieve semantically similar text
+
+      Query:'
+- name: hybrid-bm25-bge
+  type: hybrid
+  params:
+    components:
+    - bm25
+    - bge-small
+    method: rrf
+    k: 60
+    depth: 1000
+- name: hybrid-bm25-bge-large
+  type: hybrid
+  params:
+    components:
+    - bm25
+    - bge-large
+    method: rrf
+    k: 60
+    depth: 1000
+- name: hybrid-bm25-qwen3
+  type: hybrid
+  params:
+    components:
+    - bm25
+    - qwen3-0.6b
+    method: rrf
+    k: 60
+    depth: 1000
+- name: hybrid-bm25-qwen3-generic
+  type: hybrid
+  params:
+    components:
+    - bm25
+    - qwen3-0.6b-generic
+    method: rrf
+    k: 60
+    depth: 1000
+evaluation:
+  synopsis:
+    split: validation
+    n_queries: 1000
+    seed: 13
+  topical:
+    queries: data/queries/topical_v1.yaml
+    human_qrels:
+    - data/qrels/human_v1.tsv
+  contrast:
+    path: data/contrast/contrast_v1.jsonl
+data_dir: data/processed
+cache_dir: cache
+results_dir: results
