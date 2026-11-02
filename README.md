@@ -115,6 +115,30 @@ Early findings:
 
 Extended run ([results/extended/summary.md](results/extended/summary.md)): BGE-small, MPNet and E5-base don't close the gap on synopses (best dense MRR@10 is 0.287, against 0.458 for BM25 on whole reports). On topical queries MPNet and BGE are not significantly different from BM25. Keeping "not" in BM25 makes negation accuracy worse (0.08), because paraphrases express negation with other words.
 
+### Larger encoders (`configs/large.yaml`)
+
+Full tables: [results/large/summary.md](results/large/summary.md). Two size ladders (33M → 110M → 335M) and Qwen3-Embedding-0.6B, an LLM-based embedder.
+
+| System | Params | Synopsis MRR@10 | Topical nDCG@10 (silver) | Contrast, overlap-controlled |
+|---|---|---|---|---|
+| BM25 / BM25 whole report | – | 0.425 / **0.458** | 0.630 / 0.621 | 0.53 |
+| BGE small / base / large | 33M / 110M / 335M | 0.287 / 0.308 / 0.336 | 0.610 / 0.583 / 0.623 | 0.85 / 0.82 / 0.88 |
+| E5 small / base / large | 33M / 110M / 335M | 0.241 / 0.280 / 0.299 | 0.438 / 0.451 / 0.556 | 0.85 / 0.82 / **0.89** |
+| Qwen3-0.6B, generic instruction | 596M | 0.371 | 0.746 | 0.86 |
+| Qwen3-0.6B, aviation instruction | 596M | 0.303 | 0.728 | 0.86 |
+| BM25 + Qwen3 generic (RRF) | – | 0.446 | 0.746 | – |
+
+- **Size helps, but not enough on synopses.** Both ladders improve monotonically (small → large: BGE +0.049, E5 +0.058 MRR@10, p < 0.001), and Qwen3 is best (0.371), yet every encoder stays below BM25 (Qwen3 −0.054, p < 0.001). BM25 + Qwen3 is the first system to beat chunk BM25 on synopses (0.446 vs 0.425, p = 0.018); it ties BM25 on whole reports (0.458, p = 0.23) and finds more targets in its top 100 (R@100 0.805 vs 0.753).
+- **On topical queries Qwen3 beats BM25** (0.746 vs 0.630 nDCG@10, p < 0.001), even though the silver labels partly come from synopsis keywords, which favours lexical matching. Size alone does not do this: BGE-large ties BM25 (p = 0.81). E5's topical weakness shrinks with size (0.438 → 0.556).
+- **Our aviation-specific Qwen3 instruction hurt** synopsis retrieval against the model card's generic web-search one (0.303 vs 0.371, p < 0.001); topical was not significantly different.
+- **Contrast:** the larger models resist word overlap better in the proposal's condition (BGE-large and Qwen3 0.35 vs ≤ 0.24 before; Qwen3 negation 0.80), but event order stays at chance (Qwen3 0.48 controlled).
+
+Qwen3-4B/8B and whole-report Qwen3 (2048 tokens, no truncation) need a CUDA GPU: [configs/large_gpu.yaml](configs/large_gpu.yaml).
+
+### Taxonomy graph (`scripts/taxonomy_graph.py`)
+
+Does a knowledge graph over the ASRS anomaly codes help? Each report links to its analyst codes; a classifier links a synopsis query to codes; BM25's top 100 is reranked by how well each candidate's codes fit. With perfect query linking (oracle) synopsis MRR@10 would rise from 0.425 to 0.643 (whole reports: 0.458 → 0.680). With a real linker (TF-IDF + logistic regression on train-split synopses, exact code set right for 21% of queries) the gain is +0.010 (p = 0.013; whole reports +0.012, p = 0.002). The graph carries signal, but linking a query to it is the bottleneck. The topical track cannot test this, because its silver labels come from the same codes. Output: `results/taxonomy_graph.json`.
+
 ## Phase 2 status
 
 - [x] Data downloaded, cleaned, grouped by incident, chunked (`asrsbench prepare`)
@@ -123,4 +147,6 @@ Extended run ([results/extended/summary.md](results/extended/summary.md)): BGE-s
 - [x] Blind judging pools for human labels (`data/qrels/pool_v1/`)
 - [ ] Human relevance judgments (both annotators) → `asrsbench labels ...` → `data/qrels/human_v1.tsv`
 - [x] Extended encoders and ablations (`configs/extended.yaml`)
+- [x] Larger encoders, BGE/E5 size ladders and Qwen3-0.6B (`configs/large.yaml`); taxonomy-graph rerank (`scripts/taxonomy_graph.py`)
+- [ ] Qwen3-4B/8B and whole-report Qwen3 on a CUDA GPU (`configs/large_gpu.yaml`)
 - [x] Milestone report (`reports/milestone/phase 2 jacob tang Aarambh.pdf`, built from `main.tex`)
