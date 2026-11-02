@@ -83,25 +83,32 @@ class Retriever(ABC):
 
     # ---- shared -------------------------------------------------------------------------
     def index(self, units: Units) -> None:
+        """Keep the units and build the index over them."""
         self.units = units
         self.build(units)
 
     def search(self, queries: list[str], k: int = 100) -> list[SearchResult]:
+        """Top-k reports per query: score every unit, then keep each report's best unit (MaxP)."""
         assert self.units is not None, "call index() first"
         u = self.units
         out: list[SearchResult] = []
         for i in range(0, len(queries), self.query_batch_size):
+            # Score a batch of queries against every unit: shape (batch, n_units).
             unit_scores = self.score_units(queries[i : i + self.query_batch_size])
             for row in unit_scores:
+                # MaxP: a report's score is the max over its units (which are contiguous).
                 doc_scores = np.maximum.reduceat(row, u.doc_starts)
+                # Top k reports, best first (argpartition avoids sorting every report).
                 kk = min(k, len(doc_scores))
                 top = np.argpartition(-doc_scores, kk - 1)[:kk]
                 top = top[np.argsort(-doc_scores[top], kind="stable")]
+                # Remember which unit matched best: it is shown as the matched passage.
                 best = self._best_units(row, top)
                 out.append(SearchResult(u.doc_ids[top], doc_scores[top], best))
         return out
 
     def _best_units(self, row: np.ndarray, top_docs: np.ndarray) -> np.ndarray:
+        """Id of the highest-scoring unit inside each of the top reports."""
         u = self.units
         ends = np.r_[u.doc_starts[1:], len(u)]
         best = [u.doc_starts[d] + int(np.argmax(row[u.doc_starts[d] : ends[d]])) for d in top_docs]

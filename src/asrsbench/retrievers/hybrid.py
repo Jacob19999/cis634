@@ -13,6 +13,8 @@ from .base import Retriever, SearchResult, Units
 
 
 class HybridRetriever(Retriever):
+    """Fuses the report rankings of systems built earlier, e.g. BM25 + MiniLM."""
+
     supports_pairs = False
 
     def __init__(self, name: str, components: list[Retriever], method: str = "rrf",
@@ -35,6 +37,7 @@ class HybridRetriever(Retriever):
         raise NotImplementedError
 
     def search(self, queries: list[str], k: int = 100) -> list[SearchResult]:
+        # Each component returns its top ``depth`` reports for every query.
         runs = [c.search(queries, k=self.depth) for c in self.components]
         out = []
         for per_q in zip(*runs):
@@ -42,14 +45,17 @@ class HybridRetriever(Retriever):
             passage: dict[str, str] = {}
             for w, res in zip(self.weights, per_q):
                 if self.method == "rrf":
+                    # RRF: the report at rank r gets 1 / (k + r). Equal weights make w * n = 1.
                     contrib = w * len(self.weights) / (self.k + np.arange(1, len(res.doc_ids) + 1))
                 else:
+                    # Convex: rescale this list's scores to 0..1, then weight them.
                     s = res.scores.astype(np.float64)
                     span = s.max() - s.min()
                     contrib = w * ((s - s.min()) / span if span > 0 else np.ones_like(s))
                 for d, c, u in zip(res.doc_ids, contrib, res.best_units):
                     fused[d] = fused.get(d, 0.0) + float(c)
                     passage.setdefault(d, u)  # passage from the first component that found it
+            # Highest fused score first.
             docs = sorted(fused, key=fused.get, reverse=True)[:k]
             out.append(SearchResult(np.array(docs), np.array([fused[d] for d in docs]),
                                     np.array([passage[d] for d in docs])))

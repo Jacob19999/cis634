@@ -25,6 +25,7 @@ _MODEL_CACHE: dict[tuple, object] = {}
 
 
 def _free_accelerator_memory(device: str) -> None:
+    """Release GPU memory after encoding the corpus."""
     import gc
 
     import torch
@@ -37,6 +38,7 @@ def _free_accelerator_memory(device: str) -> None:
 
 
 def resolve_device(device: str = "auto") -> str:
+    """With "auto", use CUDA if available, else Apple MPS, else CPU."""
     if device != "auto":
         return device
     import torch
@@ -49,6 +51,8 @@ def resolve_device(device: str = "auto") -> str:
 
 
 class DenseRetriever(Retriever):
+    """Embed every unit once; a query's score for a unit is the cosine similarity."""
+
     def __init__(self, name: str, model: str, query_prefix: str = "", passage_prefix: str = "",
                  pair_prefix: str | None = None, max_seq_length: int | None = None,
                  batch_size: int = 128, device: str = "auto", cache_dir: str = "cache",
@@ -68,6 +72,7 @@ class DenseRetriever(Retriever):
 
     @property
     def model(self):
+        """Load the model on first use, shared by systems with the same checkpoint."""
         if self._model is None:
             key = (self.model_name, self.device, self.max_seq_length)
             if key not in _MODEL_CACHE:
@@ -81,12 +86,14 @@ class DenseRetriever(Retriever):
         return self._model
 
     def encode(self, texts: list[str], prefix: str = "", show_progress: bool = False) -> np.ndarray:
+        """Embed texts (with an optional prefix) as unit-length vectors."""
         return self.model.encode(
             [prefix + t for t in texts], batch_size=self.batch_size, convert_to_numpy=True,
             normalize_embeddings=True, show_progress_bar=show_progress,
         ).astype(np.float32)
 
     def _cache_path(self, units: Units) -> Path:
+        """Cache file named after the model, prefix, max length and the unit set."""
         key = json.dumps([self.model_name, self.passage_prefix, self.model.max_seq_length,
                           units.tag, len(units), units.texts[0], units.texts[-1]])
         digest = hashlib.sha1(key.encode()).hexdigest()[:12]
@@ -94,6 +101,7 @@ class DenseRetriever(Retriever):
         return self.cache_dir / f"{slug}__{units.tag}__{digest}.npy"
 
     def build(self, units: Units) -> None:
+        # Reuse the saved embeddings if this exact unit set was encoded before.
         path = self._cache_path(units)
         if path.exists():
             self.E = np.load(path)
@@ -107,10 +115,12 @@ class DenseRetriever(Retriever):
         np.save(path, self.E)
 
     def score_units(self, queries: list[str]) -> np.ndarray:
+        # Vectors are unit length, so the dot product equals cosine similarity.
         q = self.encode(queries, self.query_prefix)
         return q @ self.E.T
 
     def pair_scores(self, queries: list[str], texts: list[str]) -> np.ndarray:
+        """Cosine similarity of each (query, text) pair (meaning-change test)."""
         a = self.encode(queries, self.pair_prefix)
         b = self.encode(texts, self.pair_prefix)
         return (a * b).sum(axis=1)

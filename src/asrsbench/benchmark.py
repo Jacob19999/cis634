@@ -34,6 +34,7 @@ PRIMARY_METRIC = {"synopsis": "MRR@10", "topical": "nDCG@10"}
 
 
 def load_config(path: str | Path) -> dict:
+    """Read a YAML config and fill in defaults."""
     cfg = yaml.safe_load(Path(path).read_text())
     cfg.setdefault("data_dir", "data/processed")
     cfg.setdefault("cache_dir", "cache")
@@ -45,6 +46,7 @@ def load_config(path: str | Path) -> dict:
 
 
 def _unit_sets(cfg: dict, reports: pd.DataFrame) -> dict[str, Units]:
+    """Build only the unit sets (chunks and/or whole reports) that some system needs."""
     modes = {s.get("params", {}).get("doc_mode", "chunk_max") for s in cfg["systems"]
              if s["type"] != "hybrid"}
     sets = {}
@@ -57,6 +59,7 @@ def _unit_sets(cfg: dict, reports: pd.DataFrame) -> dict[str, Units]:
 
 
 def _query_sets(cfg: dict, reports: pd.DataFrame, only: list[str] | None) -> dict[str, QuerySet]:
+    """Build the retrieval tracks named in the config (synopsis, topical)."""
     ev = cfg.get("evaluation", {})
     out = {}
     if "synopsis" in ev and (not only or "synopsis" in only):
@@ -68,6 +71,7 @@ def _query_sets(cfg: dict, reports: pd.DataFrame, only: list[str] | None) -> dic
 
 
 def _write_run(path: Path, qids: list[str], results, system: str) -> None:
+    """Save rankings as a TREC run file, with the matched passage id as a last column."""
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w") as f:
         for qid, res in zip(qids, results):
@@ -76,11 +80,13 @@ def _write_run(path: Path, qids: list[str], results, system: str) -> None:
 
 
 def read_run(path: str | Path) -> pd.DataFrame:
+    """Load a run file written by ``_write_run``."""
     return pd.read_csv(path, sep="\t", header=None, dtype={0: str, 2: str},
                        names=["qid", "q0", "acn", "rank", "score", "system", "unit_id"])
 
 
 def _summarise(per_query: pd.DataFrame, metrics: list[str]) -> pd.DataFrame:
+    """Mean of each metric with a 95% bootstrap CI, per system and label source."""
     rows = []
     for (system, source), g in per_query.groupby(["system", "labels"], sort=False):
         row = {"system": system, "labels": source, "n_queries": len(g)}
@@ -96,6 +102,7 @@ def _summarise(per_query: pd.DataFrame, metrics: list[str]) -> pd.DataFrame:
 
 
 def _significance(per_query: pd.DataFrame, metric: str) -> pd.DataFrame:
+    """p-value for every pair of systems on one metric (paired randomization test)."""
     rows = []
     for source, g in per_query.groupby("labels", sort=False):
         wide = g.pivot(index="qid", columns="system", values=metric)
@@ -109,6 +116,7 @@ def _significance(per_query: pd.DataFrame, metric: str) -> pd.DataFrame:
 
 def run_retrieval_track(name: str, qs: QuerySet, systems: dict[str, Retriever], out: Path,
                         depth: int, timings: dict) -> pd.DataFrame:
+    """Search every query with every system, score the rankings and save the tables."""
     texts, qids = qs.queries["text"].tolist(), qs.queries["qid"].tolist()
     frames = []
     for sname, system in systems.items():
@@ -146,6 +154,7 @@ CONTRAST_CONDITIONS = {
 
 
 def run_contrast(path: str, systems: dict[str, Retriever], out: Path) -> pd.DataFrame:
+    """Meaning-change test: an item passes if the same-meaning sentence scores higher."""
     items = load_contrast(path)
     rows, frames = [], []
     for sname, system in systems.items():
@@ -154,6 +163,7 @@ def run_contrast(path: str, systems: dict[str, Retriever], out: Path) -> pd.Data
         for cond, (anchor, pos, neg) in CONTRAST_CONDITIONS.items():
             s_pos = system.pair_scores(items[anchor].tolist(), items[pos].tolist())
             s_neg = system.pair_scores(items[anchor].tolist(), items[neg].tolist())
+            # 1 = pass, 0 = fail, 0.5 = tie.
             passed = np.where(s_pos > s_neg, 1.0, np.where(np.isclose(s_pos, s_neg), 0.5, 0.0))
             frames.append(items[["id", "category"]].assign(
                 system=sname, condition=cond, score_same_meaning=s_pos, score_changed=s_neg,
@@ -171,6 +181,7 @@ def run_contrast(path: str, systems: dict[str, Retriever], out: Path) -> pd.Data
 
 
 def _fmt_table(df: pd.DataFrame, metrics: list[str], ci: bool = True) -> str:
+    """Markdown table; adds the CI as [lo, hi] when available."""
     cols = [c for c in ("system", "labels", "n_queries") if c in df.columns]
     head = "| " + " | ".join(cols + metrics) + " |"
     sep = "|" + "---|" * (len(cols) + len(metrics))
@@ -188,6 +199,7 @@ def _fmt_table(df: pd.DataFrame, metrics: list[str], ci: bool = True) -> str:
 
 
 def write_summary(out: Path, run_name: str, tables: dict, meta: dict) -> None:
+    """Write summary.md, the readable tables of one run."""
     md = [f"# Benchmark run `{run_name}`", "",
           f"Corpus: {meta['n_reports']:,} reports, {meta['n_units']} retrieval units. "
           f"Device: {meta['device']}. Means with 95% bootstrap CIs.", ""]
@@ -216,6 +228,7 @@ def write_summary(out: Path, run_name: str, tables: dict, meta: dict) -> None:
 
 def run_benchmark(config_path: str, run_name: str | None = None, tracks: list[str] | None = None,
                   only_systems: list[str] | None = None) -> Path:
+    """``asrsbench run``: index every system, run every track, write results/<run>/."""
     cfg = load_config(config_path)
     run_name = run_name or cfg.get("name") or Path(config_path).stem
     out = Path(cfg["results_dir"]) / run_name
@@ -224,6 +237,7 @@ def run_benchmark(config_path: str, run_name: str | None = None, tracks: list[st
         cfg["systems"] = [s for s in cfg["systems"] if s["name"] in only_systems]
     (out / "config.yaml").write_text(yaml.safe_dump(cfg, sort_keys=False))
 
+    # Load the corpus and the units (chunks and/or whole reports) the systems index.
     reports = load_reports(cfg["data_dir"])
     unit_sets = _unit_sets(cfg, reports)
 
@@ -237,6 +251,7 @@ def run_benchmark(config_path: str, run_name: str | None = None, tracks: list[st
         print(f"indexed {spec['name']} in {timings[spec['name']]['index_seconds']}s", flush=True)
     timings["_total_index_seconds"] = round(time.time() - t0, 2)
 
+    # Run the retrieval tracks, then the meaning-change test.
     tables = {}
     for name, qs in _query_sets(cfg, reports, tracks).items():
         tables[name] = run_retrieval_track(name, qs, systems, out, cfg["depth"], timings)
@@ -244,6 +259,7 @@ def run_benchmark(config_path: str, run_name: str | None = None, tracks: list[st
     if contrast and (not tracks or "contrast" in tracks):
         tables["contrast"] = run_contrast(contrast["path"], systems, out)
 
+    # Record the setup and timings, then write the readable summary.
     meta = {
         "asrsbench_version": __version__, "python": platform.python_version(),
         "platform": platform.platform(), "n_reports": len(reports),

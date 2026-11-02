@@ -26,6 +26,8 @@ from .metrics import Qrels
 
 @dataclass
 class QuerySet:
+    """One track's queries, their relevance labels and the metrics to report."""
+
     name: str
     queries: pd.DataFrame  # columns: qid, text, (+ any metadata)
     qrels: dict[str, Qrels] = field(default_factory=dict)  # label source -> qrels
@@ -39,11 +41,14 @@ class QuerySet:
 
 def synopsis_track(reports: pd.DataFrame, split: str = "validation", n_queries: int = 1000,
                    seed: int = 13, min_words: int = 8) -> QuerySet:
+    """Sample reports from ``split``; each synopsis is a query for its own report."""
+    # Skip very short synopses (fewer than min_words words).
     pool = reports[(reports["split"] == split) & (reports["synopsis"].str.split().str.len() >= min_words)]
     sample = pool.sample(n=min(n_queries, len(pool)), random_state=seed).sort_values("acn")
     groups = reports.groupby("group_id")["acn"].apply(list).to_dict()
     queries = pd.DataFrame({"qid": "S" + sample["acn"], "text": sample["synopsis"],
                             "acn": sample["acn"]})
+    # The summarised report and every report of the same incident count as relevant.
     qrels = {f"S{acn}": {d: 2 for d in groups[g]} for acn, g in zip(sample["acn"], sample["group_id"])}
     return QuerySet(f"synopsis_{split}", queries.reset_index(drop=True), {"auto": qrels},
                     ["MRR@10", "R@1", "R@10", "R@100", "nDCG@10"])
@@ -58,6 +63,7 @@ RULE_FIELDS = {"anomaly", "synopsis", "human_factors", "comm_breakdown", "flight
 
 
 def _clause_mask(reports: pd.DataFrame, clause: dict[str, str]) -> np.ndarray:
+    """Reports where every field in the clause matches its regex (AND)."""
     mask = np.ones(len(reports), dtype=bool)
     for fld, pattern in clause.items():
         if fld not in RULE_FIELDS:
@@ -76,6 +82,7 @@ def silver_qrels(reports: pd.DataFrame, rules: dict) -> dict[str, int]:
     grades = np.zeros(len(reports), dtype=np.int8)
     for grade in sorted(rules, key=int):  # lower grades first, higher grades overwrite
         clauses = rules[grade]
+        # A grade's clauses are ORed: matching any one clause gives that grade.
         mask = np.zeros(len(reports), dtype=bool)
         for clause in clauses:
             mask |= _clause_mask(reports, clause)
@@ -105,6 +112,7 @@ def write_qrels_tsv(qrels: Qrels, path: str | Path) -> None:
 
 def topical_track(reports: pd.DataFrame, path: str | Path, human_qrels: list[str] | None = None,
                   splits: list[str] | None = None) -> QuerySet:
+    """Load the topical queries, derive silver labels, and add human labels if the file exists."""
     spec = yaml.safe_load(Path(path).read_text())
     qs = spec["queries"]
     if splits:
@@ -126,6 +134,7 @@ CONTRAST_FIELDS = ("id", "category", "original", "paraphrase", "changed")
 
 
 def load_contrast(path: str | Path) -> pd.DataFrame:
+    """Read the meaning-change items (one JSON object per line)."""
     rows = [json.loads(line) for line in Path(path).read_text().splitlines() if line.strip()]
     df = pd.DataFrame(rows)
     missing = set(CONTRAST_FIELDS) - set(df.columns)

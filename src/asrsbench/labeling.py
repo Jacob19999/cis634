@@ -33,6 +33,7 @@ GRADING_GUIDE = (
 def build_pool(run_dir: str | Path, queries_path: str | Path, out_dir: str | Path,
                depth: int = 10, overlap: float = 0.25, annotators: tuple[str, str] = ("A", "B"),
                data_dir: str = "data/processed", seed: int = 0) -> dict[str, Path]:
+    """Write one blind judging CSV per annotator from a run's topical top-``depth`` results."""
     run_dir, out_dir = Path(run_dir), Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     runs = pd.concat([read_run(p) for p in sorted((run_dir / "runs" / "topical").glob("*.tsv"))],
@@ -63,6 +64,7 @@ def build_pool(run_dir: str | Path, queries_path: str | Path, out_dir: str | Pat
     pool["notes"] = ""
     pool = pool[["item_id", "qid", "query", "acn", "grade", "notes", "matched_passage", "narrative"]]
 
+    # Some queries go to both annotators (for agreement); the rest alternate between them.
     qids = sorted(pool["qid"].unique())
     shared = {str(q) for q in rng.choice(qids, size=max(1, int(round(overlap * len(qids)))), replace=False)}
     half = [q for q in qids if q not in shared]
@@ -80,6 +82,7 @@ def build_pool(run_dir: str | Path, queries_path: str | Path, out_dir: str | Pat
 
 
 def import_labels(paths: list[str | Path], out_path: str | Path) -> dict:
+    """Read graded pools, measure agreement (Cohen's kappa) and write the final qrels."""
     frames = []
     for p in paths:
         df = pd.read_csv(p, dtype={"acn": str})
@@ -89,6 +92,7 @@ def import_labels(paths: list[str | Path], out_path: str | Path) -> dict:
     labels["grade"] = labels["grade"].astype(float).astype(int)
 
     stats: dict = {"n_labels": int(len(labels))}
+    # One row per (query, report), one column per annotator.
     wide = labels.pivot_table(index=["qid", "acn"], columns="annotator", values="grade", aggfunc="first")
     if wide.shape[1] >= 2:
         a, b = wide.columns[:2]

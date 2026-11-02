@@ -41,6 +41,8 @@ class Analyzer:
 
 
 class BM25Retriever(Retriever):
+    """Keyword retrieval: rare query words that appear often in a unit give a high score."""
+
     def __init__(self, name: str = "bm25", k1: float = 1.2, b: float = 0.75,
                  stopwords: str = "english", stem: bool = True, **kw):
         super().__init__(name, **kw)
@@ -49,11 +51,14 @@ class BM25Retriever(Retriever):
         self.analyzer = Analyzer(stopwords, stem)
 
     def build(self, units: Units) -> None:
+        # Term counts per unit: rows = units, columns = vocabulary terms.
         self.vectorizer = CountVectorizer(analyzer=self.analyzer, dtype=np.float32)
         tf = self.vectorizer.fit_transform(units.texts).tocsr()  # (U, V)
         n_docs = tf.shape[0]
+        # IDF (Lucene): log(1 + (N - df + 0.5) / (df + 0.5)), so rare terms weigh more.
         df = np.bincount(tf.indices, minlength=tf.shape[1])
         self.idf = np.log1p((n_docs - df + 0.5) / (df + 0.5)).astype(np.float32)
+        # Unit lengths: long units are penalised relative to the average length.
         dl = np.asarray(tf.sum(axis=1)).ravel()
         self.avgdl = float(dl.mean())
         self.W = self._weights(tf, dl).T.tocsr()  # (V, U): fast row slicing by query term
@@ -63,6 +68,7 @@ class BM25Retriever(Retriever):
         tf = tf.tocsr(copy=True)
         norm = self.k1 * (1 - self.b + self.b * dl / self.avgdl)
         row_norm = np.repeat(norm, np.diff(tf.indptr)).astype(np.float32)
+        # tf * (k1 + 1) / (tf + k1 * (1 - b + b * len / avg_len)): repeats help, but saturate.
         tf.data = tf.data * (self.k1 + 1) / (tf.data + row_norm)
         return tf.multiply(self.idf[None, :]).tocsr()
 
@@ -71,10 +77,12 @@ class BM25Retriever(Retriever):
         return self.vectorizer.transform(queries).tocsr()
 
     def score_units(self, queries: list[str]) -> np.ndarray:
+        # One sparse matrix product sums the weights of the query terms in every unit.
         q = self._query_matrix(queries)  # (Q, V)
         return np.asarray((q @ self.W).todense(), dtype=np.float32)
 
     def pair_scores(self, queries: list[str], texts: list[str]) -> np.ndarray:
+        # Score each sentence against its partner with the corpus IDF (meaning-change test).
         q = self._query_matrix(queries)
         tf = self.vectorizer.transform(texts).tocsr()
         w = self._weights(tf, np.asarray(tf.sum(axis=1)).ravel())

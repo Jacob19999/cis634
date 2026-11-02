@@ -16,10 +16,12 @@ Run = dict[str, list[str]]  # qid -> ranked doc ids
 
 
 def precision_at_k(ranked: list[str], rel: dict[str, int], k: int, min_grade: int = 2) -> float:
+    """Share of the top k with grade >= min_grade (default 2: same issue)."""
     return sum(rel.get(d, 0) >= min_grade for d in ranked[:k]) / k
 
 
 def recall_at_k(ranked: list[str], rel: dict[str, int], k: int, min_grade: int = 1) -> float:
+    """Share of all relevant reports that appear in the top k."""
     n_rel = sum(g >= min_grade for g in rel.values())
     if n_rel == 0:
         return float("nan")
@@ -27,6 +29,7 @@ def recall_at_k(ranked: list[str], rel: dict[str, int], k: int, min_grade: int =
 
 
 def reciprocal_rank(ranked: list[str], rel: dict[str, int], k: int, min_grade: int = 1) -> float:
+    """1 / rank of the first relevant report in the top k (0 if there is none)."""
     for i, d in enumerate(ranked[:k]):
         if rel.get(d, 0) >= min_grade:
             return 1.0 / (i + 1)
@@ -34,6 +37,7 @@ def reciprocal_rank(ranked: list[str], rel: dict[str, int], k: int, min_grade: i
 
 
 def ndcg_at_k(ranked: list[str], rel: dict[str, int], k: int) -> float:
+    """DCG of the ranking divided by the DCG of a perfect ranking (1.0 = perfect)."""
     dcg = sum(rel.get(d, 0) / math.log2(i + 2) for i, d in enumerate(ranked[:k]))
     ideal = sorted(rel.values(), reverse=True)[:k]
     idcg = sum(g / math.log2(i + 2) for i, g in enumerate(ideal))
@@ -45,6 +49,7 @@ def judged_at_k(ranked: list[str], rel: dict[str, int], k: int) -> float:
     return sum(d in rel for d in ranked[:k]) / k
 
 
+# Metric name -> function(ranked doc ids, that query's labels).
 METRICS = {
     "P@10": lambda r, q: precision_at_k(r, q, 10, 2),
     "P@10_lenient": lambda r, q: precision_at_k(r, q, 10, 1),
@@ -69,6 +74,7 @@ def evaluate_run(run: Run, qrels: Qrels, metrics: list[str]) -> pd.DataFrame:
 
 def bootstrap_ci(values: np.ndarray, n: int = 10_000, alpha: float = 0.05,
                  seed: int = 0) -> tuple[float, float]:
+    """95% CI of the mean: resample the per-query values n times, take the 2.5/97.5 percentiles."""
     values = np.asarray(values, dtype=float)
     values = values[~np.isnan(values)]
     if len(values) == 0:
@@ -86,12 +92,14 @@ def paired_randomization_test(a: np.ndarray, b: np.ndarray, n: int = 10_000,
     if len(d) == 0 or np.all(d == 0):
         return 1.0
     rng = np.random.default_rng(seed)
+    # If the two systems were equally good, each difference's sign would be a coin flip.
     signs = rng.choice([-1.0, 1.0], size=(n, len(d)))
     null = np.abs((signs * d).mean(axis=1))
     return float((np.sum(null >= abs(d.mean()) - 1e-12) + 1) / (n + 1))
 
 
 def wilson_ci(successes: float, n: int, z: float = 1.96) -> tuple[float, float]:
+    """Wilson score interval for an accuracy; behaves well for small n (25 items)."""
     if n == 0:
         return float("nan"), float("nan")
     p = successes / n

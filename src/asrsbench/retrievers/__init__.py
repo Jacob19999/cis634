@@ -16,6 +16,7 @@ from .bm25 import BM25Retriever
 from .dense import DenseRetriever, resolve_device
 from .hybrid import HybridRetriever
 
+# Config "type" -> retriever class.
 TYPES = {"bm25": BM25Retriever, "dense": DenseRetriever, "hybrid": HybridRetriever}
 
 
@@ -34,11 +35,13 @@ def build_systems(specs: list[dict], unit_sets: dict[str, Units], device: str = 
         params = dict(spec.get("params", {}))
         if name in systems:
             raise ValueError(f"duplicate system name {name!r}")
+        # A hybrid fuses systems built earlier in the list, so it has no index of its own.
         if kind == "hybrid":
             comps = [systems[c] for c in params.pop("components")]
             system = HybridRetriever(name, comps, **params)
             system.index(comps[0].units)
         elif kind in TYPES:
+            # Dense models also need the device and the embedding cache folder.
             if kind == "dense":
                 params.setdefault("device", device)
                 params.setdefault("cache_dir", cache_dir)

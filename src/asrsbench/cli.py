@@ -10,6 +10,7 @@ def main(argv: list[str] | None = None) -> None:
     p = argparse.ArgumentParser(prog="asrsbench", description=__doc__)
     sub = p.add_subparsers(dest="cmd", required=True)
 
+    # One sub-command per pipeline step.
     pr = sub.add_parser("prepare", help="download, clean and chunk the ASRS corpus")
     pr.add_argument("--out", default="data/processed")
     pr.add_argument("--max-words", type=int, default=150)
@@ -39,6 +40,7 @@ def main(argv: list[str] | None = None) -> None:
     lb.add_argument("pools", nargs="+")
     lb.add_argument("--out", default="data/qrels/human_v1.tsv")
 
+    # Run the chosen command. Heavy imports sit inside each branch so the CLI starts fast.
     args = p.parse_args(argv)
 
     if args.cmd == "prepare":
@@ -65,6 +67,7 @@ def main(argv: list[str] | None = None) -> None:
 
 
 def _search(args) -> None:
+    """``asrsbench search``: print one system's top-k reports and matched passages for a query."""
     from .benchmark import _unit_sets, load_config
     from .data import load_reports
     from .retrievers import build_systems
@@ -72,6 +75,7 @@ def _search(args) -> None:
     cfg = load_config(args.config)
     specs = {s["name"]: s for s in cfg["systems"]}
     needed = [args.system]
+    # A hybrid needs its component systems built first.
     if specs[args.system]["type"] == "hybrid":
         needed = specs[args.system]["params"]["components"] + needed
     cfg["systems"] = [specs[n] for n in needed]

@@ -23,6 +23,7 @@ INK, MUTED, GRID = "#0b0b0b", "#52514e", "#e4e3df"
 
 
 def contrast_figure(run: Path, out: Path) -> None:
+    """Contrast figure: accuracy per category, one panel per condition."""
     df = pd.read_csv(run / "metrics_contrast.csv")
     df = df[df["system"].isin(SYSTEM_COLORS)]
     conds = [("original_anchor", "(a) Anchor = original (proposal)"),
@@ -56,6 +57,7 @@ def contrast_figure(run: Path, out: Path) -> None:
 
 
 def facet_table(run: Path, out: Path) -> pd.DataFrame:
+    """Topical nDCG@10 per event type (facet) and per dev/test split."""
     pq = pd.read_csv(run / "per_query_topical.csv")
     pq = pq[pq["labels"] == "silver"]
     t = pq.pivot_table(index="facet", columns="system", values="nDCG@10", aggfunc="mean")
@@ -67,6 +69,7 @@ def facet_table(run: Path, out: Path) -> pd.DataFrame:
 
 
 def contrast_failures(run: Path, out: Path, system: str = "e5-small") -> pd.DataFrame:
+    """Items the system fails in the controlled condition, worst first."""
     items = pd.read_csv(run / "contrast_items.csv")
     src = pd.read_json("data/contrast/contrast_v1.jsonl", lines=True)
     f = items[(items["system"] == system) & (items["condition"] == "paraphrase_anchor")

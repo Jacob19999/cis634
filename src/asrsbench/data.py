@@ -112,11 +112,14 @@ def _clean_id(x) -> str:
 
 
 class _UnionFind:
+    """Tiny union-find (disjoint sets): links ids that belong to the same incident."""
+
     def __init__(self):
         self.parent: dict[str, str] = {}
 
     def find(self, x: str) -> str:
         self.parent.setdefault(x, x)
+        # Walk up to the root, shortening the path on the way (path halving).
         while self.parent[x] != x:
             self.parent[x] = self.parent[self.parent[x]]
             x = self.parent[x]
@@ -161,11 +164,14 @@ _SENT_SPLIT = re.compile(r"(?<=[.!?])\s+(?=[\[\"'(A-Z0-9])")
 
 
 def split_sentences(text: str) -> list[str]:
+    """Split a narrative into sentences (see _SENT_SPLIT above)."""
     return [s for s in _SENT_SPLIT.split(text) if s.strip()]
 
 
 @dataclass(frozen=True)
 class ChunkConfig:
+    """Chunking settings. ``tag`` names the chunk file, e.g. "w150o1m40"."""
+
     max_words: int = 150
     overlap_sentences: int = 1
     # A leftover tail shorter than this is absorbed into the previous chunk instead of
@@ -187,6 +193,7 @@ def chunk_text(text: str, cfg: ChunkConfig) -> list[str]:
     hard-split on words. If fewer than ``cfg.min_tail_words`` words would remain after a
     window, they are appended to it (so a chunk holds at most max_words + min_tail_words).
     """
+    # Split into sentences; a sentence longer than the window is cut into window-sized pieces.
     sents: list[list[str]] = []
     for s in split_sentences(text):
         words = s.split()
@@ -195,6 +202,7 @@ def chunk_text(text: str, cfg: ChunkConfig) -> list[str]:
     if not sents:
         return []
 
+    # Fill each window with whole sentences until the next one would not fit.
     chunks: list[str] = []
     start = 0
     while start < len(sents):
@@ -202,11 +210,13 @@ def chunk_text(text: str, cfg: ChunkConfig) -> list[str]:
         while end < len(sents) and (n + len(sents[end]) <= cfg.max_words or end == start):
             n += len(sents[end])
             end += 1
+        # A short leftover tail joins this window instead of becoming its own chunk.
         if 0 < sum(len(s) for s in sents[end:]) < cfg.min_tail_words:
             end = len(sents)
         chunks.append(" ".join(w for s in sents[start:end] for w in s))
         if end >= len(sents):
             break
+        # The next window starts ``overlap_sentences`` back, so neighbouring windows overlap.
         start = max(end - cfg.overlap_sentences, start + 1)
     return chunks
 
@@ -217,6 +227,7 @@ def build_chunks(reports: pd.DataFrame, cfg: ChunkConfig) -> pd.DataFrame:
     for acn, n1, n2 in zip(reports["acn"], reports["narrative_1"], reports["narrative_2"]):
         for nidx, narr in ((1, n1), (2, n2)):
             for cidx, text in enumerate(chunk_text(narr, cfg)):
+                # chunk_id = "<acn>_<narrative 1 or 2>_<chunk number>"
                 rows.append((f"{acn}_{nidx}_{cidx}", acn, nidx, cidx, text))
     return pd.DataFrame(rows, columns=["chunk_id", "acn", "narrative_idx", "chunk_idx", "text"])
 
@@ -227,6 +238,7 @@ def build_chunks(reports: pd.DataFrame, cfg: ChunkConfig) -> pd.DataFrame:
 
 
 def load_raw(cache_dir: str | None = None) -> pd.DataFrame:
+    """Download all three splits from the Hugging Face Hub into one DataFrame."""
     from datasets import load_dataset
 
     ds = load_dataset(HF_DATASET, cache_dir=cache_dir)
@@ -239,15 +251,19 @@ def load_raw(cache_dir: str | None = None) -> pd.DataFrame:
 
 
 def clean_reports(raw: pd.DataFrame) -> pd.DataFrame:
+    """Rename columns, repair the text, drop placeholders, group incidents, flag focus reports."""
     df = raw[list(COLUMNS) + ["split"]].rename(columns=COLUMNS).copy()
+    # Report ids and the accession numbers used for incident grouping, as plain strings.
     df["acn"] = df["acn"].map(_clean_id)
     for c in ("accession_1", "accession_2"):
         df[c] = df[c].map(_clean_id)
     free_text = ("narrative_1", "narrative_2", "synopsis")
     coded = [c for c in df.columns
              if c not in free_text and c not in ("acn", "accession_1", "accession_2", "split")]
+    # Free text: undo the comma->semicolon artefact.
     for c in free_text:
         df[c] = df[c].map(normalize_text)
+    # Blank out editorial placeholders ("no additional information") in the second narrative.
     df["narrative_2_placeholder"] = df["narrative_2"].map(is_placeholder)
     df.loc[df["narrative_2_placeholder"], "narrative_2"] = ""
     # Coded fields use "; " as a list separator, so only tidy whitespace there.
@@ -261,15 +277,18 @@ def clean_reports(raw: pd.DataFrame) -> pd.DataFrame:
     df["narrative"] = (df["narrative_1"] + " " + df["narrative_2"]).str.strip()
     df["n_words"] = df["narrative"].str.split().str.len()
 
+    # Incident groups, and the proposal's focus subset (altitude, clearance, heading, comms).
     df["group_id"] = assign_incident_groups(df)
     focus_re = re.compile("|".join(FOCUS_PATTERNS))
     df["focus"] = df["anomaly"].str.contains(focus_re) | (df["comm_breakdown"] != "")
 
+    # Drop reports with no narrative; sort by ACN so outputs are reproducible.
     df = df[df["narrative"] != ""].sort_values("acn").reset_index(drop=True)
     return df
 
 
 def corpus_stats(reports: pd.DataFrame, chunks: pd.DataFrame, cfg: ChunkConfig) -> dict:
+    """Corpus numbers quoted in the report (saved to stats.json)."""
     g = reports.groupby("group_id")
     multi = g.filter(lambda x: len(x) > 1)
     crossing = multi.groupby("group_id")["split"].nunique()
@@ -307,6 +326,7 @@ def corpus_stats(reports: pd.DataFrame, chunks: pd.DataFrame, cfg: ChunkConfig) 
 
 def prepare(out_dir: str | Path = "data/processed", cfg: ChunkConfig = ChunkConfig(),
             cache_dir: str | None = None) -> dict:
+    """``asrsbench prepare``: download, clean and chunk, then save everything to ``out_dir``."""
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     reports = clean_reports(load_raw(cache_dir))
@@ -319,11 +339,13 @@ def prepare(out_dir: str | Path = "data/processed", cfg: ChunkConfig = ChunkConf
 
 
 def load_reports(data_dir: str | Path = "data/processed") -> pd.DataFrame:
+    """Load the cleaned reports written by ``prepare``."""
     return pd.read_parquet(Path(data_dir) / "reports.parquet")
 
 
 def load_chunks(cfg: ChunkConfig, data_dir: str | Path = "data/processed",
                 reports: pd.DataFrame | None = None) -> pd.DataFrame:
+    """Load the chunks for one chunking setting, building and saving them on first use."""
     path = Path(data_dir) / f"chunks_{cfg.tag}.parquet"
     if not path.exists():
         reports = load_reports(data_dir) if reports is None else reports

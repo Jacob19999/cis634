@@ -42,10 +42,12 @@ NOT_CODES = frozenset(
 
 
 def _run_config(run: Path) -> dict:
+    """The resolved config saved with the run."""
     return yaml.safe_load((run / "config.yaml").read_text())
 
 
 def _chunk_units(run: Path, reports: pd.DataFrame, **chunking) -> Units:
+    """The chunks the run indexed (or another chunking setting, if given)."""
     cfg = _run_config(run)
     ccfg = ChunkConfig(**{**cfg.get("chunking", {}), **chunking})
     return Units.from_chunks(load_chunks(ccfg, cfg.get("data_dir", "data/processed"), reports), ccfg.tag)
@@ -85,6 +87,7 @@ def identifier_split(reports: pd.DataFrame, run: Path) -> dict:
 
 
 def silver_label_stats(reports: pd.DataFrame) -> dict:
+    """Size of the silver grade-2 sets, and how many rules use synopsis keywords."""
     spec = yaml.safe_load(Path(QUERIES).read_text())["queries"]
     qrels = topical_track(reports, QUERIES).qrels["silver"]
     n2 = [sum(g == 2 for g in qrels[q["qid"]].values()) for q in spec]
