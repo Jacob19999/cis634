@@ -13,6 +13,7 @@ __pycache__/
 # Large / regenerable data (rebuild with `asrsbench prepare`)
 data/raw/
 data/processed/
+data/graph/
 cache/
 
 # Per-run raw outputs (summary tables in results/ are committed)

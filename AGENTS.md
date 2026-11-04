@@ -52,7 +52,11 @@ is auto-detected.
 | `reports/milestone/` | IEEE LaTeX report (`main.tex`), figures, submitted PDF |
 | `Research/` | proposal and the course's project/report guidelines (PDFs) |
 
-Git-ignored and regenerable: `data/raw/`, `data/processed/`, `cache/` (embeddings),
+`scripts/llm_graph.py` extracts a per-report knowledge graph from the narratives with a local
+Ollama model (narrative only: never the synopsis or analyst codes, which are evaluation
+targets) into `data/graph/<model>_v1.jsonl`. It resumes an interrupted run.
+
+Git-ignored and regenerable: `data/raw/`, `data/processed/`, `data/graph/` (LLM graph), `cache/` (embeddings),
 `results/**/runs/` (TREC run files), LaTeX build artefacts. `scripts/analysis.py` and
 `asrsbench pool` need the ignored run files, so they only work after a local `run`.
 
