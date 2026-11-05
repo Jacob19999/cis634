@@ -140,6 +140,26 @@ RESULT = {
     "Aircraft Automation Overrode Flight Crew": "Automation overrode crew",
 }
 
+TIME_OF_DAY = ["0001-0600", "0601-1200", "1201-1800", "1801-2400"]  # ASRS local-time buckets
+STATES = {
+    "AL": "Alabama", "AK": "Alaska", "AZ": "Arizona", "AR": "Arkansas", "CA": "California",
+    "CO": "Colorado", "CT": "Connecticut", "DE": "Delaware", "DC": "District of Columbia",
+    "FL": "Florida", "GA": "Georgia", "HI": "Hawaii", "ID": "Idaho", "IL": "Illinois",
+    "IN": "Indiana", "IA": "Iowa", "KS": "Kansas", "KY": "Kentucky", "LA": "Louisiana",
+    "ME": "Maine", "MD": "Maryland", "MA": "Massachusetts", "MI": "Michigan", "MN": "Minnesota",
+    "MS": "Mississippi", "MO": "Missouri", "MT": "Montana", "NE": "Nebraska", "NV": "Nevada",
+    "NH": "New Hampshire", "NJ": "New Jersey", "NM": "New Mexico", "NY": "New York",
+    "NC": "North Carolina", "ND": "North Dakota", "OH": "Ohio", "OK": "Oklahoma", "OR": "Oregon",
+    "PA": "Pennsylvania", "RI": "Rhode Island", "SC": "South Carolina", "SD": "South Dakota",
+    "TN": "Tennessee", "TX": "Texas", "UT": "Utah", "VT": "Vermont", "VA": "Virginia",
+    "WA": "Washington", "WV": "West Virginia", "WI": "Wisconsin", "WY": "Wyoming",
+    "PR": "Puerto Rico", "GU": "Guam", "VI": "US Virgin Islands", "AS": "American Samoa",
+    "AB": "Canada: Alberta", "BC": "Canada: British Columbia", "MB": "Canada: Manitoba",
+    "NF": "Canada: Newfoundland", "NS": "Canada: Nova Scotia", "ON": "Canada: Ontario",
+    "PQ": "Canada: Quebec",
+    "US": "United States, state withheld", "FO": "Outside the US and Canada",
+}
+
 PHASES = {"Parked", "Taxi", "Takeoff / Launch", "Initial Climb", "Climb", "Cruise", "Descent",
           "Initial Approach", "Final Approach", "Landing"}
 WEATHER = {"Turbulence", "Rain", "Thunderstorm", "Icing", "Windshear", "Haze / Smoke", "Snow",
@@ -552,6 +572,17 @@ def main() -> None:
                          "y": round(float(np.median(xy[members, 1])), 4)})
     print(f"{len(clusters)} regions, {np.mean(labels >= 0):.0%} of reports in one", flush=True)
 
+    # ---- when and where, for the page's date / time / place filters
+    tod = [TIME_OF_DAY.index(v) if v in TIME_OF_DAY else None
+           for v in raw["Time.1_Local Time Of Day"].astype(str)]
+    state = [s if s in STATES else None
+             for s in raw["Place.1_State Reference"].fillna("").astype(str).str.strip().str.upper()]
+    loc = []
+    for v in raw["Place_Locale Reference"].fillna("").astype(str):
+        code = v.split(".")[0].strip().upper()
+        # ZZZ / ZZZZ are ASRS's de-identified places.
+        loc.append(code if re.fullmatch(r"[A-Z0-9]{2,5}", code) and not code.startswith("ZZZ") else None)
+
     # ---- write
     acns = reports["acn"].tolist()
     rows = []
@@ -564,6 +595,12 @@ def main() -> None:
             r["seq"] = [[int(j), round(float(v), 2)] for j, v in zip(seq_i[i], seq_v[i])
                         if v > 0 and has_seq[j]]
             r["events"] = events[i]
+        if tod[i] is not None:
+            r["t"] = tod[i]
+        if state[i]:
+            r["st"] = state[i]
+        if loc[i]:
+            r["loc"] = loc[i]
         if labels[i] >= 0:
             r["cl"] = int(labels[i])
         if sib[i]:
@@ -591,6 +628,8 @@ def main() -> None:
             {"label": "Landing gear problem, critical", "acn": "1839641"},
         ],
         "clusters": clusters, "shard": SHARD,
+        "tod": ["00:01–06:00", "06:01–12:00", "12:01–18:00", "18:01–24:00"],
+        "states": [{"id": s, "label": STATES[s], "n": k} for s, k in Counter(x for x in state if x).most_common()],
     }
     meta["examples"] = [x for x in meta["examples"] if x["acn"] in set(acns)]
     (out / "data").mkdir(parents=True, exist_ok=True)
