@@ -19,7 +19,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "bm25s>=0.2", "matplotlib>=3.8"]
+dev = ["pytest>=8", "bm25s>=0.2", "matplotlib>=3.8", "openTSNE>=1.0"]
 
 [project.scripts]
 asrsbench = "asrsbench.cli:main"

@@ -55,6 +55,9 @@ is auto-detected.
 `scripts/llm_graph.py` extracts a per-report knowledge graph from the narratives with a local
 Ollama model (narrative only: never the synopsis or analyst codes, which are evaluation
 targets) into `data/graph/<model>_v1.jsonl`. It resumes an interrupted run.
+`scripts/export_precedent_graph.py <triaggent_consulting>/portfolio/asrs-precedent-graph` turns
+that graph plus the raw analyst codes into the ASRS Precedent Graph page's `data/` (all 47,723
+reports; MPNet embeddings and the t-SNE map are cached in `cache/precedent/`).
 
 Git-ignored and regenerable: `data/raw/`, `data/processed/`, `data/graph/` (LLM graph), `cache/` (embeddings),
 `results/**/runs/` (TREC run files), LaTeX build artefacts. `scripts/analysis.py` and
