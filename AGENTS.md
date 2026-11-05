@@ -1,7 +1,7 @@
 # AGENTS.md
 
 Guidance for coding agents working in this repository. Human-facing docs are in
-[README.md](README.md).
+[README.md](README.md) and the step-by-step [TUTORIAL.md](TUTORIAL.md).
 
 ## Project
 
@@ -83,7 +83,8 @@ issue with the user instead.
 - **Results come from the pipeline.** Never hand-edit files in `results/`; rerun the
   config. The numbers in `README.md` and `reports/milestone/main.tex` are copied by hand
   from `results/*/summary.md` and `analysis.json`. If a change shifts any metric, list the
-  affected numbers for the user rather than leaving the docs stale.
+  affected numbers for the user rather than leaving the docs stale. `TUTORIAL.md` also
+  quotes outputs, from `smoke.yaml`, its `my_run.yaml` example and two `search` calls.
 - **Human labels pending.** `data/qrels/human_v1.tsv` doesn't exist yet. When it appears,
   configs pick it up automatically as a `human:human_v1` label source next to `silver`.
 
