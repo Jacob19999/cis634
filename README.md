@@ -10,6 +10,9 @@ negation, altitude/number changes, direction, or event order?
 sentence-transformers model, and hybrids of them) on the same corpus and evaluation
 tracks. To add a model, add a few lines to a YAML config.
 
+**New here?** The [tutorial](TUTORIAL.md) walks through installing, searching the corpus,
+running a benchmark, reading its results and benchmarking your own model.
+
 ```
 Research/                     proposal, class guidelines
 configs/                      benchmark configs (milestone.yaml, smoke.yaml, extended.yaml)
