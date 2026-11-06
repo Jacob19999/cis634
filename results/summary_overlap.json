@@ -7,6 +7,11 @@
     "mean_novel": 0.0689814135741676,
     "share_with_3plus_novel": 0.005070930159461895
   },
+  "similar_report": {
+    "share_with_novel": 0.010833350795214048,
+    "mean_novel": 0.015275653248957525,
+    "share_with_3plus_novel": 0.000942941558577625
+  },
   "shuffled": {
     "share_with_novel": 0.00037717662343105,
     "mean_novel": 0.0004819479077174528,
@@ -55,5 +60,34 @@
       "synopsis": "An MD-80 arriving at its destination with minimum fuel was directed to go-around due to an airport emergency. They declared a fuel emergency and received appropriate special handling, arriving at the gate with fuel remaining of 2,700 LBS.",
       "summary": "The crew was on final approach when instructed to go around due to an airport emergency. They declared a low fuel emergency, touched down with 3,400 lbs, and arrived at the gate with 2,700 lbs after a delay."
     }
-  ]
+  ],
+  "gain_without_overlap": {
+    "run": "results/summaries",
+    "n_queries": 1000,
+    "n_with_overlap": 49,
+    "bm25-chunk-sum": {
+      "gain_all": 0.033893650793650795,
+      "gain_overlap_free": 0.03208819454876237,
+      "p_overlap_free": 0.0,
+      "gain_with_overlap": 0.0689342403628118
+    },
+    "hybrid-bm25-qwen3-8b-chunk-sum": {
+      "gain_all": 0.019140873015873014,
+      "gain_overlap_free": 0.016939145093719226,
+      "p_overlap_free": 0.0158,
+      "gain_with_overlap": 0.06187236799481697
+    },
+    "qwen3-0.6b-chunk-sum": {
+      "gain_all": 0.011046428571428572,
+      "gain_overlap_free": 0.007339392118571929,
+      "p_overlap_free": 0.2824,
+      "gain_with_overlap": 0.08299319727891157
+    },
+    "qwen3-8b-chunk-sum": {
+      "gain_all": 0.01908174603174603,
+      "gain_overlap_free": 0.019188656885817768,
+      "p_overlap_free": 0.0079,
+      "gain_with_overlap": 0.017006802721088433
+    }
+  }
 }
