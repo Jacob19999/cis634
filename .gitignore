@@ -18,6 +18,8 @@ data/graph/
 # FAA PDFs (scripts/build_faa_glossary.py records their URLs and checksums)
 data/summaries/
 data/external/
+# Corpus v2 (ASRS + NTSB, scripts/build_corpus_v2.py) and its Qwen3.5-27B / Qwen3-8B outputs
+data/processed_v2/
 cache/
 
 # Per-run raw outputs (summary tables in results/ are committed)

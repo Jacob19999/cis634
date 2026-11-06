@@ -16,7 +16,7 @@ reproducibility matter more than features.
 
 ```bash
 uv venv --python 3.12 .venv && uv pip install --python .venv/bin/python -e ".[dev]"
-.venv/bin/pytest -q                                # 30 tests, ~2 s, no data/models/network needed
+.venv/bin/pytest -q                                # 39 tests, ~3 s, no data/models/network needed
 .venv/bin/asrsbench prepare                        # HF download + clean + chunk -> data/processed/
 .venv/bin/asrsbench run configs/smoke.yaml         # quick end-to-end check
 .venv/bin/asrsbench run configs/milestone.yaml --systems bm25 --tracks topical   # subset
@@ -70,8 +70,20 @@ summarise every narrative; `doc_mode: summary` / `chunk_summary` index the summa
 best raw score over its components: for one encoder over chunks and over summaries it equals
 MaxP over both unit sets without re-encoding them together.
 
+**Corpus v2** (`data/processed_v2/`, `scripts/build_corpus_v2.py`) joins ASRS and NTSB for
+the Precedent Graph page: the 47,723 v1 reports, 19,547 newer narrative-only ASRS reports
+(`sookiemonster/asrs-narratives`, months estimated from the ACN with ASRS's monthly intake in
+`data/asrs/callback_intake_v1.json`, from `scripts/fetch_asrs_intake.py`) and 24,557 NTSB
+events 2010–2026 (`avall.mdb`). Ids carry the source (`ASRS:`, `ASRSN:`, `NTSB:`) in `acn`, so
+chunking, units and summaries work unchanged; `display_id` is the ACN or NTSB case number.
+Benchmark tracks and reported results stay on v1. `configs/corpus_v2.yaml` searches v2; dense
+caches are stored per source block (the v1 ASRS block reuses the v1 cache) and `devices:`
+encodes on several GPUs. `scripts/export_precedent_graph_v2.py` writes the page data
+(`data/graph.json`, `data/reports/<k>.json`, `data/narratives/<k>.json`).
+
 Git-ignored and regenerable: `data/raw/`, `data/processed/`, `data/graph/` (LLM graph),
-`data/summaries/` (LLM summaries), `data/external/` (FAA PDFs), `cache/` (embeddings),
+`data/summaries/` (LLM summaries), `data/external/` (FAA PDFs, NTSB, HF narratives),
+`data/processed_v2/` (corpus v2), `cache/` (embeddings),
 `results/**/runs/` (TREC run files), LaTeX build artefacts. `scripts/analysis.py` and
 `asrsbench pool` need the ignored run files, so they only work after a local `run`.
 

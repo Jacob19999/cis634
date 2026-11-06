@@ -1,0 +1,27 @@
+# Corpus v2: ASRS (2012–2022, plus narrative-only 2021–2025) and NTSB (2010–2026), built by
+# scripts/build_corpus_v2.py. For the Precedent Graph page and for searching both sources at
+# once; the benchmark tracks stay on corpus v1. The topical silver labels exist only for v1
+# reports, so only the contrast test is configured here.
+# Qwen3-8B reuses the v1 ASRS embeddings (per-source cache blocks) and encodes the NTSB and
+# narrative-only ASRS chunks on all three GPUs of the CUDA server.
+#   asrsbench search configs/corpus_v2.yaml qwen3-8b "engine failure after takeoff, forced landing"
+name: corpus_v2
+data_dir: data/processed_v2
+cache_dir: cache
+results_dir: results
+device: auto
+depth: 100
+chunking: {max_words: 150, overlap_sentences: 1, min_tail_words: 40}
+
+systems:
+  - {name: bm25, type: bm25, params: {k1: 1.2, b: 0.75, stopwords: english}}
+  - name: qwen3-8b
+    type: dense
+    params: {model: Qwen/Qwen3-Embedding-8B, max_seq_length: 512, batch_size: 16, dtype: float16,
+             devices: ["cuda:0", "cuda:1", "cuda:2"],
+             query_prefix: "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+             pair_prefix: "Instruct: Retrieve semantically similar text\nQuery:"}
+  - {name: hybrid-bm25-qwen3-8b, type: hybrid, params: {components: [bm25, qwen3-8b], method: rrf, k: 60, depth: 1000}}
+
+evaluation:
+  contrast: {path: data/contrast/contrast_v1.jsonl}

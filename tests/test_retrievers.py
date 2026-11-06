@@ -122,3 +122,38 @@ def test_max_fusion_equals_maxp_over_the_union_of_units():
     assert list(got.doc_ids) == list(want.doc_ids) == ["2", "1", "3"]
     assert np.allclose(got.scores, want.scores)
     assert list(got.best_units) == list(want.best_units) == ["2_s", "1_1_1", "3_s"]
+
+
+def test_dense_cache_is_per_source_block(tmp_path, monkeypatch):
+    from asrsbench.retrievers import DenseRetriever
+
+    calls = []
+
+    def vec(texts):
+        v = np.array([[len(t), sum(map(ord, t)) % 97, 1.0] for t in texts], dtype=np.float32)
+        return v / np.linalg.norm(v, axis=1, keepdims=True)
+
+    def fake_encode(self, texts, prefix="", show_progress=False):
+        calls.append(len(texts))
+        return vec(texts)
+
+    def units(ntsb_text):
+        rows = [("ASRS:1_1_0", "ASRS:1", 1, 0, "asrs one"), ("ASRS:2_1_0", "ASRS:2", 1, 0, "asrs two"),
+                ("NTSB:9_1_0", "NTSB:9", 1, 0, ntsb_text)]
+        df = pd.DataFrame(rows, columns=["chunk_id", "acn", "narrative_idx", "chunk_idx", "text"])
+        return Units.from_chunks(df, "t")
+
+    monkeypatch.setattr(DenseRetriever, "encode", fake_encode)
+    d = DenseRetriever("d", model="fake/model", max_seq_length=64, cache_dir=str(tmp_path), device="cpu")
+    assert DenseRetriever.segments(units("ntsb")) == [(0, 2), (2, 3)]
+    d.index(units("ntsb"))
+    assert calls == [3] and len(list((tmp_path / "embeddings").glob("*.npy"))) == 2
+    assert np.allclose(d.E, vec(["asrs one", "asrs two", "ntsb"]))
+
+    d2 = DenseRetriever("d2", model="fake/model", max_seq_length=64, cache_dir=str(tmp_path), device="cpu")
+    d2.index(units("ntsb changed"))  # only the NTSB block is new
+    assert calls == [3, 1]
+    assert np.allclose(d2.E[:2], d.E[:2])
+
+    # Ids without a source prefix (corpus v1) are one block, as before.
+    assert DenseRetriever.segments(Units.from_chunks(_chunks(DOCS), "t")) == [(0, 10)]

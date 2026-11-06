@@ -1,13 +1,16 @@
 """Extract a knowledge graph from every ASRS narrative with a local LLM (Ollama).
 
 usage: python scripts/llm_graph.py [--model qwen3:8b] [--workers 4] [--limit N]
+                                   [--host URL[,URL...]] [--data-dir data/processed]
                                    [--out data/graph/<model>_v1.jsonl]
 
 Each report's narrative goes to a local model served by Ollama, which returns JSON
 constrained to ``SCHEMA``: entity lists (aircraft, flight phases, events, causes, actors,
 equipment, locations, outcomes) plus a few typed (subject, relation, object) triples. One
 JSON line per report is appended to the output file, so an interrupted run resumes where it
-stopped; failed reports are retried on the next run.
+stopped; failed reports are retried on the next run. Several Ollama servers (e.g. one per
+GPU) can share the work: ``--host`` takes a comma-separated list and ``--workers`` is per host.
+With ``--data-dir data/processed_v2`` (corpus v2) reports are keyed by document id.
 
 Only the narrative is sent. The analyst synopsis is the query on the synopsis track and the
 analyst codes define the topical silver labels, so showing either to the model would let
@@ -133,8 +136,9 @@ def done_acns(path: Path) -> set[str]:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", default="qwen3:8b")
-    ap.add_argument("--host", default="http://localhost:11434")
-    ap.add_argument("--workers", type=int, default=4, help="concurrent requests to Ollama")
+    ap.add_argument("--host", default="http://localhost:11434", help="comma-separated Ollama servers")
+    ap.add_argument("--workers", type=int, default=4, help="concurrent requests per Ollama server")
+    ap.add_argument("--data-dir", default="data/processed")
     ap.add_argument("--limit", type=int, default=None, help="only the first N pending reports")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
@@ -142,7 +146,8 @@ def main() -> None:
     out = Path(args.out or f"data/graph/{args.model.replace(':', '-')}_{PROMPT_VERSION}.jsonl")
     out.parent.mkdir(parents=True, exist_ok=True)
 
-    reports = load_reports()
+    reports = load_reports(args.data_dir)
+    hosts = args.host.split(",")
     done = done_acns(out)
     todo = reports[~reports["acn"].isin(done)]
     if args.limit:
@@ -151,9 +156,10 @@ def main() -> None:
           flush=True)
 
     t0, n_ok, n_fail, toks = time.time(), 0, 0, 0
-    with out.open("a", encoding="utf-8") as f, ThreadPoolExecutor(args.workers) as pool:
-        futs = {pool.submit(extract, nar, args.model, args.host): acn
-                for acn, nar in zip(todo["acn"], todo["narrative"])}
+    with out.open("a", encoding="utf-8") as f, \
+            ThreadPoolExecutor(args.workers * len(hosts)) as pool:
+        futs = {pool.submit(extract, nar, args.model, hosts[k % len(hosts)]): acn
+                for k, (acn, nar) in enumerate(zip(todo["acn"], todo["narrative"]))}
         for i, fut in enumerate(as_completed(futs), 1):
             acn = futs[fut]
             meta = {"acn": acn, "model": args.model, "prompt_version": PROMPT_VERSION}

@@ -1,6 +1,9 @@
 """Summarise every ASRS narrative with a local LLM, for indexing next to the chunks.
 
 usage: python scripts/summarise_reports.py [--model Qwen/Qwen3-8B] [--shard 0 --n-shards 3]
+       python scripts/summarise_reports.py --backend ollama --model qwen3.5-27b-q6k \
+           --hosts http://127.0.0.1:11434,http://127.0.0.1:11435 --data-dir data/processed_v2 \
+           --order NTSB:,ASRSN:,ASRS:
 
 Writes ``data/summaries/<model>_v1.jsonl`` (one JSON line per report: acn, summary), or one
 ``...v1.<shard>.jsonl`` file per shard so that several GPUs can run at once; the loader
@@ -13,7 +16,13 @@ database is public, the model may still have memorised synopses during pre-train
 ``scripts/summary_overlap.py`` measures that. The prompt is fixed as ``PROMPT_VERSION``;
 a changed prompt needs a new version and output file.
 
-Runs with Hugging Face ``transformers`` in float16 on one CUDA GPU per process.
+Two backends: Hugging Face ``transformers`` in float16 on one CUDA GPU per process
+(``--backend hf``), or one or more Ollama servers, e.g. one per GPU serving a GGUF quant
+(``--backend ollama``) or llama.cpp ``llama-server`` instances (``--backend llamacpp``; on
+Volta GPUs, where Ollama's bundled CUDA 13 build has no kernels), with ``--per-host`` requests
+in flight on each. Corpus v2
+(``--data-dir data/processed_v2``) keys reports by document id (``NTSB:<ev_id>`` etc.), and
+``--order`` sets which sources go first.
 """
 
 from __future__ import annotations
@@ -22,6 +31,8 @@ import argparse
 import json
 import sys
 import time
+import urllib.request
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 from asrsbench.data import load_reports
@@ -38,6 +49,63 @@ SYSTEM = (
 )
 
 
+def ollama_summary(host: str, model: str, narrative: str, max_new_tokens: int) -> str:
+    """One summary from an Ollama server (thinking off, greedy decoding)."""
+    body = {"model": model, "stream": False, "think": False, "keep_alive": "60m",
+            "messages": [{"role": "system", "content": SYSTEM},
+                         {"role": "user",
+                          "content": "Narrative:\n" + " ".join(narrative.split()[:MAX_WORDS])}],
+            "options": {"temperature": 0, "num_ctx": 4096, "num_predict": max_new_tokens}}
+    req = urllib.request.Request(f"{host}/api/chat", data=json.dumps(body).encode(),
+                                 headers={"Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=600) as r:
+        return json.loads(r.read())["message"]["content"]
+
+
+def llamacpp_summary(host: str, model: str, narrative: str, max_new_tokens: int) -> str:
+    """One summary from a llama.cpp ``llama-server`` (OpenAI-style API, thinking off, greedy)."""
+    body = {"model": model, "temperature": 0, "max_tokens": max_new_tokens,
+            "chat_template_kwargs": {"enable_thinking": False},
+            "messages": [{"role": "system", "content": SYSTEM},
+                         {"role": "user",
+                          "content": "Narrative:\n" + " ".join(narrative.split()[:MAX_WORDS])}]}
+    req = urllib.request.Request(f"{host}/v1/chat/completions", data=json.dumps(body).encode(),
+                                 headers={"Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=600) as r:
+        return json.loads(r.read())["choices"][0]["message"]["content"]
+
+
+def run_ollama(todo, out: Path, args) -> int:
+    """Summarise ``todo`` on the servers in ``args.hosts`` (Ollama or llama-server); returns
+    the exit code."""
+    hosts = args.hosts.split(",")
+    call = llamacpp_summary if args.backend == "llamacpp" else ollama_summary
+    acns, nars = todo["acn"].tolist(), todo["narrative"].tolist()
+    t0, n_ok, n_bad = time.time(), 0, 0
+    with out.open("a", encoding="utf-8") as f, \
+            ThreadPoolExecutor(len(hosts) * args.per_host) as pool:
+        futs = {pool.submit(call, hosts[i % len(hosts)], args.model, n,
+                            args.max_new_tokens): i for i, n in enumerate(nars)}
+        for k, fut in enumerate(as_completed(futs), 1):
+            i = futs[fut]
+            rec = {"acn": acns[i], "model": args.model, "backend": args.backend,
+                   "prompt_version": PROMPT_VERSION, "truncated": len(nars[i].split()) > MAX_WORDS}
+            try:
+                rec["summary"] = " ".join(fut.result().split())
+                n_ok += bool(rec["summary"])
+                n_bad += not rec["summary"]
+            except Exception as e:  # logged; the report is retried on the next run
+                rec["error"] = f"{type(e).__name__}: {e}"[:300]
+                n_bad += 1
+            f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+            if k % 200 == 0 or k == len(nars):
+                f.flush()
+                dt = time.time() - t0
+                print(f"{k}/{len(nars)} {k / dt:.2f} reports/s, eta {(len(nars) - k) * dt / k / 3600:.1f} h "
+                      f"ok={n_ok} failed={n_bad}", flush=True)
+    return 1 if n_bad else 0
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", default="Qwen/Qwen3-8B")
@@ -48,10 +116,13 @@ def main() -> None:
                     help="max narrative words per batch (GPU memory)")
     ap.add_argument("--max-new-tokens", type=int, default=96)
     ap.add_argument("--limit", type=int, default=None, help="only the first N pending reports")
+    ap.add_argument("--backend", choices=["hf", "ollama", "llamacpp"], default="hf")
+    ap.add_argument("--hosts", default="http://127.0.0.1:11434",
+                    help="comma-separated Ollama servers (--backend ollama)")
+    ap.add_argument("--per-host", type=int, default=8, help="requests in flight per Ollama server")
+    ap.add_argument("--data-dir", default="data/processed")
+    ap.add_argument("--order", default="", help="comma-separated id prefixes to summarise first")
     args = ap.parse_args()
-
-    import torch
-    from transformers import AutoModelForCausalLM, AutoTokenizer
 
     slug = args.model.split("/")[-1].lower()
     suffix = f".{args.shard}" if args.n_shards > 1 else ""
@@ -67,15 +138,26 @@ def main() -> None:
             if rec.get("summary"):
                 done.add(rec["acn"])
 
-    reports = load_reports()
+    reports = load_reports(args.data_dir)
     reports = reports.iloc[args.shard :: args.n_shards]
     todo = reports[~reports["acn"].isin(done)]
-    # Similar lengths in a batch waste less padding; longest first surfaces memory errors early.
-    todo = todo.assign(_n=todo["n_words"]).sort_values("_n", ascending=False)
+    if args.order:
+        prefixes = args.order.split(",")
+        rank = todo["acn"].map(lambda a: next((i for i, p in enumerate(prefixes) if a.startswith(p)),
+                                              len(prefixes)))
+        todo = todo.assign(_r=rank).sort_values(["_r", "acn"], kind="stable")
+    elif args.backend == "hf":
+        # Similar lengths in a batch waste less padding; longest first surfaces memory errors early.
+        todo = todo.assign(_n=todo["n_words"]).sort_values("_n", ascending=False)
     if args.limit:
         todo = todo.head(args.limit)
     print(f"shard {args.shard}/{args.n_shards}: {len(reports)} reports, {len(done)} done, "
           f"{len(todo)} to summarise -> {out}", flush=True)
+    if args.backend in ("ollama", "llamacpp"):
+        sys.exit(run_ollama(todo, out, args))
+
+    import torch
+    from transformers import AutoModelForCausalLM, AutoTokenizer
 
     tok = AutoTokenizer.from_pretrained(args.model, padding_side="left")
     model = AutoModelForCausalLM.from_pretrained(args.model, dtype=torch.float16,
