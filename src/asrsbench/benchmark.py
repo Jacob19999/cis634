@@ -25,7 +25,7 @@ import pandas as pd
 import yaml
 
 from . import __version__
-from .data import ChunkConfig, load_chunks, load_reports
+from .data import ChunkConfig, load_chunks, load_reports, load_summaries, summary_units
 from .metrics import bootstrap_ci, evaluate_run, paired_randomization_test, wilson_ci
 from .retrievers import Retriever, Units, build_systems
 from .tracks import QuerySet, load_contrast, synopsis_track, topical_track
@@ -46,15 +46,30 @@ def load_config(path: str | Path) -> dict:
 
 
 def _unit_sets(cfg: dict, reports: pd.DataFrame) -> dict[str, Units]:
-    """Build only the unit sets (chunks and/or whole reports) that some system needs."""
+    """Build only the unit sets (chunks, whole reports, summaries) that some system needs.
+
+    ``summary`` indexes one LLM summary per report; ``chunk_summary`` adds each report's
+    summary as one more unit next to its chunks, so MaxP can match either. Both read the
+    config's top-level ``summaries`` file.
+    """
     modes = {s.get("params", {}).get("doc_mode", "chunk_max") for s in cfg["systems"]
              if s["type"] != "hybrid"}
     sets = {}
-    if "chunk_max" in modes:
-        ccfg = ChunkConfig(**cfg["chunking"])
-        sets["chunk_max"] = Units.from_chunks(load_chunks(ccfg, cfg["data_dir"], reports), ccfg.tag)
+    ccfg = ChunkConfig(**cfg["chunking"])
+    if modes & {"chunk_max", "chunk_summary"}:
+        chunks = load_chunks(ccfg, cfg["data_dir"], reports)
+        sets["chunk_max"] = Units.from_chunks(chunks, ccfg.tag)
     if "whole" in modes:
         sets["whole"] = Units.from_reports(reports)
+    if modes & {"summary", "chunk_summary"}:
+        if not cfg.get("summaries"):
+            raise ValueError("doc_mode summary / chunk_summary needs a top-level `summaries:` file")
+        stem = Path(cfg["summaries"]).stem
+        summ = summary_units(reports, load_summaries(cfg["summaries"]))
+        sets["summary"] = Units.from_chunks(summ, f"sum-{stem}")
+        if "chunk_summary" in modes:
+            sets["chunk_summary"] = Units.from_chunks(pd.concat([summ, chunks]),
+                                                      f"{ccfg.tag}+sum-{stem}")
     return sets
 
 
@@ -161,8 +176,10 @@ def run_contrast(path: str, systems: dict[str, Retriever], out: Path) -> pd.Data
         if not system.supports_pairs:
             continue
         for cond, (anchor, pos, neg) in CONTRAST_CONDITIONS.items():
-            s_pos = system.pair_scores(items[anchor].tolist(), items[pos].tolist())
-            s_neg = system.pair_scores(items[anchor].tolist(), items[neg].tolist())
+            # ``prepare`` applies the system's acronym expansion, if any, to every sentence.
+            a, p, n = (system.prepare(items[c].tolist()) for c in (anchor, pos, neg))
+            s_pos = system.pair_scores(a, p)
+            s_neg = system.pair_scores(a, n)
             # 1 = pass, 0 = fail, 0.5 = tie.
             passed = np.where(s_pos > s_neg, 1.0, np.where(np.isclose(s_pos, s_neg), 0.5, 0.0))
             frames.append(items[["id", "category"]].assign(

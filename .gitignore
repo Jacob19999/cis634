@@ -14,6 +14,10 @@ __pycache__/
 data/raw/
 data/processed/
 data/graph/
+# LLM report summaries (scripts/summarise_reports.py, ~3 GPU-hours) and the downloaded
+# FAA PDFs (scripts/build_faa_glossary.py records their URLs and checksums)
+data/summaries/
+data/external/
 cache/
 
 # Per-run raw outputs (summary tables in results/ are committed)

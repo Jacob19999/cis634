@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from asrsbench.retrievers import BM25Retriever, HybridRetriever, Units
+from asrsbench.retrievers import BM25Retriever, HybridRetriever, Retriever, Units
 from asrsbench.retrievers.base import SearchResult
 
 DOCS = [
@@ -95,3 +95,30 @@ def test_rrf_fusion():
     assert set(res.doc_ids[:2]) == {"x", "y"}
     assert res.scores[0] == pytest.approx(1 / 61 + 1 / 62)
     assert list(res.doc_ids[2:]) == ["z", "w"]
+
+
+class _CountX(Retriever):  # a unit's score = its number of "x"
+    def build(self, units):
+        self.E = np.array([t.count("x") for t in units.texts], dtype=np.float32)
+
+    def score_units(self, queries):
+        return np.tile(self.E, (len(queries), 1))
+
+
+def test_max_fusion_equals_maxp_over_the_union_of_units():
+    chunks = pd.DataFrame({"chunk_id": ["1_1_0", "1_1_1", "2_1_0", "3_1_0"],
+                           "acn": ["1", "1", "2", "3"], "narrative_idx": 1, "chunk_idx": [0, 1, 0, 0],
+                           "text": ["x", "xxx", "xx", ""]})
+    summ = pd.DataFrame({"chunk_id": ["1_s", "2_s", "3_s"], "acn": ["1", "2", "3"],
+                         "narrative_idx": 0, "chunk_idx": 0, "text": ["xx", "xxxx", "x"]})
+    a, b, union = _CountX("a"), _CountX("b"), _CountX("u")
+    a.index(Units.from_chunks(chunks, "c"))
+    b.index(Units.from_chunks(summ, "s"))
+    union.index(Units.from_chunks(pd.concat([summ, chunks]), "cs"))
+    h = HybridRetriever("h", [a, b], method="max", depth=10)
+    h.index(a.units)
+    [got] = h.search(["q"], k=3)
+    [want] = union.search(["q"], k=3)
+    assert list(got.doc_ids) == list(want.doc_ids) == ["2", "1", "3"]
+    assert np.allclose(got.scores, want.scores)
+    assert list(got.best_units) == list(want.best_units) == ["2_s", "1_1_1", "3_s"]

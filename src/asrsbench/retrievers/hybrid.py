@@ -2,6 +2,9 @@
 
 ``rrf``: reciprocal rank fusion, score(d) = sum_s 1 / (k + rank_s(d))  (Cormack et al., 2009).
 ``convex``: alpha-weighted sum of per-query min-max normalised scores.
+``max``: a report's best raw score over the components. Only meaningful when the components
+score on one scale, e.g. one encoder over chunks and over LLM summaries: it then equals MaxP
+over the union of their units, without re-encoding the union (exact for k <= depth).
 A document missing from a component's top-``depth`` list gets no contribution from it.
 """
 
@@ -20,8 +23,11 @@ class HybridRetriever(Retriever):
     def __init__(self, name: str, components: list[Retriever], method: str = "rrf",
                  k: int = 60, weights: list[float] | None = None, depth: int = 1000, **kw):
         kw.pop("doc_mode", None)
+        if kw.get("expand") or kw.get("query_rewrites"):
+            raise ValueError("a hybrid fuses rankings; set `expand` / `query_rewrites` on its "
+                             "components instead")
         super().__init__(name, doc_mode="chunk_max", **kw)
-        if method not in ("rrf", "convex"):
+        if method not in ("rrf", "convex", "max"):
             raise ValueError(f"unknown fusion method {method!r}")
         self.components = components
         self.method, self.k, self.depth = method, k, depth
@@ -44,6 +50,11 @@ class HybridRetriever(Retriever):
             fused: dict[str, float] = {}
             passage: dict[str, str] = {}
             for w, res in zip(self.weights, per_q):
+                if self.method == "max":
+                    for d, s, u in zip(res.doc_ids, res.scores, res.best_units):
+                        if d not in fused or s > fused[d]:
+                            fused[d], passage[d] = float(s), u  # passage of the best unit
+                    continue
                 if self.method == "rrf":
                     # RRF: the report at rank r gets 1 / (k + r). Equal weights make w * n = 1.
                     contrib = w * len(self.weights) / (self.k + np.arange(1, len(res.doc_ids) + 1))

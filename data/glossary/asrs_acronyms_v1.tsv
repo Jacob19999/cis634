@@ -1,0 +1,142 @@
+abbr	expansion	source
+ACARS	aircraft communications addressing and reporting system	manual
+ADS	automatic dependent surveillance	manual
+ADSB	automatic dependent surveillance broadcast	manual
+AGL	above ground level	manual
+ALT	altitude	jo7340
+AMM	aircraft maintenance manual	manual
+AOA	angle of attack	manual
+AP	autopilot	manual
+APP	approach control	jo7340
+APU	auxiliary power unit	manual
+ARFF	aircraft rescue and fire fighting	jo7340
+ARINC	aeronautical radio incorporated	jo7340
+ASDE	airport surface detection equipment	jo7340
+ASOS	automated surface observing system	manual
+ATC	air traffic control	pcg
+ATIS	automatic terminal information service	pcg
+CDU	control display unit	manual
+CFI	certified flight instructor	manual
+CFR	code of federal regulations	manual
+CG	center of gravity	manual
+CIC	controller in charge	jo7340
+CPC	certified professional controller	manual
+CRM	crew resource management	manual
+CTAF	common traffic advisory frequency	pcg
+DME	distance measuring equipment	pcg
+ECAM	electronic centralized aircraft monitor	manual
+EEC	electronic engine control	manual
+EFB	electronic flight bag	manual
+EFIS	electronic flight instrument system	manual
+EGPWS	enhanced ground proximity warning system	manual
+EGT	exhaust gas temperature	manual
+EICAS	engine indicating and crew alerting system	manual
+EMS	emergency medical services	manual
+EPR	engine pressure ratio	manual
+FA	flight attendant	manual
+FAA	federal aviation administration	jo7340
+FAF	final approach fix	pcg
+FAR	federal aviation regulations	jo7340
+FBO	fixed-base operator	jo7340
+FD	flight director	manual
+FL	flight level	jo7340
+FLCH	flight level change	manual
+FLM	front line manager	manual
+FLT	flight	jo7340
+FMA	flight mode annunciator	manual
+FMC	flight management computer	manual
+FMGC	flight management guidance computer	manual
+FMS	flight management system	pcg
+FO	first officer	manual
+FOB	fuel on board	jo7340
+FOM	flight operations manual	manual
+FPM	feet per minute	jo7340
+FSDO	flight standards district office	jo7340
+FSS	flight service station	jo7340
+GPS	global positioning system	pcg
+GPU	ground power unit	manual
+GPWS	ground proximity warning system	manual
+HAZMAT	hazardous materials	jo7340
+HDG	heading	jo7340
+HF	high frequency	jo7340
+HSI	horizontal situation indicator	manual
+HUD	head-up display	manual
+HYD	hydraulic	jo7340
+IAF	initial approach fix	pcg
+IAS	indicated airspeed	jo7340
+IAW	in accordance with	jo7340
+IDG	integrated drive generator	manual
+IFR	instrument flight rules	pcg
+ILS	instrument landing system	pcg
+IMC	instrument meteorological conditions	pcg
+INOP	inoperative	jo7340
+IPC	illustrated parts catalog	manual
+IRO	international relief officer	manual
+IRS	inertial reference system	manual
+ITT	interstage turbine temperature	manual
+KIAS	knots indicated airspeed	jo7340
+LC	local control	jo7340
+LNAV	lateral navigation	pcg
+LOA	letter of agreement	jo7340
+LOC	localizer	jo7340
+MCP	mode control panel	manual
+MDA	minimum descent altitude	jo7340
+MEA	minimum en route ifr altitude	jo7340
+MEL	minimum equipment list	manual
+METAR	aviation routine weather report	jo7340
+MFD	multi-function display	manual
+MOA	military operations area	jo7340
+MSA	minimum safe altitude	jo7340
+MSL	mean sea level	jo7340
+MVA	minimum vectoring altitude	pcg
+NAS	national airspace system	jo7340
+ND	navigation display	manual
+NMAC	near midair collision	manual
+NORDO	no radio	jo7340
+NOTAM	notice to airmen	pcg
+NTSB	national transportation safety board	jo7340
+OAT	outside air temperature	jo7340
+OE	operating experience	manual
+OJT	on-the-job training	jo7340
+OJTI	on-the-job training instructor	manual
+OM	outer marker	jo7340
+PAPI	precision approach path indicator	jo7340
+PDC	pre-departure clearance	jo7340
+PF	pilot flying	manual
+PFD	primary flight display	manual
+PIC	pilot in command	jo7340
+PIREP	pilot weather report	jo7340
+PM	pilot monitoring	manual
+POH	pilot operating handbook	manual
+QRC	quick reference card	manual
+QRH	quick reference handbook	manual
+RA	resolution advisory	manual
+RNAV	area navigation	pcg
+RNP	required navigation performance	pcg
+RTO	rejected takeoff	manual
+RVR	runway visual range	jo7340
+RWY	runway	jo7340
+SATCOM	satellite communication	jo7340
+SID	standard instrument departure	pcg
+SOP	standard operating procedure	jo7340
+STAR	standard terminal arrival	pcg
+STARS	standard terminal automation replacement system	jo7340
+TA	traffic advisory	manual
+TAF	terminal aerodrome forecast	manual
+TCAS	traffic alert and collision avoidance system	pcg
+TMU	traffic management unit	pcg
+TOD	top of descent	jo7340
+TOGA	takeoff go-around	manual
+TRACON	terminal radar approach control	jo7340
+UAS	unmanned aircraft system	manual
+UAV	unmanned aerial vehicle	manual
+VASI	visual approach slope indicator	jo7340
+VFR	visual flight rules	pcg
+VHF	very high frequency	pcg
+VMC	visual meteorological conditions	pcg
+VNAV	vertical navigation	pcg
+VOR	vhf omni-directional radio range	jo7340
+VS	vertical speed	manual
+VSI	vertical speed indicator	manual
+WX	weather	manual
+ZFW	zero fuel weight	manual

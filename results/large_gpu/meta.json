@@ -1,0 +1,172 @@
+{
+  "asrsbench_version": "0.1.0",
+  "python": "3.13.11",
+  "platform": "Linux-5.15.0-202-generic-x86_64-with-glibc2.35",
+  "n_reports": 47723,
+  "n_units": {
+    "chunk_max": 136842,
+    "whole": 47723
+  },
+  "device": "cuda",
+  "systems": {
+    "bm25": {
+      "name": "bm25",
+      "class": "BM25Retriever",
+      "doc_mode": "chunk_max",
+      "k1": 1.2,
+      "b": 0.75,
+      "stopwords": "english",
+      "stem": true
+    },
+    "bm25-whole": {
+      "name": "bm25-whole",
+      "class": "BM25Retriever",
+      "doc_mode": "whole",
+      "k1": 1.2,
+      "b": 0.75,
+      "stopwords": "english",
+      "stem": true
+    },
+    "qwen3-0.6b-generic": {
+      "name": "qwen3-0.6b-generic",
+      "class": "DenseRetriever",
+      "doc_mode": "chunk_max",
+      "model": "Qwen/Qwen3-Embedding-0.6B",
+      "query_prefix": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+      "passage_prefix": "",
+      "max_seq_length": 512,
+      "device": "cuda",
+      "dtype": "float16",
+      "encode_seconds": null
+    },
+    "qwen3-0.6b-whole": {
+      "name": "qwen3-0.6b-whole",
+      "class": "DenseRetriever",
+      "doc_mode": "whole",
+      "model": "Qwen/Qwen3-Embedding-0.6B",
+      "query_prefix": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+      "passage_prefix": "",
+      "max_seq_length": 2048,
+      "device": "cuda",
+      "dtype": "float16",
+      "encode_seconds": null
+    },
+    "qwen3-4b": {
+      "name": "qwen3-4b",
+      "class": "DenseRetriever",
+      "doc_mode": "chunk_max",
+      "model": "Qwen/Qwen3-Embedding-4B",
+      "query_prefix": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+      "passage_prefix": "",
+      "max_seq_length": 512,
+      "device": "cuda",
+      "dtype": "float16",
+      "encode_seconds": null
+    },
+    "qwen3-8b": {
+      "name": "qwen3-8b",
+      "class": "DenseRetriever",
+      "doc_mode": "chunk_max",
+      "model": "Qwen/Qwen3-Embedding-8B",
+      "query_prefix": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+      "passage_prefix": "",
+      "max_seq_length": 512,
+      "device": "cuda",
+      "dtype": "float16",
+      "encode_seconds": null
+    },
+    "hybrid-bm25-qwen3-generic": {
+      "name": "hybrid-bm25-qwen3-generic",
+      "class": "HybridRetriever",
+      "method": "rrf",
+      "k": 60,
+      "weights": [
+        0.5,
+        0.5
+      ],
+      "depth": 1000,
+      "components": [
+        "bm25",
+        "qwen3-0.6b-generic"
+      ]
+    },
+    "hybrid-bm25-qwen3-4b": {
+      "name": "hybrid-bm25-qwen3-4b",
+      "class": "HybridRetriever",
+      "method": "rrf",
+      "k": 60,
+      "weights": [
+        0.5,
+        0.5
+      ],
+      "depth": 1000,
+      "components": [
+        "bm25",
+        "qwen3-4b"
+      ]
+    },
+    "hybrid-bm25-qwen3-8b": {
+      "name": "hybrid-bm25-qwen3-8b",
+      "class": "HybridRetriever",
+      "method": "rrf",
+      "k": 60,
+      "weights": [
+        0.5,
+        0.5
+      ],
+      "depth": 1000,
+      "components": [
+        "bm25",
+        "qwen3-8b"
+      ]
+    }
+  },
+  "timings": {
+    "bm25": {
+      "index_seconds": 28.42,
+      "query_seconds_synopsis": 8.09,
+      "query_seconds_topical": 0.3
+    },
+    "bm25-whole": {
+      "index_seconds": 24.75,
+      "query_seconds_synopsis": 3.43,
+      "query_seconds_topical": 0.12
+    },
+    "qwen3-0.6b-generic": {
+      "index_seconds": 14.24,
+      "query_seconds_synopsis": 9.86,
+      "query_seconds_topical": 0.46
+    },
+    "qwen3-0.6b-whole": {
+      "index_seconds": 3.74,
+      "query_seconds_synopsis": 11.17,
+      "query_seconds_topical": 0.46
+    },
+    "qwen3-4b": {
+      "index_seconds": 8.43,
+      "query_seconds_synopsis": 18.81,
+      "query_seconds_topical": 0.69
+    },
+    "qwen3-8b": {
+      "index_seconds": 14.91,
+      "query_seconds_synopsis": 27.26,
+      "query_seconds_topical": 0.89
+    },
+    "hybrid-bm25-qwen3-generic": {
+      "index_seconds": 0.0,
+      "query_seconds_synopsis": 34.42,
+      "query_seconds_topical": 1.31
+    },
+    "hybrid-bm25-qwen3-4b": {
+      "index_seconds": 0.0,
+      "query_seconds_synopsis": 43.6,
+      "query_seconds_topical": 1.61
+    },
+    "hybrid-bm25-qwen3-8b": {
+      "index_seconds": 0.0,
+      "query_seconds_synopsis": 52.46,
+      "query_seconds_topical": 1.9
+    },
+    "_total_index_seconds": 94.5
+  }
+}

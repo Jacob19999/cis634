@@ -1,0 +1,207 @@
+{
+  "asrsbench_version": "0.1.0",
+  "python": "3.13.11",
+  "platform": "Linux-5.15.0-202-generic-x86_64-with-glibc2.35",
+  "n_reports": 47723,
+  "n_units": {
+    "chunk_max": 136842,
+    "summary": 47723,
+    "chunk_summary": 184565
+  },
+  "device": "cuda",
+  "systems": {
+    "bm25": {
+      "name": "bm25",
+      "class": "BM25Retriever",
+      "doc_mode": "chunk_max",
+      "k1": 1.2,
+      "b": 0.75,
+      "stopwords": "english",
+      "stem": true
+    },
+    "bm25-sum": {
+      "name": "bm25-sum",
+      "class": "BM25Retriever",
+      "doc_mode": "summary",
+      "k1": 1.2,
+      "b": 0.75,
+      "stopwords": "english",
+      "stem": true
+    },
+    "bm25-chunk-sum": {
+      "name": "bm25-chunk-sum",
+      "class": "BM25Retriever",
+      "doc_mode": "chunk_summary",
+      "k1": 1.2,
+      "b": 0.75,
+      "stopwords": "english",
+      "stem": true
+    },
+    "qwen3-0.6b": {
+      "name": "qwen3-0.6b",
+      "class": "DenseRetriever",
+      "doc_mode": "chunk_max",
+      "model": "Qwen/Qwen3-Embedding-0.6B",
+      "query_prefix": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+      "passage_prefix": "",
+      "max_seq_length": 512,
+      "device": "cuda",
+      "dtype": "float16",
+      "encode_seconds": null
+    },
+    "qwen3-0.6b-sum": {
+      "name": "qwen3-0.6b-sum",
+      "class": "DenseRetriever",
+      "doc_mode": "summary",
+      "model": "Qwen/Qwen3-Embedding-0.6B",
+      "query_prefix": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+      "passage_prefix": "",
+      "max_seq_length": 512,
+      "device": "cuda",
+      "dtype": "float16",
+      "encode_seconds": 140.24916291236877
+    },
+    "qwen3-0.6b-chunk-sum": {
+      "name": "qwen3-0.6b-chunk-sum",
+      "class": "HybridRetriever",
+      "method": "max",
+      "k": 60,
+      "weights": [
+        0.5,
+        0.5
+      ],
+      "depth": 1000,
+      "components": [
+        "qwen3-0.6b",
+        "qwen3-0.6b-sum"
+      ]
+    },
+    "qwen3-8b": {
+      "name": "qwen3-8b",
+      "class": "DenseRetriever",
+      "doc_mode": "chunk_max",
+      "model": "Qwen/Qwen3-Embedding-8B",
+      "query_prefix": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+      "passage_prefix": "",
+      "max_seq_length": 512,
+      "device": "cuda",
+      "dtype": "float16",
+      "encode_seconds": null
+    },
+    "qwen3-8b-sum": {
+      "name": "qwen3-8b-sum",
+      "class": "DenseRetriever",
+      "doc_mode": "summary",
+      "model": "Qwen/Qwen3-Embedding-8B",
+      "query_prefix": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+      "passage_prefix": "",
+      "max_seq_length": 512,
+      "device": "cuda",
+      "dtype": "float16",
+      "encode_seconds": 967.4507603645325
+    },
+    "qwen3-8b-chunk-sum": {
+      "name": "qwen3-8b-chunk-sum",
+      "class": "HybridRetriever",
+      "method": "max",
+      "k": 60,
+      "weights": [
+        0.5,
+        0.5
+      ],
+      "depth": 1000,
+      "components": [
+        "qwen3-8b",
+        "qwen3-8b-sum"
+      ]
+    },
+    "hybrid-bm25-qwen3-8b": {
+      "name": "hybrid-bm25-qwen3-8b",
+      "class": "HybridRetriever",
+      "method": "rrf",
+      "k": 60,
+      "weights": [
+        0.5,
+        0.5
+      ],
+      "depth": 1000,
+      "components": [
+        "bm25",
+        "qwen3-8b"
+      ]
+    },
+    "hybrid-bm25-qwen3-8b-chunk-sum": {
+      "name": "hybrid-bm25-qwen3-8b-chunk-sum",
+      "class": "HybridRetriever",
+      "method": "rrf",
+      "k": 60,
+      "weights": [
+        0.5,
+        0.5
+      ],
+      "depth": 1000,
+      "components": [
+        "bm25-chunk-sum",
+        "qwen3-8b-chunk-sum"
+      ]
+    }
+  },
+  "timings": {
+    "bm25": {
+      "index_seconds": 28.95,
+      "query_seconds_synopsis": 8.15,
+      "query_seconds_topical": 0.15
+    },
+    "bm25-sum": {
+      "index_seconds": 4.44,
+      "query_seconds_synopsis": 3.09,
+      "query_seconds_topical": 0.06
+    },
+    "bm25-chunk-sum": {
+      "index_seconds": 32.95,
+      "query_seconds_synopsis": 10.21,
+      "query_seconds_topical": 0.18
+    },
+    "qwen3-0.6b": {
+      "index_seconds": 19.09,
+      "query_seconds_synopsis": 8.8,
+      "query_seconds_topical": 0.23
+    },
+    "qwen3-0.6b-sum": {
+      "index_seconds": 140.77,
+      "query_seconds_synopsis": 5.34,
+      "query_seconds_topical": 0.11
+    },
+    "qwen3-0.6b-chunk-sum": {
+      "index_seconds": 0.0,
+      "query_seconds_synopsis": 30.45,
+      "query_seconds_topical": 0.57
+    },
+    "qwen3-8b": {
+      "index_seconds": 9.01,
+      "query_seconds_synopsis": 25.67,
+      "query_seconds_topical": 0.45
+    },
+    "qwen3-8b-sum": {
+      "index_seconds": 968.33,
+      "query_seconds_synopsis": 21.7,
+      "query_seconds_topical": 0.33
+    },
+    "qwen3-8b-chunk-sum": {
+      "index_seconds": 0.0,
+      "query_seconds_synopsis": 64.65,
+      "query_seconds_topical": 1.03
+    },
+    "hybrid-bm25-qwen3-8b": {
+      "index_seconds": 0.0,
+      "query_seconds_synopsis": 51.17,
+      "query_seconds_topical": 0.88
+    },
+    "hybrid-bm25-qwen3-8b-chunk-sum": {
+      "index_seconds": 0.0,
+      "query_seconds_synopsis": 87.12,
+      "query_seconds_topical": 1.48
+    },
+    "_total_index_seconds": 1203.54
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "summaries": "data/summaries/qwen3-8b_v1.jsonl",
+  "n_reports": 47723,
+  "ngram": 5,
+  "matched": {
+    "share_with_novel": 0.04519833204115416,
+    "mean_novel": 0.0689814135741676,
+    "share_with_3plus_novel": 0.005070930159461895
+  },
+  "shuffled": {
+    "share_with_novel": 0.00037717662343105,
+    "mean_novel": 0.0004819479077174528,
+    "share_with_3plus_novel": 2.0954256857280555e-05
+  },
+  "synopsis_ngrams_found_in_narrative": 0.013358590406168117,
+  "by_split": {
+    "test": {
+      "share_with_novel": 0.04546406871988267
+    },
+    "train": {
+      "share_with_novel": 0.04540162980209546
+    },
+    "validation": {
+      "share_with_novel": 0.04307334109429569
+    }
+  },
+  "examples": [
+    {
+      "acn": "1659582",
+      "novel": 8,
+      "synopsis": "C170 pilot reported loss of directional control after touchdown, resulting in a ground loop with the aircraft coming to rest on its nose.",
+      "summary": "During the second landing attempt, the aircraft began to move left after touchdown, the left wing dipped, and the pilot initiated a go-around. However, insufficient airspeed led to loss of directional control, resulting in a ground loop with the aircraft coming to rest on the nose, right main gear, and right wing. No injuries were reported."
+    },
+    {
+      "acn": "989512",
+      "novel": 8,
+      "synopsis": "A GLF4 flight crew initiated an emergency descent, declared an emergency and diverted to a nearby airport following a loss of cabin pressurization.",
+      "summary": "During climb to FL430, cabin pressurization failed with cabin altitude at 10,500 FT climbing at 1,500 FT/min. The crew initiated an emergency descent, declared an emergency, and diverted to a suitable airport after reaching 10,000 FT."
+    },
+    {
+      "acn": "1507782",
+      "novel": 7,
+      "synopsis": "B737 Captain reported a diversion after a Flight Attendant lost consciousness and hit her head during cruise.",
+      "summary": "A flight attendant lost consciousness and hit her head during cruise, prompting a medical response and diversion to ZZZ. The crew diverted to ZZZ due to the flight attendant's critical condition, landed slightly overweight, and the injured crew member was hospitalized after landing."
+    },
+    {
+      "acn": "995705",
+      "novel": 7,
+      "synopsis": "A CE-750 flight crew executed a missed approach due to a low altitude alert from the Tower and an EGPWS terrain warning while on the RNAV 16 approach to BVY. A second approach was successful utilizing the LOC 16 IAP although a second low altitude alert was issued by the Tower. During a debriefing the flight crew determined they had utilized the lower MDA for an LPV vice LNAV equipped aircraft.",
+      "summary": "The crew executed a missed approach due to a low altitude alert during the LOC 16 approach, later realizing they had used incorrect minimums from the RNAV 16 approach briefing. The tower confirmed the low altitude alert was common for Runway 16 approaches."
+    },
+    {
+      "acn": "1120949",
+      "novel": 7,
+      "synopsis": "An MD-80 arriving at its destination with minimum fuel was directed to go-around due to an airport emergency. They declared a fuel emergency and received appropriate special handling, arriving at the gate with fuel remaining of 2,700 LBS.",
+      "summary": "The crew was on final approach when instructed to go around due to an airport emergency. They declared a low fuel emergency, touched down with 3,400 lbs, and arrived at the gate with 2,700 lbs after a delay."
+    }
+  ]
+}

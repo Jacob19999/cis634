@@ -1,0 +1,2727 @@
+abbr	expansion	source
+AAC	alaskan air command	jo7340
+AAD	assigned altitude deviation	jo7340
+AADC	approach and departure control	jo7340
+AAF	army air field	jo7340
+AAITVL	arrival aircraft interval	jo7340
+AAL	alaskan region, faa	jo7340
+AAM	advanced air mobility	pcg
+AAP	advise if able to proceed	jo7340
+AAR	airport arrival rate	pcg
+AARTE	airport acceptance rate	jo7340
+AATM	at all times	jo7340
+AAUP	attention all users page	pcg
+AAWTA	advise at what time able	jo7340
+AB	airborne	jo7340
+ABBR	abbreviate	jo7340
+ABCST	automatic broadcast	jo7340
+ABD	aboard	jo7340
+ABI	advance boundary information	jo7340
+ABLCHG	airborne launching	jo7340
+ABM	abeam	jo7340
+ABN	aerodrome beacon	jo7340
+ABND	abandon	jo7340
+ABNDT	abundant	jo7340
+ABRR	airborne reroute	pcg
+AC	advisory circular	pcg
+ACDO	air carrier district office	pcg
+ACL	aircraft list	pcg
+ACLS	automatic carrier landing system	pcg
+ACT	technical center, faa	jo7340
+ACTG	acting	jo7340
+ACTV	active	jo7340
+ACTVT	activate	jo7340
+ACW	aircraft control and warning	jo7340
+AD	aerodrome	jo7340
+ADA	advisory area	jo7340
+ADAP	airport development aid program	jo7340
+ADAR	adapted routes	pcg
+ADC	aerodrome chart	jo7340
+ADCF	air defense control facility	jo7340
+ADCON	advise or issue instructions to all concerned	jo7340
+ADCUS	advise customs	jo7340
+ADDN	addition	jo7340
+ADE	air defense emergency	jo7340
+ADF	automatic direction finder	pcg
+ADFAP	automatic direction finder approach	jo7340
+ADIZ	air defense identification zone	pcg
+ADJ	adjacent	jo7340
+ADL	aggregate demand list	jo7340
+ADLO	air defense liaison officer	jo7340
+ADLY	arrival delay	pcg
+ADMAP	advise by air mail as soon as possible	jo7340
+ADMIN	administration	jo7340
+ADMIR	administrator	jo7340
+ADMIS	aircraft departing at (number of minutes) intervals	jo7340
+ADMIV	administrative	jo7340
+ADNL	additional	jo7340
+ADNOK	advise if not correct	jo7340
+ADO	airport district office	jo7340
+ADP	automatic data processing	jo7340
+ADPE	automatic data processing equipment	jo7340
+ADPS	automatic data processing systems	jo7340
+ADQT	adequate	jo7340
+ADR	adapted routes	pcg
+ADRDE	advise reason for delay	jo7340
+ADRT	alternate departure route	jo7340
+ADSPN	advise disposition	jo7340
+ADSU	automatic dependent surveillance unit	jo7340
+ADVALT	allotment advice	jo7340
+ADVC	advice	jo7340
+ADVN	advance	jo7340
+ADVZY	advisory	jo7340
+ADW	arrival departure window	pcg
+ADZ	advise	jo7340
+ADZAR	advise arrival	jo7340
+ADZI	advise intentions	jo7340
+ADZOF	advise this office	jo7340
+ADZY	advisory	jo7340
+AEA	eastern region, faa	jo7340
+AEM	aircraft and engine mechanic	jo7340
+AENG	airways engineer	jo7340
+AER	approach end runway	jo7340
+AERO	aeronautical	jo7340
+AES	aircraft earth station faa	jo7340
+AEVAC	air evacuation	jo7340
+AEW	airborne early warning	jo7340
+AFB	air force base	jo7340
+AFCT	affect	jo7340
+AFIL	filed flight plan in the air	jo7340
+AFIO	authorization for interceptor operations	jo7340
+AFIRM	affirmative	jo7340
+AFIS	aerodrome flight information service	jo7340
+AFJ	air force jet	jo7340
+AFM	affirmative	jo7340
+AFNEA	air force notam exchange area	jo7340
+AFNEO	air force notam exchange office	jo7340
+AFP	airspace flow program	pcg
+AFRCC	air force rescue coordination center	jo7340
+AFREP	air force representative to the faa	jo7340
+AFRT	air freight	jo7340
+AFS	aeronautical fixed service	jo7340
+AFT	after	jo7340
+AG	air ground	jo7340
+AGACS	automatic ground air/ground communication system	jo7340
+AGL	great lakes region, faa	jo7340
+AGN	again	jo7340
+AGR	agree	jo7340
+AGRMT	agreement	jo7340
+AHA	aircraft hazard area	pcg
+AHD	ahead	jo7340
+AI	arrival approved request for ifr flight	jo7340
+AIA	advise if able	jo7340
+AIATSC	all international air traffic switching centers	jo7340
+AIC	aeronautical information circular	jo7340
+AID	airport information desk	jo7340
+AIDC	air traffic services inter-facility data communication	jo7340
+AIFP	activate ifr flight plan	jo7340
+AILS	automatic instrument landing system	jo7340
+AIM	aeronautical information manual	pcg
+AIP	aeronautical information publications (in general) control	jo7340
+AIRCRAFT	heavy	pcg
+AIREP	air report	jo7340
+AIRFL	air refueling	jo7340
+AIRMET	airmen's meteorological information	jo7340
+AIROPNET	air operations network	jo7340
+AIS	aeronautical information services	pcg
+AIT	automated information transfer	pcg
+ALA	alighting area	jo7340
+ALACFO	all air carrier field offices area	jo7340
+ALAFFO	all technical operations	jo7340
+ALANO	all accident notice offices	jo7340
+ALARTC	all air route traffic control centers in service area	jo7340
+ALAT	all air traffic service personnel in service area	jo7340
+ALATAS	all air traffic (area) supervisors in service area	jo7340
+ALATF	all air traffic field facilities	jo7340
+ALATFO	all air traffic field offices	jo7340
+ALCKT	all offices having send-receive teletypewriter service on circuit service area service area	jo7340
+ALCT	attempt to locate	jo7340
+ALD	available landing distance	pcg
+ALDA	air line dispatchers association	jo7340
+ALERFA	alert phase code (alerting service)	jo7340
+ALFAA	all faa field offices and personnel	jo7340
+ALFAB	all faa offices on nadin	jo7340
+ALFSFO	all flight standards field offices	jo7340
+ALG	along	jo7340
+ALIATSC	all international aeronautical telecommunication switching centers	jo7340
+ALIFO	all international field offices service area	jo7340
+ALNMT	alignment	jo7340
+ALNOT	alert notice	pcg
+ALP	airport layout plan	jo7340
+ALPA	air line pilots association	jo7340
+ALR	alerting	jo7340
+ALRAFAC	all radar atc facilities in service area	jo7340
+ALRGN	all regional/service area offices	jo7340
+ALS	approach light system	jo7340
+ALSTG	altimeter setting	jo7340
+ALT	altitude	jo7340
+ALTM	altimeter	jo7340
+ALTPT	alternate airport	jo7340
+ALTRV	altitude reservation	pcg
+ALTWR	all atc towers in service area	jo7340
+AMA	area minimum altitude	jo7340
+AMB	ambiguity	jo7340
+AMC	mike monroney aeronautical center, faa	jo7340
+AMCL	amended clearance	jo7340
+AMD	amend / amended forecast	jo7340
+AMDT	amendment	jo7340
+AMECH	account mechanical	jo7340
+AMGR	airport manager	jo7340
+AMOS	automatic meteorological observing system 2−1−3	jo7340
+AMP	amplifier or amplify	jo7340
+AMRF	amended route of flight	jo7340
+AMS	aeronautical mobile service	jo7340
+AMSL	above mean sea level	jo7340
+AMSS	aeronautical mobile satellite service	jo7340
+AMT	amount	jo7340
+AMVER	automated mutual-assistance vessel rescue system	pcg
+ANC	aeronautical chart 1:500 000 (followed by name/title)	jo7340
+ANCPT	anticipate	jo7340
+ANCS	aeronautical navigation chart small scale (followed by name/title scale)	jo7340
+ANE	new england region, faa	jo7340
+ANF	air navigation facility	jo7340
+ANG	air national guard	jo7340
+ANM	northwest mountain region, faa	jo7340
+ANMS	automatic network management system	jo7340
+ANNC	announce	jo7340
+ANP	actual navigation performance	pcg
+ANR	advanced navigation routes	jo7340
+ANRA	air navigation radio aids	jo7340
+ANS	answer	jo7340
+ANT	antenna	jo7340
+AOA	at or above	jo7340
+AOAF	at or after	jo7340
+AOB	at or below	jo7340
+AOBF	at or before	jo7340
+AOC	airport operating certificate	jo7340
+AOCP	aircraft out of commission for parts	jo7340
+AOE	airport of entry	jo7340
+AOPA	aircraft owners and pilots association	jo7340
+AP	anomalous propagation	jo7340
+APAP	approach path alignment panel	jo7340
+APAPI	abbreviated precision approach path indicator	jo7340
+APB	automated problem detection boundary	pcg
+APC	area positive control	jo7340
+APCH	approach by name/title)	jo7340
+APD	automated problem detection	pcg
+APDIA	automated problem detection inhibited area	pcg
+APL	airport lights	jo7340
+APN	apron	jo7340
+APNT	appoint	jo7340
+APP	approach control or approach control office	jo7340
+APPA	advise present position and altitude	jo7340
+APPR	appear	jo7340
+APR	airports program report	jo7340
+APREQ	approval request	jo7340
+APRNT	apparent	jo7340
+APROP	appropriate	jo7340
+APRX	approximate	jo7340
+APS	airborne pulse search radar	jo7340
+APSG	after passing	jo7340
+APV	approach with vertical guidance	pcg
+APVL	approval	jo7340
+AR	atlantic route	jo7340
+ARAC	army radar approach control facility (us army)	jo7340
+ARAD	altitude radial	jo7340
+ARB	air reserve base	jo7340
+ARC	area chart	jo7340
+ARCP	air refueling control point	jo7340
+AREP	air refueling egress point	jo7340
+AREX	air refueling exit	jo7340
+ARFF	aircraft rescue and fire fighting	jo7340
+ARFFOK	airport rescue and fire fighting alarm checked	jo7340
+ARFOR	area forecast	jo7340
+ARINC	aeronautical radio, incorporated	jo7340
+ARIP	air refueling initial point	jo7340
+ARL	aerial	jo7340
+ARLO	army liaison officer specified points	jo7340
+ARML	airmail	jo7340
+ARND	around	jo7340
+ARNG	arrange	jo7340
+ARNOT	area notice	jo7340
+ARO	airport reservation office	pcg
+ARP	airport reference point	pcg
+ARPT	airport	jo7340
+ARQ	automatic error correction equipment	jo7340
+ARR	arrival or arrive	jo7340
+ARSA	airport radar service area	jo7340
+ARSR	air route surveillance radar	pcg
+ARST	arresting	jo7340
+ARTC	air route traffic control decode	jo7340
+ARTCC	air route traffic control center	pcg
+ARTS	automated radar terminal systems	jo7340
+ARUNK	arrival unknown	jo7340
+ASAP	as soon as possible	jo7340
+ASC	ascent to	jo7340
+ASCU	automatic scanning control unit	jo7340
+ASD	airspace docket	jo7340
+ASDA	accelerate-stop distance available	pcg
+ASDE	airport surface detection equipment	pcg
+ASE	altimetry system error	jo7340
+ASGN	assign	jo7340
+ASHTAM	volcanic ash advisory	jo7340
+ASI	altimeter setting indicator	jo7340
+ASIP	airspace flight inspection pilot	jo7340
+ASL	above sea level	jo7340
+ASLAR	aircraft surge launch and recovery	pcg
+ASMD	assumed	jo7340
+ASND	ascend	jo7340
+ASO	southern region, faa	jo7340
+ASPH	asphalt	jo7340
+ASR	airport surveillance radar	pcg
+ASSOC	associate	jo7340
+ASST	assistant	jo7340
+ASW	southwest region, faa	jo7340
+ATA	air transport association of america	jo7340
+ATAM	at and maintain	jo7340
+ATAR	above transmitted as received	jo7340
+ATC	air traffic control	pcg
+ATCA	air traffic control association	jo7340
+ATCAA	atc assigned airspace	pcg
+ATCBI	atc beacon interrogator	jo7340
+ATCC	atc clears	jo7340
+ATCF	atc facility	jo7340
+ATCH	attach	jo7340
+ATCOR	atc operations representative	jo7340
+ATCR	atc requests	jo7340
+ATCRBS	radar	pcg
+ATCS	atc specialist center	jo7340
+ATCSCC	air traffic control system command center	pcg
+ATCT	tower	pcg
+ATD	actual time of departure	jo7340
+ATFC	account traffic	jo7340
+ATFM	air traffic flow management	jo7340
+ATIS	automatic terminal information service	pcg
+ATMT	attempt	jo7340
+ATMTC	attempt to contact	jo7340
+ATN	aeronautical telecommunications network	jo7340
+ATND	attend	jo7340
+ATO	air traffic organization	pcg
+ATOG	allowable take-off gross weight	jo7340
+ATP	air traffic procedures	jo7340
+ATPA	automated terminal proximity alert	pcg
+ATPAC	air traffic procedures advisory committee	jo7340
+ATR	air transport rating	jo7340
+ATREP	air traffic representative	jo7340
+ATRLS	actual time of release	jo7340
+ATSCCP	air traffic service contingency command post	jo7340
+ATT	american telephone and telegraph company	jo7340
+ATTM	at this time	jo7340
+ATTN	attention	jo7340
+ATZ	aerodrome traffic zone	jo7340
+AUGRA	authority granted	jo7340
+AUREQ	authority is requested	jo7340
+AUTH	authority	jo7340
+AUTO	automatic	jo7340
+AUTOB	automatic weather reporting system	jo7340
+AUW	all up weight (gross weight)	jo7340
+AUX	auxiliary	jo7340
+AUZ	authorize	jo7340
+AVBL	available or availability	jo7340
+AVFP	activate vfr flight plan	jo7340
+AVFPNO	pilot failed to activate vfr/dvfr flight plan	jo7340
+AVG	average	jo7340
+AVGAS	aviation gasoline	jo7340
+AVN	aviation	jo7340
+AWA	advise when able	jo7340
+AWANS	aviation weather and notam system	jo7340
+AWBE	automatic weather broadcast equipment	jo7340
+AWE	advise when established	jo7340
+AWL	all weather landing	jo7340
+AWOS	automatic weather observing/reporting system 2−1−5	jo7340
+AWP	western-pacific region, faa	jo7340
+AWS	air weather service (usaf)	jo7340
+AWT	await or awaiting	jo7340
+AWX	account weather	jo7340
+AWY	airway	jo7340
+AXPS	air express	jo7340
+AZM	azimuth	jo7340
+AZRAN	azimuth and range data b	jo7340
+BA	braking action	jo7340
+BAC	below all clouds	jo7340
+BAL	balance	jo7340
+BASE	cloud base	jo7340
+BASOPS	base operations office	jo7340
+BC	back course	jo7340
+BCN	beacon	jo7340
+BCREQ	broadcast requested	jo7340
+BCST	broadcast	jo7340
+BCSTN	broadcast station	jo7340
+BDAT	beacon data (digitized)	jo7340
+BDR	border	jo7340
+BDRY	boundary	jo7340
+BDSLD	bids solicited	jo7340
+BEACON	aeronautical beacon	pcg
+BFR	before	jo7340
+BGN	began or begin	jo7340
+BGND	begin or beginning descent	jo7340
+BHND	behind	jo7340
+BIFR	before encountering ifr conditions	jo7340
+BLDG	building	jo7340
+BLN	balloon	jo7340
+BLO	below	jo7340
+BLW	below	jo7340
+BLX	block	jo7340
+BMBR	bomber	jo7340
+BND	bound	jo7340
+BNTH	beneath	jo7340
+BOMB	bombing	jo7340
+BPOC	before proceeding on course	jo7340
+BPS	bytes per second	jo7340
+BPT	beginning procedure turn	jo7340
+BR	branch	jo7340
+BRAG	braking action good	jo7340
+BRAM	braking action medium	jo7340
+BRAN	braking action nil	jo7340
+BRAP	braking action poor	jo7340
+BRG	bearing	jo7340
+BRGT	bright	jo7340
+BRITE	bright radar indicator tower equipment	jo7340
+BRKG	braking	jo7340
+BS	commercial broadcasting station	jo7340
+BSAF	bids solicited as follows	jo7340
+BSC	bird sweep completed	jo7340
+BSHP	beginning standard holding procedure	jo7340
+BSIAP	beginning straight-in approach	jo7340
+BSRAP	beginning standard range approach	jo7340
+BSRO	begin standard refuel orbit	jo7340
+BT	back taxiing	jo7340
+BTL	between layers	jo7340
+BTN	between decode	jo7340
+BTR	better	jo7340
+BUEC	backup emergency communication	jo7340
+BUIC	backup interceptor control	jo7340
+BUL	bulletin	jo7340
+BUR	bureau	jo7340
+BUS	business	jo7340
+BVLOS	beyond visual line of sight	pcg
+BYD	beyond	jo7340
+BZR	buzzer (radar) c	jo7340
+CA	clear above (pirep only)	jo7340
+CAAS	class a airspace	jo7340
+CACT	civil air carrier turbojet	jo7340
+CADO	chief, airport district office	jo7340
+CAM	canadian armed forces transport command	jo7340
+CANO	catalogue number	jo7340
+CANOT	canadian notam	jo7340
+CANR	canadian norad region	jo7340
+CAO	civil aircraft operation	pcg
+CAP	civil air patrol station	jo7340
+CAPD	climb at pilot's discretion	jo7340
+CAPT	captain	jo7340
+CARA	check area airports	jo7340
+CARF	central altitude reservation function	jo7340
+CARU	canadian airspace reservation unit	jo7340
+CAS	collision avoidance system	jo7340
+CAT	clear-air turbulence	pcg
+CATX	climb and cross	jo7340
+CAUFN	caution advised until further notice	jo7340
+CBAS	class b airspace	jo7340
+CBSA	class b surface area	jo7340
+CC	carbon copy	jo7340
+CCA	continental control area	jo7340
+CCAS	class c airspace	jo7340
+CCD	city (or county) civil defense director at____	jo7340
+CCF	combined control facility	pcg
+CCLDS	clear of clouds	jo7340
+CCLKOB	counterclockwise orbit	jo7340
+CCRU	complete crew	jo7340
+CCRZ	climb and cruise	jo7340
+CCSA	class c surface area	jo7340
+CCTLR	chief controller	jo7340
+CCUS	cleared customs	jo7340
+CDAS	class d airspace	jo7340
+CDC	computer display channel	jo7340
+CDM	collaborative decision making	jo7340
+CDN	coordination	jo7340
+CDO	communications duty officer	jo7340
+CDSA	class d surface area	jo7340
+CE	communications equipment	jo7340
+CEAS	class e airspace	jo7340
+CELNAV	celestial navigation	jo7340
+CENGR	civil engineer	jo7340
+CENPAC	central north pacific	jo7340
+CENTER	air route traffic control center	pcg
+CEP	central east pacific	pcg
+CER	climb en route	jo7340
+CERT	certificate	jo7340
+CERTIF	certification	jo7340
+CESA	class e surface area	jo7340
+CF	change frequency to	jo7340
+CFA	controlled firing area	jo7340
+CFAD	composite flight data processing	jo7340
+CFAP	cleared for approach	jo7340
+CFM	confirm	jo7340
+CFN	confine	jo7340
+CFPL	carryover from previous log	jo7340
+CFR	call for release	pcg
+CFWSU	central flow weather service unit	jo7340
+CFY	clarify	jo7340
+CG	coast guard	jo7340
+CGAS	coast guard air station	jo7340
+CGL	circling guidance light	jo7340
+CGLS	coast guard loran station	jo7340
+CGSTN	congestion	jo7340
+CHA	contingency hazard area	pcg
+CHAP	chapter	jo7340
+CHARC	characteristic	jo7340
+CHG	change	jo7340
+CHGO	changing over	jo7340
+CHM	chemicals	jo7340
+CHNL	channel	jo7340
+CHOK	check okay	jo7340
+CHOV	changeover	jo7340
+CHRG	charge	jo7340
+CHTR	charter	jo7340
+CIC	controller in charge	jo7340
+CIFP	cancel ifr flight plan	jo7340
+CIFR	cancel ifr clearance previously given	jo7340
+CIFRR	common ifr room	jo7340
+CIRNAV	circumnavigate	jo7340
+CIRNOT	circuit notice	jo7340
+CIRVIS	communications instructions for reporting vital intelligence sightings	jo7340
+CIT	near or over large towns	jo7340
+CIV	civil	jo7340
+CK	check	jo7340
+CKT	circuit	jo7340
+CL	closing station	jo7340
+CLA	clear type of ice formation	jo7340
+CLB	climb	jo7340
+CLBI	climb immediately	jo7340
+CLBN	crash locator beacon	jo7340
+CLBR	calibration	jo7340
+CLG	calling	jo7340
+CLKOB	clockwise orbit	jo7340
+CLKWS	clockwise	jo7340
+CLN	colon	jo7340
+CLNC	clearance	jo7340
+CLODA	closing date	jo7340
+CLOTO	close this office	jo7340
+CLR	clears, or cleared to, or clearance	jo7340
+CLRAP	cleared as planned	jo7340
+CLSD	closed	jo7340
+CLST	celestial	jo7340
+CLT	calculated landing time	pcg
+CLU	circuit line up	jo7340
+CM	centimeter	jo7340
+CMA	comma	jo7340
+CMB	climb to or climbing to	jo7340
+CMNC	commence	jo7340
+CMNPS	canadian minimum navigation performance specification airspace	pcg
+CMPCT	compact	jo7340
+CMPL	complete or completed or completion	jo7340
+CMPLT	complete	jo7340
+CMPLX	complex	jo7340
+CMPSN	composition	jo7340
+CMPT	component	jo7340
+CMS	construction maintenance supervisor	jo7340
+CMSN	commission	jo7340
+CNCNT	concurrently	jo7340
+CNCT	connect	jo7340
+CNF	computer navigation fix	pcg
+CNL	cancel	jo7340
+CNLFP	cancel flight plan	jo7340
+CNS	consolidated notam system	jo7340
+CNSTNT	consistent	jo7340
+CNTR	center	jo7340
+CNTRL	central	jo7340
+CNTRLN	centerline	jo7340
+CNVG	converge	jo7340
+CNVRT	convert	jo7340
+CNVSN	conversion	jo7340
+COA	certificate of waiver or authorization	pcg
+COB	close of business	jo7340
+COC	climb on course	jo7340
+COLL	collect	jo7340
+COM	communication	jo7340
+COMB	combine	jo7340
+COML	commercial	jo7340
+COMLO	compass locator decode	jo7340
+COMPR	compare	jo7340
+COMPRT	compartment	jo7340
+CONC	concrete	jo7340
+CONCA	continue calling until	jo7340
+COND	condition	jo7340
+CONF	confidential	jo7340
+CONFIG	configuration	jo7340
+CONFIGN	configuration	jo7340
+CONR	continental norad region	jo7340
+CONS	continuous	jo7340
+CONSO	consolan facility	jo7340
+CONSOL	consol beacon navigational aid	jo7340
+CONST	construction	jo7340
+CONT	continue(s) or continued	jo7340
+CONTH	continue to hold	jo7340
+CONTR	contract	jo7340
+COORD	coordinate	jo7340
+COP	changeover point	jo7340
+COPCOM	controllers' operations and procedures committee	jo7340
+COPT	completed procedure turn	jo7340
+COPTER	helicopter	pcg
+COR	correct or corrected or correction	jo7340
+CORAS	corridor assignment	jo7340
+COREQ	confirming requisition follows	jo7340
+COT	at the coast	jo7340
+COV	cover	jo7340
+CP	circular polarization	jo7340
+CPA	crash phone activated	jo7340
+CPBL	capable	jo7340
+CPD	coupled	jo7340
+CPDLC	controller pilot data link communications	pcg
+CPF	complete power failure	jo7340
+CPL	current flight plan	jo7340
+CPME	calibration performance monitoring equipment	jo7340
+CPN	air transport pulse radar navigation aid	jo7340
+CPS	air transport pulse radar search	jo7340
+CPTY	capacity	jo7340
+CRAD	composite radar data processing	jo7340
+CRAF	civil reserve air fleet	jo7340
+CRC	circle	jo7340
+CRCHF	crew chief	jo7340
+CRLC	circulate	jo7340
+CRS	course	jo7340
+CRT	cathode ray tube	jo7340
+CRTFY	certify	jo7340
+CRYPTO	cryptographic	jo7340
+CRZ	cruise	jo7340
+CRZAM	cruise and maintain	jo7340
+CRZWTR	cruise well to right	jo7340
+CS	call sign	jo7340
+CSATR	climb so as to reach	jo7340
+CSATX	climb so as to cross	jo7340
+CSDR	consider	jo7340
+CSDRBL	considerable	jo7340
+CSLDT	consolidate	jo7340
+CSP	constraint satisfaction point	pcg
+CTA	controlled time of arrival	pcg
+CTAF	common traffic advisory frequency	pcg
+CTAM	climb to and maintain	jo7340
+CTAS	controlled airspace	jo7340
+CTAX	climb to and cross	jo7340
+CTC	contact	jo7340
+CTCEN	contact center	jo7340
+CTL	control	jo7340
+CTLA	control area	jo7340
+CTLB	control boundary	jo7340
+CTLR	controller	jo7340
+CTLZ	control zone	jo7340
+CTN	caution	jo7340
+CTOP	collaborative trajectory options program	pcg
+CTR	control zone	jo7340
+CTRD	certified tower radar display	pcg
+CUF	cumuliform	jo7340
+CUSNO	customs has been notified	jo7340
+CUST	customs	jo7340
+CVFP	cancel vfr flight plan	jo7340
+CVINO	clearance void if not off	jo7340
+CVN	convene	jo7340
+CVR	cover	jo7340
+CVRS	computerized voice reservation system	jo7340
+CW	continuous wave	jo7340
+CWM	change weight manifest	jo7340
+CWRC	climb well to right of course	jo7340
+CWSU	center weather service unit	jo7340
+CWT	consolidated wake turbulence	pcg
+CWTR	climb well to right	jo7340
+CWY	clearway	jo7340
+CXA	cancel approved arrival	jo7340
+CXD	cancel approved departure 2−1−9	jo7340
+CYL	cylinder	jo7340
+CZM	coastal zone management d	jo7340
+DA	decision altitude	pcg
+DAAR	deviation approved as requested	jo7340
+DAE	district airport engineer	jo7340
+DAIR	direct altitude and identity readout	pcg
+DAIRE	direct altitude and identification readout equipment	jo7340
+DALGT	daylight	jo7340
+DAP	do all possible	jo7340
+DAPD	descend at pilot's discretion	jo7340
+DAS	delay assignment	pcg
+DASI	digital altimeter setting indicator service	jo7340
+DBA	doing business as	jo7340
+DBASI	digital barometer altimeter setting indicator	jo7340
+DBL	double	jo7340
+DBTF	doubtful	jo7340
+DC	direct current	jo7340
+DCA	defense communications agency	jo7340
+DCD	double channel duplex	jo7340
+DCF	deputy chief	jo7340
+DCKG	docking	jo7340
+DCL	departure clearance application	pcg
+DCLRT	decelerate	jo7340
+DCM	defense combat maneuvers	jo7340
+DCMSN	decommission	jo7340
+DCMT	document	jo7340
+DCPC	direct controller-pilot communications	jo7340
+DCR	decrease	jo7340
+DCRZ	descend to and cruise	jo7340
+DCT	delay countdown timer	pcg
+DDM	difference in depth of modulation	jo7340
+DECCO	defense commercial communications office	jo7340
+DEF	defense	jo7340
+DEFCON	defense readiness conditions	jo7340
+DEG	degree	jo7340
+DEGREES	fly heading	pcg
+DELPHO	deliver by telephone	jo7340
+DEMOL	demolition	jo7340
+DENEB	fog dispersal operations	jo7340
+DEP	depart	jo7340
+DEPT	department	jo7340
+DER	departure end of runway	jo7340
+DES	descend to or descending to	jo7340
+DESTN	destination	jo7340
+DEV	deviation	jo7340
+DEW	distant early warning	jo7340
+DEWIZ	distant early warning identification zone	jo7340
+DFCLT	difficult	jo7340
+DFDR	digital flight data recorder	jo7340
+DFL	daily flight log	jo7340
+DFNT	definite	jo7340
+DFRS	differs	jo7340
+DFTI	distance from touchdown indicator	jo7340
+DFUS	diffuse	jo7340
+DGCGO	dangerous cargo	jo7340
+DGNL	diagonal	jo7340
+DGR	danger	jo7340
+DH	decision height	pcg
+DIAM	diameter	jo7340
+DIF	diffuse	jo7340
+DIR	director	jo7340
+DISABLD	disabled	jo7340
+DISC	discontinue	jo7340
+DISEM	disseminate	jo7340
+DIST	district	jo7340
+DISTR	distribute	jo7340
+DIV	division	jo7340
+DLA	delay or delayed	jo7340
+DLAC	delay account of	jo7340
+DLAT	delay time	jo7340
+DLC	delay clearance or delayed clearance	jo7340
+DLIC	data link initiation capability	jo7340
+DLT	delete	jo7340
+DLVR	deliver	jo7340
+DLVY	delivery	jo7340
+DLY	daily	jo7340
+DMAAC	defense mapping agency aerospace center decode	jo7340
+DMAHC	defense mapping agency hydrographic center	jo7340
+DME	distance measuring equipment	pcg
+DMEG	dme-collocated with glide slope	jo7340
+DMEL	dme-collocated with localizer	jo7340
+DMER	dme-tactical air navigation with dme only commissioned	jo7340
+DMEV	dme-collocated with vor	jo7340
+DMG	damage	jo7340
+DMNT	dominant	jo7340
+DMO	directives management officer, faa	jo7340
+DMSTN	demonstration	jo7340
+DNA	defense nuclear agency	jo7340
+DNG	danger	jo7340
+DNWND	downwind	jo7340
+DOB	date of birth	jo7340
+DOC	department of commerce	jo7340
+DOD	department of defense	jo7340
+DOE	department of energy	jo7340
+DOLLY	data link	jo7340
+DOM	domestic	jo7340
+DOT	department of transportation	jo7340
+DP	instrument departure procedure	pcg
+DPCR	departure procedure	jo7340
+DPT	depth	jo7340
+DR	direct route	jo7340
+DRA	debris response area	pcg
+DRCT	direct	jo7340
+DRCTN	direction	jo7340
+DRG	during	jo7340
+DRIR	direct readout infrared	jo7340
+DRMS	distance root mean square	jo7340
+DRR	deployment readiness review	jo7340
+DS	domestic services (island operations)	jo7340
+DSATR	descend so as to reach	jo7340
+DSATX	descend so as to cross	jo7340
+DSB	double sideband	jo7340
+DSCNT	descent	jo7340
+DSGND	designated	jo7340
+DSN	defense switching network	jo7340
+DSND	descend	jo7340
+DSNDI	descend immediately	jo7340
+DSNT	distant	jo7340
+DSP	departure sequencing program	pcg
+DSPL	display	jo7340
+DSPLC	displace	jo7340
+DSPN	disposition	jo7340
+DSPRL	dispersal	jo7340
+DSR	desire	jo7340
+DSRGD	disregard	jo7340
+DST	distort	jo7340
+DSTC	distance	jo7340
+DSTND	destined	jo7340
+DTAM	descend to and maintain	jo7340
+DTAS	digital terminal automation system	pcg
+DTAX	descend to and cross	jo7340
+DTE	data terminal equipment	jo7340
+DTF	data transmission feature	jo7340
+DTG	date time group	jo7340
+DTHR	displaced runway threshold	jo7340
+DTL	detail	jo7340
+DTR	data transmission request	jo7340
+DTRM	determine	jo7340
+DTS	diplomatic telecommunications service	jo7340
+DTW	dual tandem wheels	jo7340
+DUATS	direct user access terminal system	jo7340
+DUC	dense upper cloud	jo7340
+DUPE	duplicate	jo7340
+DUR	duration	jo7340
+DURC	during climb	jo7340
+DURD	during descent	jo7340
+DURG	during	jo7340
+DURN	duration	jo7340
+DV	distinguished visitors	jo7340
+DVA	diverse vector area	pcg
+DVFR	defense visual flight rules	pcg
+DVLP	develop	jo7340
+DVOR	doppler vhf omni-directional radio range	jo7340
+DVRG	diverge	jo7340
+DVRSN	diversion	pcg
+DW	dual wheels	jo7340
+DWG	drawing	jo7340
+DWRC	descend well to right of course	jo7340
+DWTR	descend well to right	jo7340
+DX	duplex	jo7340
+DZ	drizzle e	jo7340
+EACLN	expect approach clearance	jo7340
+EADIZ	entering air defense identification zone	jo7340
+EARTS	en route automated radar tracking system	jo7340
+EAS	en route automation system	pcg
+EAT	expected approach time	jo7340
+EB	eastbound	jo7340
+EBND	eastbound	jo7340
+ECA	enter control area	jo7340
+ECAS	enter controlled airspace	jo7340
+ECD	except change departure to read	jo7340
+ECM	electronic counter measures	jo7340
+ECMSN	electronic counter measure mission	jo7340
+ECOM	en route communications	jo7340
+ECR	except change route to read	jo7340
+ECSP	electronic specialist	jo7340
+EDA	early departure authorized	jo7340
+EDC	expect departure clearance at	jo7340
+EDCT	expect departure clearance time	pcg
+EDR	expect departure release at	jo7340
+EDST	en route decision support tool	pcg
+EEE	error (to be used in afs as a procedure signal)	jo7340
+EEM	electronic equipment modification	jo7340
+EENGR	electrical engineer	jo7340
+EEP	end exercise point	jo7340
+EET	estimated elapsed time	jo7340
+EFA	entire field available	jo7340
+EFC	expect further clearance at	jo7340
+EFCT	effect	jo7340
+EFF	effective	jo7340
+EFR	expect further routing	jo7340
+EFTO	encrypt for transmission only	jo7340
+EFVS	enhanced flight vision system	pcg
+EGECON	electronic geographic coordinator navigation system	jo7340
+EHA	expect higher altitude	jo7340
+EHF	extremely high frequency (30000 to 300000 mhz)	jo7340
+EIT	electronic installation technician	jo7340
+ELAT	estimated latitude	jo7340
+ELBA	emergency location beacon - aircraft	jo7340
+ELEC	electric	jo7340
+ELECN	electrician	jo7340
+ELEV	elevate or elevation	jo7340
+ELIP	elliptical	jo7340
+ELMT	electronic mechanic technician	jo7340
+ELONG	estimated longitude	jo7340
+ELR	extra long range	jo7340
+ELSW	elsewhere	jo7340
+ELT	emergency locator transmitter	pcg
+EM	emission	jo7340
+EMBD	embedded (in cloud layer)	jo7340
+EMDO	engineering and manufacturing district office	jo7340
+EMERG	emergency	jo7340
+EMI	electronic maintenance inspector	jo7340
+EMT	electronic maintenance technician	jo7340
+ENCTR	encounter	jo7340
+END	stop-end (related to rvr)	jo7340
+ENDCE	endurance	jo7340
+ENDG	ending	jo7340
+ENE	east-north east	jo7340
+ENG	engine	jo7340
+ENGR	engineer	jo7340
+ENHNCD	enhanced	jo7340
+ENR	en-route	jo7340
+ENRC	en-route chart (followed by name/title)	jo7340
+ENRT	en route	jo7340
+ENTR	entire	jo7340
+EOBT	estimated off-block time	jo7340
+EOD	entered on duty	jo7340
+EP	en route penetration	jo7340
+EPE	estimated position error	pcg
+EPI	expanded position indicator	jo7340
+EQCRT	equipment certified	jo7340
+EQPT	equipment	jo7340
+EQUIP	equipment	jo7340
+ER	here decode	jo7340
+ERAD	en route radar (broadband)	jo7340
+ERMG	en route metering	jo7340
+ERSP	en route spacing program	jo7340
+ERT	embedded route text	jo7340
+ERY	early	jo7340
+ESCAT	emergency security control of air traffic	jo7340
+ESE	east-south east	jo7340
+ESEC	en route secondary radar beacon (broadband)	jo7340
+ESNTL	essential	jo7340
+ESP	en route sequencing program	jo7340
+EST	estimated	pcg
+ESTAB	establish	jo7340
+ESV	expanded service volume	jo7340
+ET	electronic technician	jo7340
+ETA	estimated time of arrival	pcg
+ETD	estimated time of departure	jo7340
+ETE	estimated time en route	pcg
+ETFL	each thousand foot level	jo7340
+ETI	estimated information	jo7340
+ETIM	elapsed time	jo7340
+ETO	estimated time over significant point	jo7340
+ETOV	estimated time over	jo7340
+ETP	estimated time of penetration	jo7340
+ETR	eastern test range	jo7340
+EU	electronic unit	jo7340
+EUO	emergency use only	jo7340
+EV	every	jo7340
+EVAC	evacuation	jo7340
+EVAL	evaluate or evaluation	jo7340
+EVE	evening	jo7340
+EVS	electronic voice switching system	jo7340
+EVT	expect vector to	jo7340
+EXAM	examination	jo7340
+EXC	except	jo7340
+EXCH	exchange	jo7340
+EXCLD	exclude	jo7340
+EXCLV	exclusive	jo7340
+EXCP	except	jo7340
+EXCT	execute	jo7340
+EXDLVY	expedite delivery	jo7340
+EXEC	executive	jo7340
+EXER	exercise	jo7340
+EXP	expect	jo7340
+EXPC	expect	jo7340
+EXPED	expedite	jo7340
+EXPHO	expedite delivery by telephone	jo7340
+EXPS	express	jo7340
+EXQF	expanded quota flow	jo7340
+EXREP	expedite mail reply	jo7340
+EXSEC	extra section	jo7340
+EXSHI	expedite shipment	jo7340
+EXTD	extend	jo7340
+EXTN	extension	jo7340
+EXTSV	extensive f	jo7340
+FA	aviation area forecast center	jo7340
+FAA	federal aviation administration	jo7340
+FAAP	federal aid to airports program	jo7340
+FAAR	faa requirements	jo7340
+FAC	facility	jo7340
+FACF	facility chief	jo7340
+FACSFAC	fleet area controlled and surveillance facility	jo7340
+FAD	fuel advisory departure	jo7340
+FAF	final approach fix	pcg
+FAFAB	fss assumes flight-plan area and service b	jo7340
+FAL	facilitation of international air transport	jo7340
+FAM	familiar or familiarization	jo7340
+FAP	final approach point	jo7340
+FAR	federal aviation regulations	jo7340
+FATFL	fss assumes control of tower frequencies and lights	jo7340
+FAX	facsimile	jo7340
+FBO	fixed-base operator	jo7340
+FCA	frequency change approved	jo7340
+FCC	federal communications commission	jo7340
+FCFSS	faa contract flight service station	jo7340
+FCO	facility coordination officer	jo7340
+FCRP	field condition report	jo7340
+FCST	forecast	jo7340
+FCTA	flow control time of arrival	jo7340
+FDAT	flight data	jo7340
+FDC	flight data center	jo7340
+FDDL	frequency division data link	jo7340
+FDEP	flight data entry and printout	jo7340
+FDI	fault detection and isolation	jo7340
+FDIO	flight data input/output	jo7340
+FDIOR	flight data input/output repeater	jo7340
+FDPS	flight data processing system	jo7340
+FE	flight engineer	jo7340
+FENKN	fuel supply unknown	jo7340
+FENTL	fuel supply until	jo7340
+FEXHA	fuel supply exhausted	jo7340
+FFC	for further clearance	jo7340
+FFLT	familiarization flight	jo7340
+FFMN	fixed federal monitoring network	jo7340
+FGSB	fss guarding service b	jo7340
+FIC	flight information center	jo7340
+FICON	field condition	jo7340
+FIDO	flight inspection district office	jo7340
+FIFO	flight inspection field office	jo7340
+FIFP	filed ifr flight plan	jo7340
+FIL	filament	jo7340
+FILS	florescan instrument landing system	jo7340
+FIR	flight information region	pcg
+FIRAV	first available	jo7340
+FIRB	flight information region boundary	jo7340
+FIRG	firing	jo7340
+FIRIV	arrival report will be filed with	jo7340
+FIS	flight information service	jo7340
+FISA	automated flight information service	jo7340
+FL	flight level	jo7340
+FLCTN	fluctuation	jo7340
+FLD	field	jo7340
+FLG	flashing	jo7340
+FLIDAP	flight data position	jo7340
+FLIP	flight information publication	jo7340
+FLORL	fluorescent runway lighting (floodlight system)	jo7340
+FLR	flares	jo7340
+FLT	flight	jo7340
+FLTCK	flight check	jo7340
+FLTO	flight orders	jo7340
+FLTWO	flight watch outlet	jo7340
+FLUC	fluctuating	jo7340
+FLW	follow	jo7340
+FM	fan marker	jo7340
+FMA	final monitor aid	pcg
+FMAP	fan marker approach	jo7340
+FMH	fan marker located with radio beacon	jo7340
+FMO	frequency management officer	jo7340
+FMS	flight management system	pcg
+FMT	format	jo7340
+FMU	flow management unit	jo7340
+FNA	final approach	jo7340
+FNCTN	function	jo7340
+FOB	fuel on board	jo7340
+FOD	foreign object debris	jo7340
+FONE	telephone	jo7340
+FP	flight plan	jo7340
+FPA	flight plan area	pcg
+FPB	flight progress board	jo7340
+FPDI	flight path deviation indicator	jo7340
+FPL	full performance level	jo7340
+FPM	feet per minute	jo7340
+FPN	fixed pulse radar navigation aid	jo7340
+FPNO	flight plan not received	jo7340
+FPP	from present position	jo7340
+FPR	flight plan route	jo7340
+FPRC	for possible reclearance	jo7340
+FPWA	further particulars when available	jo7340
+FQT	frequent	jo7340
+FR	fuel remaining	jo7340
+FRC	request full route clearance	pcg
+FRD	fix-radial-distance	jo7340
+FREQ	frequency decode	jo7340
+FRFAB	fss returns flight-plan area and service b	jo7340
+FRH	fly runway heading	jo7340
+FRI	friday	jo7340
+FRM	form	jo7340
+FRMN	formation	jo7340
+FRNG	firing	jo7340
+FRQ	frequent	jo7340
+FRSB	fss returns service b	jo7340
+FRTFL	fss returns control of tower frequencies and lights	jo7340
+FSDO	flight standards district office	pcg
+FSL	full stop landing	jo7340
+FSM	flight schedule monitor	jo7340
+FSNFO	flight standards national field office	jo7340
+FSP	flight strip printer	jo7340
+FSPD	freeze speed parameter	pcg
+FSS	flight service station	pcg
+FST	first	jo7340
+FTAR	following transmitted as received (message handling)	jo7340
+FTHR	farther or further	jo7340
+FTHRD	feathered	jo7340
+FTS	federal telecommunications system	jo7340
+FURN	furnish	jo7340
+FV	forward visibility (miles)	jo7340
+FVFP	filed vfr flight plan	jo7340
+FWA	flight watch area	jo7340
+FWCS	flight watch control station	jo7340
+FWD	forward	jo7340
+FWDC	forward collect	jo7340
+FWP	flight watch point	jo7340
+FWRNG	fire warning	jo7340
+FWS	flight watch specialist	jo7340
+FWU	flight watch unit	jo7340
+FYI	for your information	jo7340
+GA	glide angle in afs as a procedure signal)	jo7340
+GADO	general aviation district office	jo7340
+GALS	gallons	jo7340
+GBA	give better address	jo7340
+GBAS	ground based augmentation system	pcg
+GBL	government bill of lading	jo7340
+GBR	give better reference	jo7340
+GC	ground control	jo7340
+GCA	ground controlled approach	pcg
+GCI	ground control intercept	jo7340
+GCO	ground communication outlet	pcg
+GDP	ground delay program	pcg
+GDPGM	ground delay program	jo7340
+GEN	general	jo7340
+GENOT	general notice	jo7340
+GEO	geographic	jo7340
+GEOREF	geographical reference	jo7340
+GES	ground earth station	jo7340
+GHZ	gigahertz	jo7340
+GIC	gps integrity channel	jo7340
+GLD	glider	jo7340
+GLDR	glider	jo7340
+GLS	gbas landing system	jo7340
+GMC	ground movement chart (followed by name/title)	jo7340
+GMT	greenwich mean time	jo7340
+GND	ground	jo7340
+GNDCK	ground check	jo7340
+GNSS	global navigation satellite system	pcg
+GNTR	generator	jo7340
+GOV	governor 2−1−15	jo7340
+GOVT	government	jo7340
+GP	glide path	jo7340
+GPA	glide path angle	jo7340
+GPD	graphic plan display	pcg
+GPI	ground point of intercept	jo7340
+GPS	global positioning system	pcg
+GQA	get quick answer	jo7340
+GRADU	gradual	jo7340
+GRASS	grass landing area	jo7340
+GRBL	garble	jo7340
+GRID	grid point values of processed meteorological data	jo7340
+GRVL	gravel	jo7340
+GS	ground stop	pcg
+GSA	general services administration	jo7340
+GSDO	general safety district office	jo7340
+GSI	general safety inspector	jo7340
+GTC	gain time control	jo7340
+GTCL	great circle	jo7340
+GTR	greater	jo7340
+GUND	geoid undulation	jo7340
+GVG	giving	jo7340
+GVH	government vehicle	jo7340
+GWT	gross weight h	jo7340
+H24	continuous 24-hour service	jo7340
+HAA	height above airport	pcg
+HADA	hawaiian defense area	jo7340
+HADD	hawaiian air defense division	jo7340
+HAL	height above landing	pcg
+HANG	hawaiian air national guard	jo7340
+HAPI	holding as previously instructed	jo7340
+HARS	hazardous area reporting service	jo7340
+HAT	height above touchdown	pcg
+HAZ	hazard	jo7340
+HAZMAT	hazardous materials	pcg
+HB	homing beacon	jo7340
+HBN	hazard beacon	jo7340
+HDATZ	high density traffic zones	jo7340
+HDF	high frequency direction finding station	jo7340
+HDG	heading	jo7340
+HDOP	horizontal dilution of precision	jo7340
+HDTA	high density traffic airport	jo7340
+HDWND	headwind	jo7340
+HEAD	head of state status	jo7340
+HEL	helicopter	jo7340
+HELI	heliport	jo7340
+HF	high frequency	pcg
+HFR	hold for release	jo7340
+HGT	height	jo7340
+HHE	household effects	jo7340
+HIALS	high intensity approach light system	jo7340
+HIBAL	high altitude balloon	jo7340
+HIRL	high intensity runway lights	jo7340
+HIWAS	hazardous inflight weather advisory service	jo7340
+HJ	sunrise to sunset	jo7340
+HLDG	holding	jo7340
+HLF	half	jo7340
+HLP	heliport	jo7340
+HN	sunset to sunrise	jo7340
+HND	hundred	jo7340
+HNGR	hangar	jo7340
+HO	service available to meet operational requirements	jo7340
+HOL	holiday	jo7340
+HOP	helicopter operations	jo7340
+HOSP	hospital aircraft	jo7340
+HP	holding pattern	jo7340
+HPA	hectopascal	jo7340
+HQ	headquarters decode	jo7340
+HR	here	jo7340
+HRP	heliport reference point	pcg
+HRZN	horizon	jo7340
+HS	service available during scheduled operations	jo7340
+HTN	heterodyne	jo7340
+HTR	heater	jo7340
+HUM	humanitarian mission	jo7340
+HURCN	hurricane	jo7340
+HV	high voltage	jo7340
+HVDF	high and very high frequency direction finding stations	jo7340
+HVY	heavy	jo7340
+HWVR	however	jo7340
+HWY	highway	jo7340
+HX	no specific working hours	jo7340
+HYD	hydraulic	jo7340
+HYDRO	hydrographic	jo7340
+HYR	higher	jo7340
+HZ	hertz	pcg
+IAARC	international administrative aeronautical radio conference	jo7340
+IAATCD	if authorized by atc, dme may be used name/title)	jo7340
+IAF	initial approach fix	pcg
+IAO	in and out of clouds	jo7340
+IAP	instrument approach procedure	pcg
+IAR	intersection of air routes	jo7340
+IAS	indicated air speed	jo7340
+IATA	international air transport association	jo7340
+IATSC	international aeronautical telecommunications switching center	jo7340
+IAW	in accordance with	jo7340
+IBASF	intervals between aircraft in stream type formation	jo7340
+IBN	identification beacon	jo7340
+IBND	inbound	jo7340
+IC	icing (pirep only)	jo7340
+ICD	interface control document	jo7340
+ID	identify or identifier	jo7340
+IDAC	integrated departure/arrival capability	pcg
+IDAT	interfacility data	jo7340
+IDENT	identification	jo7340
+IDP	individual development plan	jo7340
+IFAMP	if approach missed proceed	jo7340
+IFF	identification friend/foe	jo7340
+IFHOL	if holding	jo7340
+IFIM	international flight information manual	jo7340
+IFINS	if instrument conditions encountered	jo7340
+IFONO	interphone (service f) not operative	jo7340
+IFORO	interphone (service f) resumed operation	jo7340
+IFPFP	individual flight plans from this point	jo7340
+IFR	instrument flight rules	pcg
+IFSS	international flight service station	jo7340
+IFUN	if unable	jo7340
+IFVLS	if flight visibility becomes less than	jo7340
+IFVR	if visibility remains	jo7340
+IGA	international general aviation	jo7340
+IGIA	interagency group on international aviation	jo7340
+IIA	if incorrect advise	jo7340
+IISD	if incorrect service direct	jo7340
+ILAS	instrument low approach	jo7340
+ILS	instrument landing system	pcg
+ILSP	ils-partial	jo7340
+IM	inner marker	pcg
+IMAP	immediately after passing	jo7340
+IMC	instrument meteorological conditions	pcg
+IMF	interrogation sign	jo7340
+IMG	immigration	jo7340
+IMI	intensity unknown (weather reports only)	jo7340
+IMP	impracticable	jo7340
+IMPL	impulse	jo7340
+IMPR	improve	jo7340
+IMPT	important	jo7340
+IMT	immediate or immediately	jo7340
+INA	initial approach	jo7340
+INADQT	inadequate	jo7340
+INATS	interruption of air traffic services	jo7340
+INBD	inbound	jo7340
+INCERFA	uncertainty phase code (alerting service) 2−1−17	jo7340
+INCL	include	jo7340
+INCLV	inclusive	jo7340
+INCOMP	incomplete	jo7340
+INCOR	incorrect	jo7340
+INCR	increase	jo7340
+INDC	indicate	jo7340
+INDEF	indefinite	jo7340
+INDUS	industrial	jo7340
+INF	inland navigation facility	jo7340
+INFO	information	jo7340
+INIT	initial training	jo7340
+INOF	if not off	jo7340
+INOP	inoperative	jo7340
+INP	if not possible	jo7340
+INPR	in progress	jo7340
+INREQ	information request	pcg
+INS	inertial navigation system	pcg
+INSP	inspect	jo7340
+INST	instrument	jo7340
+INSTA	interstate	jo7340
+INSTL	install	jo7340
+INSTR	instruct	jo7340
+INT	intersection	jo7340
+INTCNTL	intercontinental	jo7340
+INTCP	intercept	jo7340
+INTD	intend	jo7340
+INTER	intermittent	jo7340
+INTFC	interference	jo7340
+INTL	international	jo7340
+INTMD	intermediate	jo7340
+INTMT	intermittent	jo7340
+INTNS	intentions	jo7340
+INTRG	interrogator	jo7340
+INTRP	interrupt	jo7340
+INTSF	intensify or intensifying	jo7340
+INTST	intensity	jo7340
+INTVL	interval	jo7340
+INTXN	intersection	jo7340
+INVES	investigate	jo7340
+INVOF	in the vicinity of	jo7340
+INVSTAR	investigate and report	jo7340
+IP	instructor pilot	jo7340
+IPV	improve	jo7340
+IR	ifr military training routes	pcg
+IRAC	interdepartmental radio advisory committee	jo7340
+IRAD	inbound radial	jo7340
+IREG	irregular	jo7340
+IRN	interface revision notices	jo7340
+ISA	international standard atmosphere	jo7340
+ISB	independent sideband	jo7340
+ISMGR	island manager	jo7340
+ISMLS	interim standard microwave landing system	jo7340
+ISOL	isolate	jo7340
+ISR	increased separation required	pcg
+ITCK	issue time check	jo7340
+ITNRNT	itinerant	jo7340
+ITRY	itinerary	jo7340
+ITU	international telecommunications union	jo7340
+IVFRC	in vfr conditions j	jo7340
+JAL	jet approach landing charts	jo7340
+JATO	jet assisted take-off	jo7340
+JAWYS	join airways	jo7340
+JCTN	junction	jo7340
+JOUR	journeyman	jo7340
+JP	jet penetration	jo7340
+JPAP	jet penetration approach	jo7340
+JTST	jet stream	jo7340
+KC	kilocycles	jo7340
+KEPOA	keep this office advised	jo7340
+KG	kilogram	jo7340
+KHZ	kilohertz	jo7340
+KIAS	knots indicated airspeed	jo7340
+KM	kilometers	jo7340
+KMH	kilometers per hour	jo7340
+KPA	kilopascal	jo7340
+KT	knots	jo7340
+KW	kilowatt l	jo7340
+LA	low approach	jo7340
+LAA	local airport advisory	pcg
+LAADR	low altitude arrival/departure routing	jo7340
+LAANC	low altitude authorization and notification capability	pcg
+LAAS	local area augmentation system	jo7340
+LAB	laboratory	jo7340
+LABS	low altitude bombing system	jo7340
+LADP	local airport deicing plan	jo7340
+LAHSO	land and hold short operations	pcg
+LAM	logical acknowledgement	jo7340
+LAN	inland	jo7340
+LARCT	last radio contact	jo7340
+LAT	latitude	jo7340
+LB	pounds (weight)	jo7340
+LC	local control	jo7340
+LCA	locally	jo7340
+LCL	local or locally	jo7340
+LCT	locate	jo7340
+LD	long distance	jo7340
+LDA	landing distance available	pcg
+LDG	landing	jo7340
+LDI	landing direction indicator	jo7340
+LDIN	lead in lighting system	jo7340
+LEN	length	jo7340
+LETFO	letter follows	jo7340
+LF	low frequency	pcg
+LFC	laminar flow control	jo7340
+LFNT	low frequency intersection	jo7340
+LFR	low frequency radio range	jo7340
+LGT	light or lighting	jo7340
+LGTD	lighted	jo7340
+LGWV	long wave	jo7340
+LICOF	land lines communications facilities	jo7340
+LIH	light intensity high	jo7340
+LIL	light intensity low	jo7340
+LIM	light intensity medium	jo7340
+LIN	linearity	jo7340
+LIRL	low intensity runway edge lights	jo7340
+LKLY	likely	jo7340
+LKTYP	like type	jo7340
+LL	lost link	pcg
+LLWAS	low level wind shear alert system	jo7340
+LLWS	low level wind shear	jo7340
+LLZ	localizer (not associated with ils)	jo7340
+LM	locator middle	jo7340
+LMM	compass locator at ils middle marker	jo7340
+LMT	limit	jo7340
+LN	line	jo7340
+LNAV	lateral navigation	pcg
+LND	land	jo7340
+LNDG	landing	jo7340
+LO	liaison officer	jo7340
+LOA	letter of agreement	jo7340
+LOC	localizer	jo7340
+LOCATION	numerous targets vicinity	pcg
+LOCOR	local coordinator	jo7340
+LOM	compass locator at ils outer marker	jo7340
+LONG	longitude	jo7340
+LONGL	longitudinal	jo7340
+LOP	line of position	jo7340
+LORAC	long range accuracy	jo7340
+LORAN	long range air navigation system	jo7340
+LPV	localizer performance with vertical guidance	pcg
+LR	the last message received by me was …	jo7340
+LRA	landing rights airport	jo7340
+LRCOM	long range vhf/uhf communications	jo7340
+LRS	lake reporting service	jo7340
+LS	left side	jo7340
+LSA	light-sport aircraft	pcg
+LSQ	line squall	jo7340
+LST	local standard time	jo7340
+LT	turn left after take-off	jo7340
+LTAV	light and variable	jo7340
+LTF	local training flight	jo7340
+LTFC	landing traffic	jo7340
+LTL	little	jo7340
+LTT	landline teletypewriter	jo7340
+LTTR	latter	jo7340
+LUAW	line up and wait	pcg
+LV	leaving	jo7340
+LVE	leave or leaving	jo7340
+LVG	leaving	jo7340
+LVL	level	jo7340
+LVLOF	level off	jo7340
+LVO	low visibility operations	jo7340
+LWR	lower	jo7340
+MA	monitor alert	pcg
+MAA	maximum authorized altitude	pcg
+MAC	military airlift command	jo7340
+MACH	mach number (speed ratio to speed of sound)	jo7340
+MACKAY	mackay radio and telegraph company	jo7340
+MACVFR	make altitude changes vfr	jo7340
+MAFAP	minimum altitude over facility on final approach course	jo7340
+MAG	magnetic	jo7340
+MAGSI	minimum altitude at glide slope intersection inbound	jo7340
+MAINT	maintenance	jo7340
+MAL	maintain at least (altitude)	jo7340
+MALS	medium intensity approach lighting system	jo7340
+MALSF	medium intensity approach lighting system with sequenced flashers	jo7340
+MALSR	medium intensity approach lighting system with runway alignment indicator lights	jo7340
+MAM	maintenance assumes monitor	jo7340
+MAN	manual	jo7340
+MANAM	manual amendment	jo7340
+MANOP	manual of operations	jo7340
+MANPADS	man portable air defense systems	pcg
+MAP	missed approach point	pcg
+MAPT	missed approach point	jo7340
+MAR	at sea	jo7340
+MARPT	municipal airport	jo7340
+MARSA	military authority assumes responsibility for separation of aircraft	pcg
+MAS	military alert system	jo7340
+MAX	maximum	jo7340
+MBST	microburst	jo7340
+MCA	minimum crossing altitude	pcg
+MCAS	marine corps air station	jo7340
+MCK	maintenance check	jo7340
+MCS	master control station	jo7340
+MCW	modulated continuous wave	jo7340
+MCZNE	minimum when control zone effective	jo7340
+MDA	minimum descent altitude	pcg
+MDF	medium frequency direction finding station	jo7340
+MDFR	make descent from	jo7340
+MDFY	modify	jo7340
+MDH	minimum descent height	jo7340
+MDT	moderate	jo7340
+MDZ	modernize	jo7340
+MDZN	modernization	jo7340
+MEA	minimum en route ifr altitude	pcg
+MEARTS	micro-en route automated radar tracking system	pcg
+MECH	mechanic	jo7340
+MEHT	minimum eye height over threshold	jo7340
+MEML	memorial	jo7340
+MET	meteorological	jo7340
+METAR	aviation routine weather report	jo7340
+METOF	meteorological officer	jo7340
+METRO	metropolitan	jo7340
+MF	medium frequency	jo7340
+MFL	maintain flight level	jo7340
+MFOB	minimum fuel on board	jo7340
+MFPOF	master flight plan on file	jo7340
+MFS	military flight service	jo7340
+MFV	forward visibility more than (miles)	jo7340
+MFXT	meter fix time	jo7340
+MGAT	make good a track of (degrees)	jo7340
+MGMT	management	jo7340
+MGOW	maximum gross operating weight	pcg
+MGR	manager	jo7340
+MHA	minimum holding altitude	pcg
+MHDF	medium and high frequency direction- finding station (same location)	jo7340
+MHDG	magnetic heading	jo7340
+MHFR	military height finder radar	jo7340
+MHVDF	medium high and very high frequency direction-finding station (same location)	jo7340
+MHZ	megahertz	jo7340
+MIA	minimum ifr altitudes	pcg
+MID	middle	jo7340
+MIDIZ	mid-canada identification zone	jo7340
+MIDPT	midpoint	jo7340
+MIJI	meaconing, intrusion, jamming, interference	jo7340
+MIL	military	jo7340
+MIMNO	mimeographic notice	jo7340
+MIN	minute	jo7340
+MINIMA	minimums	pcg
+MINIT	minutes in trail	jo7340
+MIREQ	minimum requirements specified	jo7340
+MIRL	medium intensity runway edge lights	jo7340
+MIS	meteorological impact statement	pcg
+MISC	miscellaneous	jo7340
+MISG	missing	jo7340
+MISL	missile	jo7340
+MIT	miles in trail	jo7340
+MITO	minimum interval take-off	jo7340
+MKCT	make check turn	jo7340
+MKD	marked	jo7340
+MKR	marker	jo7340
+MLS	microwave landing system	jo7340
+MM	middle marker	pcg
+MMACH	maintain mach	jo7340
+MNLY	mainly	jo7340
+MNM	minimum	jo7340
+MNPS	minimum navigation performance specification	jo7340
+MNPSA	minimum navigation performance specification airspace	jo7340
+MNT	monitor, monitored, or monitoring	jo7340
+MNTN	maintain	jo7340
+MNVR	maneuver	jo7340
+MOA	military operations area	pcg
+MOC	minimum obstacle clearance (required)	jo7340
+MOCA	minimum obstruction clearance altitude	pcg
+MONOK	monitor resumed normal operation	jo7340
+MONOS	monitor out of service	jo7340
+MOPS	minimum operational performance standards	jo7340
+MOPTAR	multi-object phase tracking and ranging	jo7340
+MOREPS	monitor station reports	jo7340
+MOT	ministry of transport (canada)	jo7340
+MOTNE	meteorological operational telecommunications network europe	jo7340
+MOV	move, or moving, or movement 2−1−21	jo7340
+MPH	miles per hour	jo7340
+MPP	merit promotion program	jo7340
+MPS	meters per second	jo7340
+MPVA	maintain a position vfr and advise	jo7340
+MRA	minimum reception altitude	pcg
+MRE	meter reference element	pcg
+MRG	medium range	jo7340
+MRKG	marking	jo7340
+MRM	maintenance returns monitor	jo7340
+MRP	meter reference point list	pcg
+MRR	mechanical reliability report	jo7340
+MRU	military radar unit	jo7340
+MSA	minimum safe altitude	pcg
+MSAW	minimum safe altitude warning	pcg
+MSG	message	jo7340
+MSGCTR	message center	jo7340
+MSL	mean sea level	jo7340
+MSR	message …(transmission identification) has been misrouted	jo7340
+MSSR	monopulse secondary surveillance radar	jo7340
+MT	mountain	jo7340
+MTCA	minimum terrain clearance altitude	jo7340
+MTI	moving target indicator	pcg
+MTR	military training routes	pcg
+MTRL	material	jo7340
+MTRY	momentary	jo7340
+MTU	metric units	jo7340
+MTW	mountain wave	jo7340
+MU	designate a friction value representing runway surface conditions (greek letter)	jo7340
+MUA	maximum usable altitude	jo7340
+MUF	maximum usable frequency	jo7340
+MULT	multiple	jo7340
+MUNI	municipal	jo7340
+MV	millivolt	jo7340
+MVA	minimum vectoring altitude	pcg
+MVDF	medium and very high frequency direction-finding station (same location)	jo7340
+MVFR	maintain vfr	jo7340
+MVSP	maintain visual separation	jo7340
+MWO	meteorological watch office	jo7340
+MWRC	maintain well to right of course	jo7340
+MWTCS	modernized weather teletypewriter communications system	jo7340
+NA	not authorized	jo7340
+NAAS	naval auxiliary air station specialists	jo7340
+NAB	not above	jo7340
+NACOS	national communications schedule	jo7340
+NADIN	national airspace data interchange network	jo7340
+NAF	naval air facility	jo7340
+NAFEC	national aviation facilities experimental center	jo7340
+NANAC	national aircraft noise abatement council	jo7340
+NAP	not at present system	jo7340
+NAS	national airspace system	pcg
+NASA	national aeronautics and space administration	jo7340
+NASC	national ais system centre	jo7340
+NASEO	national airways system engineering office	jo7340
+NASP	national airport system plan	jo7340
+NAT	north atlantic	jo7340
+NATCA	national air traffic controllers association system	jo7340
+NATCC	national air transport coordinating committee	jo7340
+NATCOM	national communications center	jo7340
+NATL	national	jo7340
+NATR	no additional traffic reported	jo7340
+NATS	noise abatement test system	jo7340
+NAV	navigation	jo7340
+NAVAID	navigational aid	pcg
+NAVLO	navy liaison officer	jo7340
+NAVREP	navy representative to the faa	jo7340
+NB	northbound	jo7340
+NBCAP	national beacon code allocation plan airspace	pcg
+NBFR	not before	jo7340
+NBND	northbound	jo7340
+NBRHD	neighborhood	jo7340
+NC	no change	jo7340
+NCDC	national climatic data center	jo7340
+NCE	no change in estimates decode	jo7340
+NCS	national communications system	jo7340
+NDB	nondirectional beacon	pcg
+NDBLO	not to descend below	jo7340
+NE	north-east	jo7340
+NEB	north-eastbound	jo7340
+NEC	necessary	jo7340
+NEF	no further clearance required	jo7340
+NEG	negative	jo7340
+NESS	national environmental satellite service	jo7340
+NETR	no essential traffic reported	jo7340
+NFDD	national flight data digest	pcg
+NFQ	night frequency	jo7340
+NFT	no filing time	jo7340
+NFU	not for us	jo7340
+NG	national guard	jo7340
+NGT	night	jo7340
+NHD	not heard	jo7340
+NICS	national airspace system interfacility communications system	jo7340
+NIS	not in system	jo7340
+NLT	not later than	jo7340
+NM	nautical mile	jo7340
+NMC	national meteorological center	jo7340
+NML	normal	jo7340
+NMN	no middle name	jo7340
+NMR	nautical mile radius	jo7340
+NMRS	numerous	jo7340
+NMS	notam management service	jo7340
+NNE	north-north east	jo7340
+NNW	north-north west	jo7340
+NOAA	national oceanic and atmospheric administration	jo7340
+NOAC	no action necessary	jo7340
+NOF	notam office	jo7340
+NOFIN	no further information	jo7340
+NOHOL	not holding	jo7340
+NOIFN	no information	jo7340
+NOLF	naval outlying landing field	jo7340
+NOMAD	naval oceanographic meteorological automatic device	jo7340
+NONEG	negative replies not required	jo7340
+NOPAC	north pacific	pcg
+NOPAR	do not pass to air defense radar	jo7340
+NOPT	no procedure turn required	jo7340
+NORAC	no radio contact	jo7340
+NORAD	north american aerospace defense command	jo7340
+NORDO	no radio	jo7340
+NOREC	no record	jo7340
+NOREP	no report	jo7340
+NORIV	no arrival report	jo7340
+NORR	no reply received	jo7340
+NORST	no restrictions	jo7340
+NOS	national ocean service	jo7340
+NOSI	now simultaneous	jo7340
+NOSIG	no significant change	jo7340
+NOSUM	notam summary	jo7340
+NOTAM	notice to airmen	pcg
+NOZ	normal operating zone	pcg
+NPI	nonprecision instrument	jo7340
+NPRL	no parallel traffic	jo7340
+NPRM	notice of proposed rulemaking	jo7340
+NRAB	naval reserve air base	jo7340
+NRD	no record of destination	jo7340
+NRH	no reply heard	jo7340
+NRP	north american route program	pcg
+NRS	navigation reference system	pcg
+NRV	nonrevenue	jo7340
+NRW	narrow	jo7340
+NSA	national security area	pcg
+NSC	nonstandard c/a code displayed	jo7340
+NSP	nonstandard holding pattern	jo7340
+NSSFC	national severe storm forecast center	jo7340
+NSTD	non-standard	jo7340
+NSTP	nonstop	jo7340
+NTAP	national track analysis program 2−1−23	jo7340
+NTE	not to exceed	jo7340
+NTFD	notified	jo7340
+NTFND	no trouble found	jo7340
+NTFY	notify	jo7340
+NTL	national	jo7340
+NTO	name to	jo7340
+NTRP	no traffic reported	jo7340
+NTSB	national transportation safety board	jo7340
+NTZ	no transgression zone	pcg
+NUDET	nuclear detonation	jo7340
+NW	north-west	jo7340
+NWB	north-westbound	jo7340
+NWS	national weather service	jo7340
+NWSO	naval weather service office	jo7340
+NXT	next o	jo7340
+OA	overhead approach	jo7340
+OAC	oceanic area control	jo7340
+OAG	official airline guide	jo7340
+OANDR	operation and regulation	jo7340
+OAOI	on and off instruments	jo7340
+OARTS	oceanic air route tracking system	jo7340
+OAS	obstacle assessment surface	jo7340
+OAT	outside air temperature	jo7340
+OB	on board	jo7340
+OBL	obliterate	jo7340
+OBND	outbound	jo7340
+OBS	observe, observed, or observation	jo7340
+OBSC	obscure, obscured, or obscuring	jo7340
+OBST	obstruct	jo7340
+OBSTN	obstruction	jo7340
+OC	obstruction chart	jo7340
+OCAC	oceanic atc	jo7340
+OCAS	out of controlled airspace	jo7340
+OCH	obstacle clearance height	jo7340
+OCL	obstacle clearance limit	jo7340
+OCNL	occasional	jo7340
+OCR	occur	jo7340
+OCS	obstacle clearance surface	jo7340
+OCTLA	out of control area	jo7340
+ODALS	omnidirectional approach lighting system	jo7340
+ODAPS	oceanic display and planning system	jo7340
+ODP	obstacle departure procedure	pcg
+OFAS	overseas flight assistance service	jo7340
+OFC	office	jo7340
+OFFL	official	jo7340
+OFM	out for maintenance	jo7340
+OFP	original flight plan	jo7340
+OFT	outer fix time	pcg
+OFW	off watch	jo7340
+OFXT	outer fix time	jo7340
+OFZ	obstacle free zone	jo7340
+OG	on ground	jo7340
+OGN	originate	jo7340
+OHD	overhead	jo7340
+OI	on instruments	jo7340
+OINT	omni intersection	jo7340
+OIS	operational information system	jo7340
+OJT	on-the-job training	jo7340
+OK	operating normally	jo7340
+OLDI	on line data interchange	jo7340
+OLS	optical landing system	jo7340
+OM	outer marker	pcg
+OMSG	our message	jo7340
+ONER	oceanic navigational error report	pcg
+ONW	on watch	jo7340
+OOP	operations over people	pcg
+OOT	out of tolerance	jo7340
+OPA	opaque, white type of ice formation	jo7340
+OPC	operational control	jo7340
+OPDT	opposite direction traffic	jo7340
+OPER	operate	jo7340
+OPMET	operational meteorological (information)	jo7340
+OPN	operation	jo7340
+OPNML	operations normal	jo7340
+OPR	operate, operator, operational	jo7340
+OPS	operations	jo7340
+OPSNET	operations network	jo7340
+ORD	order, indication of	jo7340
+ORIG	original	jo7340
+ORL	overrun lights	jo7340
+ORS	over range station	jo7340
+OT	on time decode	jo7340
+OTFC	overflight traffic	jo7340
+OTP	on top	jo7340
+OTR	oceanic transition route	pcg
+OTRW	otherwise	jo7340
+OTS	organized track system	pcg
+OUBD	outbound	jo7340
+OV	location (pirep only)	jo7340
+OVD	overdue	jo7340
+OVHD	overhead	jo7340
+OVLA	overlay	jo7340
+OVNGT	overnight	jo7340
+OVR	over	jo7340
+OVRN	overrun	jo7340
+OVSEA	overseas	jo7340
+OVTK	overtake	jo7340
+OW	one way	jo7340
+OWF	optimum working frequency	jo7340
+OXY	oxygen p	jo7340
+PACF	parent fss assumes control of part-time fss	jo7340
+PADRA	pass to air defense radar	jo7340
+PAEW	personnel and equipment working	jo7340
+PAJA	parachute jumping activities	jo7340
+PALS	precision approach lighting system	jo7340
+PALT	present altitude	jo7340
+PANS	procedures for air navigation services	jo7340
+PAO	public aircraft operation	pcg
+PAPI	precision approach path indicator	jo7340
+PAR	precision approach radar	pcg
+PARA	paragraph	jo7340
+PAREN	parenthesis	jo7340
+PARL	parallel	jo7340
+PARROT	transponder	jo7340
+PAT	pattern	jo7340
+PATC	precision approach terrain chart	jo7340
+PATWAS	pilots automatic telephone weather answering service	jo7340
+PAU	present address unknown	jo7340
+PAX	passenger	jo7340
+PBCT	proposed boundary crossing time	pcg
+PBS	public buildings service	jo7340
+PCA	positive control area	jo7340
+PCD	proceed	jo7340
+PCK	pilot check	jo7340
+PCL	pilot controlled lighting	jo7340
+PCN	pavement classification number	jo7340
+PCS	permanent change of station	jo7340
+PCT	percent	jo7340
+PD	period a)	jo7340
+PDC	pre-departure clearance	jo7340
+PDDC	proceed directly on course	jo7340
+PDOP	position dilution of precision	jo7340
+PDR	preferential departure route (stage a)	jo7340
+PENT	penetrate or penetration	jo7340
+PERCOM	peripheral communications	jo7340
+PERF	perforator	jo7340
+PERI	perimeter	jo7340
+PERM	permanent	jo7340
+PERTI	plan, execute, review, train, improve	pcg
+PFSV	pilot to forecaster service	jo7340
+PGUI	planview graphical user interface	pcg
+PHYS	physical	jo7340
+PIB	pre-flight information bulletin	jo7340
+PIC	pilot in command	jo7340
+PID	pilot initiated downlink	pcg
+PIR	precision instrument runway	jo7340
+PIREP	pilot weather report	pcg
+PIRFC	pilot requests forecast	jo7340
+PIT	pilot instructor training	jo7340
+PJE	parachute jumping exercise	jo7340
+PLA	practice low approach	jo7340
+PLASI	pulsating visual approach slope indicators	jo7340
+PLAT	present latitude	jo7340
+PLF	private line telephone	jo7340
+PLINE	power line	jo7340
+PLN	flight plan	jo7340
+PLOB	place of birth	jo7340
+PLONG	present longitude	jo7340
+PLS	please	jo7340
+PLT	private line teletypewriter	jo7340
+PLVL	present level	jo7340
+PM	post meridiem	jo7340
+PMSN	permission	jo7340
+PMT	permit	jo7340
+PN	prior notice required	jo7340
+PNR	point of no return	jo7340
+POA	privately owned aircraft	jo7340
+POB	persons on board	jo7340
+POC	proceed or proceeding on course	jo7340
+POFZ	precision obstacle free zone	pcg
+POS	positive	jo7340
+POSS	possible	jo7340
+POV	privately owned vehicle	jo7340
+PP	pay period (number)	jo7340
+PPI	plan position indicator	jo7340
+PPR	prior permission required	pcg
+PPS	propose	jo7340
+PPSN	present position	jo7340
+PR	photo reconnaissance	jo7340
+PRBL	probable	jo7340
+PRBO	position relief briefing observed	jo7340
+PRCF	parent fss returns control of part-time fss	jo7340
+PRCHT	parachute	jo7340
+PRCTN	precaution	jo7340
+PRECD	precede	jo7340
+PREF	preferred	jo7340
+PRES	pressure	jo7340
+PREV	previous	jo7340
+PRI	primary	jo7340
+PRIM	primary	jo7340
+PRIN	principal	jo7340
+PRIND	present indications are	jo7340
+PRIRA	primary radar	jo7340
+PRKG	parking	jo7340
+PRN	pseudo random noise	jo7340
+PROB	probability	jo7340
+PROC	procedure	jo7340
+PROCD	proceed	jo7340
+PROG	progress	jo7340
+PROP	propeller	jo7340
+PROPA	propagation	jo7340
+PROSIG	procedure signal	jo7340
+PROV	provisional	jo7340
+PRP	prepare	jo7340
+PRST	persist	jo7340
+PRVD	provide	jo7340
+PS	passenger service	jo7340
+PSBL	possible	jo7340
+PSBT	pilot self-briefing terminal	jo7340
+PSGR	passenger	jo7340
+PSN	position	jo7340
+PSNAL	personal	jo7340
+PSNL	personnel	jo7340
+PSNRP	position report	jo7340
+PSP	pierced steel planking	jo7340
+PSR	primary surveillance radar	jo7340
+PSRI	position subject to return of incumbent	jo7340
+PSRS	position subject to rotating shifts	jo7340
+PST	pacific standard time	jo7340
+PT	procedure turn	pcg
+PTCP	participate	jo7340
+PTN	portion	jo7340
+PTP	point-to-point	pcg
+PTR	printer	jo7340
+PTS	polar track structure	pcg
+PUB	public	jo7340
+PUBL	publish	jo7340
+PUP	pickup	jo7340
+PVASI	pulsating/steady visual approach slope indicator	jo7340
+PVL	prevail	jo7340
+PVLT	prevalent	jo7340
+PVT	private	jo7340
+PWB	pilot weather briefing	jo7340
+PWI	proximity warning indicator	jo7340
+PWR	power	jo7340
+PWRNO	power failure	jo7340
+PWROK	power restored	jo7340
+PWS	predictive wind shear alert system	pcg
+QDL	do you intend to ask me for a series of bearings? or i intend to ask you for a series of bearings	jo7340
+QDM	magnetic heading	jo7340
+QDR	magnetic bearing	jo7340
+QFE	atmospheric pressure at airport elevation	jo7340
+QFLOW	quota flow control procedures	jo7340
+QFU	magnetic orientation of runway distance to my station is …	jo7340
+QJH	shall i run my test tape/a test sentence	jo7340
+QLFY	qualify	jo7340
+QLTY	quality	jo7340
+QN	question	jo7340
+QNH	altimeter sub-scale setting to obtain elevation when on the ground	jo7340
+QNTY	quantity	jo7340
+QSP	will you relay to …free of charge or i will relay to…free of charge	jo7340
+QTA	shall i cancel telegram number …? or cancel telegram number …	jo7340
+QTE	true bearing according to the bearings taken by the d/ f station which you control or the position of your station according to the bearings taken by the d/f stations that i control was …latiude…longitude (or other indication of position), class ....at....hours	jo7340
+QTR	quarter	jo7340
+QUAD	quadrant	jo7340
+QUEUING	staging/queuing	pcg
+QUJ	will you indicate the true track to reach you or the true track to reach me is … degrees at …hours r	jo7340
+RAA	remote airport advisory	jo7340
+RAAF	royal australian air force	jo7340
+RAC	request altitude change	jo7340
+RACE	request altitude changes en route	jo7340
+RACFI	radio and communication facilities inoperative	jo7340
+RACON	radar responder beacon	jo7340
+RAD	route amendment dialog	pcg
+RADEP	radar departure	jo7340
+RADON	radar beacon	jo7340
+RADU	weather radar analysis and development unit	jo7340
+RAF	royal air force	jo7340
+RAFC	regional area forecast center	jo7340
+RAGF	remote air-ground facility	jo7340
+RAI	runway alignment indicator	jo7340
+RAIL	runway alignment indicator lights	jo7340
+RAIM	receiver autonomous integrity monitoring	pcg
+RAIS	remote airport information service	pcg
+RAJAM	radar jamming	jo7340
+RALT	regardless of altitude	jo7340
+RAM	returned account mechanical	jo7340
+RAMP	apron	pcg
+RAPCON	radar approach control facility (usaf, usn and usmc) collection	jo7340
+RARAD	radar advisory	jo7340
+RASC	regional ais system centre	jo7340
+RASH	rain showers	jo7340
+RATCF	radar air traffic control facility (usn and usmc)	jo7340
+RAWX	returned account weather	jo7340
+RB	right base	jo7340
+RBDE	radar bright display equipment	jo7340
+RBN	radio beacon	jo7340
+RBOC	report back on course	jo7340
+RBOF	report back on frequency	jo7340
+RBS	radar bomb scoring	jo7340
+RC	road reconnaissance	pcg
+RCA	reach cruising altitude	jo7340
+RCADV	reverse course and advise	jo7340
+RCAG	remote center air/ground facility	pcg
+RCALT	reach cruising altitude	jo7340
+RCC	rescue coordination center	pcg
+RCF	remain on company frequency	jo7340
+RCH	reach	jo7340
+RCK	radio check	jo7340
+RCL	runway center line	jo7340
+RCLL	runway center line lights	jo7340
+RCLM	runway centerline marking	jo7340
+RCLR	radio communications link repeater	jo7340
+RCLS	runway centerline light system	jo7340
+RCLT	radio communications link terminal	jo7340
+RCMD	recommend	jo7340
+RCN	royal canadian navy	jo7340
+RCO	remote communications outlet	pcg
+RCOM	en route communications	jo7340
+RCON	reconfiguration	jo7340
+RCPT	receipt	jo7340
+RCR	runway condition reading	pcg
+RCRD	record	jo7340
+RCS	rehost computer system	jo7340
+RCV	receive	jo7340
+RCVNO	receiving capability out	jo7340
+RDARA	regional and domestic air route area	jo7340
+RDAT	radar data (digitized)	jo7340
+RDC	reduce	jo7340
+RDH	reference datum height (ils)	jo7340
+RDL	radial	jo7340
+RDO	radio decode	jo7340
+RDS	radius	jo7340
+RDSP	redispatch	jo7340
+RDSPA	redispatch accepted	jo7340
+REBAT	reference batcs report	jo7340
+REC	receive or receiver	jo7340
+RECLR	recleared	jo7340
+REDL	runway edge light	jo7340
+REF	reference	jo7340
+REFONE	reference our telephone conversation	jo7340
+REFORM	reference form	jo7340
+REG	regulation	jo7340
+REGAL	range and elevation guidance for approach and landing	jo7340
+REIB	report established in block	jo7340
+REIL	runway end identifier lights	pcg
+REINV	reference invoice	jo7340
+REL	runway entrance lights	pcg
+RELBL	reliable	jo7340
+RELCT	relocate	jo7340
+RELET	reference letter	jo7340
+REMES	reference message	jo7340
+RENL	runway end light	jo7340
+RENOT	regional office notice	jo7340
+REOC	report when established on course	jo7340
+REPAML	reply by airmail	jo7340
+REPBS	reference pbs message	jo7340
+REPERF	reperforator	jo7340
+REPMES	reply by message	jo7340
+REPML	reply by mail	jo7340
+REPTWX	reply by twx	jo7340
+REQ	request	jo7340
+REQID	request if desired	jo7340
+REQON	request consideration	jo7340
+REQRCM	request your recommendation	jo7340
+REQSTD	requested	jo7340
+RERTE	reroute	jo7340
+RESA	runway end safety area	jo7340
+RESP	response	jo7340
+REWRC	report when established well to right of course	jo7340
+RF	radio frequency	jo7340
+RFA	request further airways	jo7340
+RFL	refuel	jo7340
+RFS	refuse	jo7340
+RFTO	ready for take-off	jo7340
+RG	reception good (radio logs only)	jo7340
+RGLR	regular	jo7340
+RGN	region	jo7340
+RHA	refined hazard area	pcg
+RHC	right-hand circuit	jo7340
+RHI	range height indicator	jo7340
+RID	remote identification	pcg
+RIF	reduction in force	jo7340
+RIMAT	must ride company material	jo7340
+RIS	reports identification symbol	jo7340
+RITC	request in trail climb	jo7340
+RITD	request in trail descent	jo7340
+RITE	right (direction of turn)	jo7340
+RL	report immediately upon leaving	jo7340
+RLA	relay to	jo7340
+RLANO	relay equipment out of operation	jo7340
+RLAOK	relay equipment resumed operation	jo7340
+RLBG	relative bearing	jo7340
+RLC	report landing completed	jo7340
+RLCE	request level change en route	jo7340
+RLETFL	report leaving each thousand foot level	jo7340
+RLLS	runway lead-in lighting system	jo7340
+RLNA	request level not available	jo7340
+RLRD	railroad	jo7340
+RLS	release	jo7340
+RLSTN	relay station	jo7340
+RLTK	rhumbline track	jo7340
+RLTV	relative	jo7340
+RLV	relieve	jo7340
+RLVL	report level	jo7340
+RM	remarks (pirep only)	jo7340
+RMI	radio magnetic indicator	pcg
+RMK	remark	jo7340
+RMLR	radar microwave link repeater	jo7340
+RMLT	radar microwave link terminal	jo7340
+RMN	remain	jo7340
+RMPCK	ramp check	jo7340
+RMRK	remark	jo7340
+RN	reception nil (radio logs only)	jo7340
+RNAV	area navigation	pcg
+RNG	army national guard	jo7340
+RNLS	resume normal speed	jo7340
+RNP	required navigation performance	pcg
+ROBEX	regional opmet bulletin exchange	jo7340
+ROC	rate of climb	jo7340
+ROCC	norad region operations control center	jo7340
+ROD	rate of descent	jo7340
+RODA	regardless of destination airport	jo7340
+ROFOR	route forecast	jo7340
+ROLET	reference letter from our office	jo7340
+ROMEMO	reference our memorandum	jo7340
+ROMES	reference message from our office	jo7340
+RON	remaining overnight	jo7340
+RORQN	reference requisition from our office	jo7340
+RORU	rest of route unchanged	jo7340
+ROT	rotate	jo7340
+ROTEL	reference telegram from our office	jo7340
+ROTG	rotating	jo7340
+ROTWX	reference our twx	jo7340
+ROV	report over	jo7340
+RPA	request present altitude	jo7340
+RPFOD	reported for duty	jo7340
+RPI	radar position indicator	jo7340
+RPIC	remote pilot in command	pcg
+RPL	repetitive flight plan	jo7340
+RPLC	replace	jo7340
+RPM	rotation per minute	jo7340
+RPOC	report proceeding on course	jo7340
+RPR	repair	jo7340
+RPRT	report	jo7340
+RPS	radar position symbol	jo7340
+RPSG	report passing	jo7340
+RPT	repeat	jo7340
+RQ	request	jo7340
+RQCL	request clearance	jo7340
+RQDCZ	request clearance to depart vfr and leave control zone at	jo7340
+RQECZ	request clearance to enter control zone vfr at	jo7340
+RQMNTS	requirements	jo7340
+RQN	requisition	jo7340
+RQOF	request on file	jo7340
+RQP	request permission	jo7340
+RQPP	request present position	jo7340
+RQR	require	jo7340
+RQRP	request reply	jo7340
+RQS	request supplementary flight plan	jo7340
+RQTAO	request time and altitude over	jo7340
+RRBN	round robin	jo7340
+RRCVR	remote receiver	jo7340
+RRIA	reroute impact assessment	pcg
+RRL	runway remaining lights	jo7340
+RRP	runway reference point	jo7340
+RRPD	runway reference point downwind	jo7340
+RRPU	runway reference point upwind	jo7340
+RRS	remainder of same route	jo7340
+RRTE	reroute	jo7340
+RS	receiver station	jo7340
+RSA	runway safety area	pcg
+RSC	rescue sub-center	jo7340
+RSCD	runway surface condition	jo7340
+RSCU	rescue	jo7340
+RSN	reason	jo7340
+RSOPN	resumed operation	jo7340
+RSP	responder beacon	jo7340
+RSR	en route surveillance radar	jo7340
+RSTR	restrict	jo7340
+RSU	runway supervisory unit	jo7340
+RSVN	reservation	jo7340
+RT	round trip	jo7340
+RTB	return to base	jo7340
+RTD	delayed	jo7340
+RTE	route	jo7340
+RTF	radiotelephone	jo7340
+RTG	radiotelegraph	jo7340
+RTHL	runway threshold light	jo7340
+RTMTR	remote transmitter	jo7340
+RTN	return	jo7340
+RTND	retained	jo7340
+RTNE	routine	jo7340
+RTO	report time over	jo7340
+RTR	remote transmitter/receiver	pcg
+RTRD	retard	jo7340
+RTRN	return decode	jo7340
+RTS	return to service	jo7340
+RTT	radioteletypewriter	jo7340
+RTX	report time crossing	jo7340
+RTZL	runway touchdown zone light	jo7340
+RUFORM	reference your form	jo7340
+RULET	reference letter from your office	jo7340
+RUMEMO	reference your memorandum	jo7340
+RUMES	reference message from your office	jo7340
+RURQN	reference requisition from your office	jo7340
+RUT	standard regional route transmitting frequencies	jo7340
+RUTEL	reference telegram from your office	jo7340
+RUTWX	reference your twx	jo7340
+RV	radar vector	jo7340
+RVFP	rnav visual flight procedure	pcg
+RVO	runway visibility by observer	jo7340
+RVR	runway visual range	pcg
+RVRA	rvr ten minute average	jo7340
+RVRANO	rvr ten minute average not available	jo7340
+RVRENO	rvr ten minute extremes not available	jo7340
+RVRM	rvr midpoint	jo7340
+RVRMNO	rvr midpoint not available	jo7340
+RVRNO	rvr not available	jo7340
+RVRR	rvr rollout	jo7340
+RVRRNO	rvr rollout not available	jo7340
+RVRT	rvr touchdown	jo7340
+RVRTNO	rvr touchdown not available	jo7340
+RVS	revise	jo7340
+RVSM	reduced vertical separation minimum	jo7340
+RVV	runway visibility value	jo7340
+RVVNO	rvv not available	jo7340
+RWRC	remain well to right of course	jo7340
+RWY	runway	jo7340
+RY	runway s	jo7340
+SA	surveillance approach	jo7340
+SAA	sense and avoid	pcg
+SADT	same direction traffic	jo7340
+SALS	short approach lighting system	jo7340
+SALSF	short approach lighting system with sequenced flashing lights	jo7340
+SAN	sanitary	jo7340
+SAP	as soon as possible	jo7340
+SAPD	speed at pilots discretion	jo7340
+SAR	search and rescue	pcg
+SARPS	standards and recommended practices	jo7340
+SAT	saturday	jo7340
+SATCOM	satellite communication	jo7340
+SATFY	satisfy or satisfactory	jo7340
+SATR	special air traffic rules	pcg
+SAVASI	simplified abbreviated visual approach slope indicator station	jo7340
+SAW	aviation watch notification message	pcg
+SAYTA	say time able	jo7340
+SB	southbound	jo7340
+SBAS	satellite-based augmentation system	jo7340
+SBFC	standby for further clearance	jo7340
+SBND	southbound	jo7340
+SCAN	self-correcting automatic navigation	jo7340
+SCANO	automatic scanning unit out of service	jo7340
+SCAOK	automatic scanning unit returned to service	jo7340
+SCAT	security control of air traffic	jo7340
+SCATANA	security control of air traffic and air navigation aids	jo7340
+SCC	system command center	jo7340
+SCLN	semicolon	jo7340
+SCND	second (in line)	jo7340
+SCS	single channel simplex	jo7340
+SCTR	sector	jo7340
+SCTY	security	jo7340
+SDB	scheduled data base	jo7340
+SDBY	standby	jo7340
+SDF	simplified directional facility	jo7340
+SE	system engineer	jo7340
+SEADRM	seadrome	jo7340
+SEB	south-eastbound	jo7340
+SEC	second (time)	jo7340
+SECMR	sector manager	jo7340
+SECNOT	security notice	pcg
+SECRA	secondary radar	jo7340
+SECT	sector	jo7340
+SEL	space environment laboratory	jo7340
+SELCAL	selective calling	jo7340
+SENS	sensitivity	jo7340
+SEPN	separation	jo7340
+SEQ	sequence	jo7340
+SER	service	jo7340
+SES	supervisory electronics specialist	jo7340
+SESC	space environment service center	jo7340
+SET	stack entry time	jo7340
+SEV	severe	jo7340
+SF	standard form	jo7340
+SFA	single frequency approach	pcg
+SFC	surface	jo7340
+SFL	sequence flashing lights	jo7340
+SFO	simulated flameout	pcg
+SFPP	stored flight plan program	jo7340
+SFRA	special flight rules area	pcg
+SFU	sector field unit	jo7340
+SGD	signed	jo7340
+SGFNT	significant	jo7340
+SGI	special government interest	pcg
+SGL	signal	jo7340
+SHF	super high frequency	pcg
+SHORN	short range navigation system	jo7340
+SHP	standard holding procedure	jo7340
+SHRT	short	jo7340
+SHRTWV	shortwave	jo7340
+SHTDN	shutdown	jo7340
+SHUD	should	jo7340
+SI	straight-in approach	jo7340
+SIA	standard instrument approach	jo7340
+SIAP	standard instrument approach procedure	pcg
+SID	standard instrument departure	pcg
+SIF	selective identification feature	jo7340
+SIG	signature	jo7340
+SIGMET	significant meteorological information	jo7340
+SIGWX	significant weather	jo7340
+SIM	simulated approach	jo7340
+SIMUL	simultaneous/ly	jo7340
+SIWL	single isolated wheel load	jo7340
+SJP	standard jet penetration	jo7340
+SK	sky condition (pirep only)	jo7340
+SKED	schedule	jo7340
+SLCT	select	jo7340
+SLDI	sector list drop interval	pcg
+SLGT	slight	jo7340
+SLMM	simultaneous compass locator at middle marker	jo7340
+SLO	slow	jo7340
+SLOM	simultaneous compass locator at outer marker	jo7340
+SLP	slope	jo7340
+SLRAP	standard low frequency range approach	jo7340
+SLS	side lobe suppression	jo7340
+SLW	slow	jo7340
+SM	statute mile	jo7340
+SMAR	special military activity route	pcg
+SMC	squawk mode code	jo7340
+SMGCS	surface movement guidance and control system	jo7340
+SML	small	jo7340
+SMR	statute mile radius	jo7340
+SMRY	summary	jo7340
+SMT	submit	jo7340
+SMTM	sometime	jo7340
+SMWHT	somewhat	jo7340
+SN	system strategic navigation	pcg
+SND	sand or sanded or sanding	jo7340
+SNGL	single	jo7340
+SNSH	snow showers	jo7340
+SOAP	spectrometric oil analysis program	jo7340
+SOB	souls on board	jo7340
+SOCC	norad sector operations control center	jo7340
+SOIA	simultaneous offset instrument approach	pcg
+SOMSG	see our message	jo7340
+SOP	standard operating procedure	jo7340
+SORAP	standard omni range approach	jo7340
+SP	standard holding pattern	jo7340
+SPAN	stored program for alpha numerics	jo7340
+SPB	seaplane base	jo7340
+SPCLY	especially	jo7340
+SPD	speed	jo7340
+SPEC	specification	jo7340
+SPEED	increase speed to	pcg
+SPL	special	jo7340
+SPO	strategic plan of operation	jo7340
+SPOT	spot wind	jo7340
+SPRL	spiral	jo7340
+SPS	standard positioning service	jo7340
+SPT	strategic planning team	jo7340
+SQDN	squadron	jo7340
+SQK	squawk	jo7340
+SR	standard range approach	jo7340
+SRA	surveillance radar approach	jo7340
+SRCH	search	jo7340
+SRE	surveillance radar element of precision approach radar system	jo7340
+SRG	short range	jo7340
+SRND	surround	jo7340
+SRPN	special requisition priority number	jo7340
+SRR	search and rescue region	jo7340
+SRY	secondary	jo7340
+SS	sunset with sequenced flashers with runway alignment indicator lights	jo7340
+SSB	single sideband	jo7340
+SSE	south-south east	jo7340
+SSNO	request no sids or stars	jo7340
+SSR	secondary surveillance radar	jo7340
+SST	supersonic transport	jo7340
+SSW	south-south west	jo7340
+ST	saint	jo7340
+STA	scheduled time of arrival	pcg
+STADMR	station administrator	jo7340
+STALO	stabilized local oscillator	jo7340
+STAR	standard terminal arrival	pcg
+STARS	standard terminal automation replacement system	pcg
+STATE	military, customs, or police services	jo7340
+STBL	stable	jo7340
+STBY	standby	jo7340
+STCLB	start climb	jo7340
+STD	standard	jo7340
+STDST	start descent	jo7340
+STDY	steady	jo7340
+STF	stratiform	jo7340
+STLT	satellite	jo7340
+STMGR	station manager	jo7340
+STMP	special traffic management program	jo7340
+STN	station	jo7340
+STNR	stationary	jo7340
+STOL	short takeoff and landing aircraft	pcg
+STR	subject terminal control release	jo7340
+STRB	strobe	jo7340
+STRO	stereo routes	jo7340
+STS	status	jo7340
+STWL	stopway light	jo7340
+STWY	stopway	jo7340
+SUA	special use airspace	jo7340
+SUB	substitute	jo7340
+SUBFIX	subject to correction	jo7340
+SUBJ	subject to	jo7340
+SUF	sufficient	jo7340
+SUG	suggest	jo7340
+SUN	sunday	jo7340
+SUP	supply	jo7340
+SUPCHG	supercharge	jo7340
+SUPPL	supplement	jo7340
+SUPPS	regional supplementary procedures	jo7340
+SUPR	superior 2−1−33	jo7340
+SUPSD	supersede	jo7340
+SUPT	superintendent	jo7340
+SUPVR	supervisor	jo7340
+SURPIC	surface picture	jo7340
+SUSP	suspend	jo7340
+SVC	service	jo7340
+SVCBL	serviceable	jo7340
+SVFR	special vfr	jo7340
+SVG	serving	jo7340
+SVN	space vehicle number	jo7340
+SVR	severe	jo7340
+SVRL	several	jo7340
+SW	south-west	jo7340
+SWAP	severe weather avoidance plan	pcg
+SWB	scheduled weather broadcast	jo7340
+SWSL	supplemental weather service location	pcg
+SWY	stopway	jo7340
+SYD	release subject your discretion	jo7340
+TA	total aboard	jo7340
+TAC	trajectory altering clearance	pcg
+TACAN	tactical air navigation	pcg
+TACLO	tactical air command liaison officer	jo7340
+TACR	tactical air navigation	jo7340
+TAD	atc tower, approach and departure control facility	jo7340
+TAF	aerodrome forecast	jo7340
+TAIL	tail wind	jo7340
+TAND	tandem	jo7340
+TANDA	time and attendance report	jo7340
+TAPER	temporary appointment pending establishment of a register	jo7340
+TAR	terminal area surveillance radar	jo7340
+TARND	turn around	jo7340
+TAS	terminal automation systems	pcg
+TASR	terminal area surveillance radar	jo7340
+TAWOG	travel arrangements without government expense	jo7340
+TAWS	terrain awareness warning system	pcg
+TAX	taxi or taxiing	jo7340
+TB	turbulence (pirep only)	jo7340
+TBFM	time-based flow management	pcg
+TBJT	turbojet	jo7340
+TBM	time-based management	pcg
+TC	time check	jo7340
+TCA	terminal control area	jo7340
+TCAS	traffic alert and collision avoidance system	pcg
+TCF	traffic flow management convective forecast product	jo7340
+TCH	threshold crossing height	pcg
+TCHD	threshold crossing height downwind	jo7340
+TCHU	threshold crossing height upwind	jo7340
+TCNTL	trans-continental	jo7340
+TCOM	terminal communications	jo7340
+TCP	transfer of control point	jo7340
+TD	transmitter distributor	jo7340
+TDA	today	jo7340
+TDEL	time delay	jo7340
+TDLS	terminal data link system	pcg
+TDO	tornado	jo7340
+TDOP	time dilution of precision	jo7340
+TDWR	terminal doppler weather radar	jo7340
+TDY	temporary duty	jo7340
+TDZ	touchdown zone	jo7340
+TDZE	touchdown zone elevation	pcg
+TDZL	touchdown zone light (system)	jo7340
+TEC	tower en route control	jo7340
+TECA	tower en route control area	jo7340
+TECR	technical reason	jo7340
+TEL	telecommunications	jo7340
+TELAU	teleautograph	jo7340
+TELCO	telephone company	jo7340
+TELCON	telephone conference	jo7340
+TELEX	telephone exchange	jo7340
+TELRY	telegraph reply	jo7340
+TEMP	temperature	jo7340
+TEMPO	temporary decode	jo7340
+TEND	trend	jo7340
+TERPS	terminal instrument procedures	jo7340
+TET	tetrahedron	jo7340
+TF	terrain following	pcg
+TFC	traffic	jo7340
+TFDM	terminal flight data manager	pcg
+TFMS	traffic flow management system	jo7340
+TFR	temporary flight restriction	pcg
+TFRCD	traffic received	jo7340
+TFZ	traffic zone	jo7340
+TGL	touch and go landing	jo7340
+TGS	taxiing guidance system	jo7340
+TGUI	timeline graphical user interface	pcg
+THA	transitional hazard area	pcg
+THL	takeoff hold lights	pcg
+THLD	threshold	jo7340
+THR	threshold	jo7340
+THRFTR	thereafter	jo7340
+THRUT	throughout	jo7340
+THSD	thousand	jo7340
+THTN	threaten	jo7340
+THU	thursday	jo7340
+TIBA	traffic information broadcast by aircraft	jo7340
+TIL	until	jo7340
+TIME	clearance void if not off by	pcg
+TINOP	transponder inoperative	jo7340
+TIP	until past	jo7340
+TIPS	terminal information processing system	jo7340
+TKOF	take-off	jo7340
+TLM	telemetry	jo7340
+TLRNC	tolerance	jo7340
+TLTP	too long to print	jo7340
+TLWD	tailwind	jo7340
+TMA	terminal control area	jo7340
+TMI	traffic management initiative	pcg
+TMPA	traffic management program alert	pcg
+TMPRY	temporary	jo7340
+TMT	transmit	jo7340
+TMU	traffic management unit	pcg
+TMW	tomorrow	jo7340
+TNA	turn altitude	jo7340
+TNDCY	tendency	jo7340
+TNGT	tonight	jo7340
+TNH	turn height	jo7340
+TNTV	tentative	jo7340
+TOC	transfer of communication	pcg
+TOD	top of descent	pcg
+TODA	takeoff distance available	pcg
+TOG	take-off gross weight	jo7340
+TOI	track of interest	pcg
+TOR	time of receipt	jo7340
+TORA	takeoff run available	pcg
+TOS	trajectory options set	pcg
+TOT	time of transmission	jo7340
+TP	type aircraft (pirep only)	jo7340
+TPA	traffic pattern altitude	jo7340
+TR	vfr low altitude training routes	jo7340
+TRA	temporary reserved airspace	jo7340
+TRACAB	terminal radar approach control in tower cab	jo7340
+TRACON	terminal radar approach control facility	jo7340
+TRAD	terminal radar	jo7340
+TRAN	transient	jo7340
+TRANS	transmit or transmitter	jo7340
+TRBL	trouble	jo7340
+TRCV	tri-color visual approach slope indicator	jo7340
+TRG	training	jo7340
+TRK	track	jo7340
+TRLVL	transition level	jo7340
+TRML	terminal	jo7340
+TRMT	terminate	jo7340
+TRNG	training	jo7340
+TRNSP	transport	jo7340
+TRRN	terrain	jo7340
+TRSA	terminal radar service area	pcg
+TRSN	transition	jo7340
+TRTD	treated	jo7340
+TRUST	the recreational uas safety test	pcg
+TSA	transportation security administration	jo7340
+TSAS	terminal sequencing and spacing	pcg
+TSATLC	trans-atlantic	jo7340
+TSD	traffic situation display	pcg
+TSEC	terminal secondary radar beacon	jo7340
+TSFR	transfer	jo7340
+TSMNO	transmitting capability out of service	jo7340
+TSNT	transient	jo7340
+TSO	technical standard order	jo7340
+TSPAC	trans-pacific	jo7340
+TT	teletypewriter	jo7340
+TTS	teletype switching facilities	jo7340
+TTY	teletypewriter station	jo7340
+TUE	tuesday	jo7340
+TURB	turbulence	jo7340
+TVL	travel	jo7340
+TVOR	terminal-very high frequency omnidirectional range station	pcg
+TWD	toward	jo7340
+TWEB	transcribed weather broadcast	jo7340
+TWI	twilight	jo7340
+TWR	tower	jo7340
+TWS	radar track while scan	jo7340
+TWX	teletypewriter exchange service	jo7340
+TWY	taxiway	jo7340
+TWYL	taxiway link	jo7340
+TXG	taxiing	jo7340
+TXL	taxilane	jo7340
+TXT	text	jo7340
+TYP	type aircraft	jo7340
+TYPH	typhoon	jo7340
+TYPNO	teletypewriter communications out of service	jo7340
+TYPOK	teletypewriter communications returned to service u	jo7340
+UA	unmanned aircraft	pcg
+UAB	until advised by	jo7340
+UAC	upper area control center	jo7340
+UAM	urban air mobility	pcg
+UAP	unidentified anomalous phenomena	pcg
+UAR	upper air route	jo7340
+UAS	crewmember	pcg
+UASFM	uas facility map	pcg
+UAT	until advised by the tower	jo7340
+UCDWN	until cleared down	jo7340
+UCLT	until cleared to land by the tower	jo7340
+UD	unable to approve departure for the time specified	jo7340
+UDF	ultra high frequency direction finding station	jo7340
+UERE	user equivalent range error	jo7340
+UFA	until further advised	jo7340
+UFN	until further notice	jo7340
+UFO	unidentified flying object	jo7340
+UHA	unable higher altitude	jo7340
+UHDODT	unable higher due opposite direction traffic	jo7340
+UHDSDT	unable higher due same direction traffic	jo7340
+UHDT	unable higher due traffic	jo7340
+UHF	ultrahigh frequency	pcg
+UIC	upper information center	jo7340
+UIR	upper flight information region	jo7340
+ULDT	unable lower due traffic	jo7340
+ULR	ultra long range	jo7340
+UM	unable to maintain	jo7340
+UNA	unable	jo7340
+UNAP	unable to approve	jo7340
+UNAPV	unable to approve	jo7340
+UNAR	unable to approve altitude requested	jo7340
+UNAVBL	unavailable	jo7340
+UNCC	unable to contact company radio	jo7340
+UNCHG	unchanged	jo7340
+UNDLD	undelivered	jo7340
+UNEC	unnecessary	jo7340
+UNHRD	unheard	jo7340
+UNID	unidentified	jo7340
+UNKN	unknown	jo7340
+UNL	unlimited	jo7340
+UNLGTD	unlighted	jo7340
+UNMON	unable to monitor	jo7340
+UNOFFL	unofficial	jo7340
+UNRDBL	unreadable	jo7340
+UNREL	unreliable	jo7340
+UNRELBL	unreliable	jo7340
+UNRR	unable to approve route requested	jo7340
+UNRSTD	unrestricted	jo7340
+UNSATFY	unsatisfactory	jo7340
+UNSKED	unscheduled	jo7340
+UNTC	unable to establish contact	jo7340
+UNUSBL	unusable	jo7340
+UQOT	unquote	jo7340
+URAUZ	you are authorized	jo7340
+URG	urgent	jo7340
+URIZR	your recommendation is requested	jo7340
+USA	u.s. army	jo7340
+USAF	u.s. air force	jo7340
+USAFIB	army aviation flight information bulletin	pcg
+USBL	usable	jo7340
+USCG	u.s. coast guard	jo7340
+USMC	u.s. marine corps	jo7340
+USN	u.s. navy	jo7340
+USNO	united states naval observatory	jo7340
+USNOF	united states notam office	jo7340
+UTA	upper control area	jo7340
+UTC	coordinated universal time	jo7340
+UTCOK	coordinated universal time coordinate check completed	jo7340
+UTM	uas traffic management	pcg
+UUA	urgent pirep	jo7340
+UW	upwind	jo7340
+VA	victor airways	jo7340
+VACAPES	virginia capes	jo7340
+VADA	vfr arrival delay advisory	jo7340
+VAL	in valleys	jo7340
+VAN	runway control van	jo7340
+VAPS	v/stol approach system	jo7340
+VARN	variation	jo7340
+VASI	visual approach slope indicator	pcg
+VASIS	visual approach slope indicator system	jo7340
+VCNTY	vicinity	jo7340
+VCOA	visual climb over airport	pcg
+VCOT	vfr conditions on top	jo7340
+VCTR	vector	jo7340
+VCY	vicinity	jo7340
+VDF	very high frequency direction- finding station	jo7340
+VDOP	vertical dilution of precision	jo7340
+VDP	visual descent point	pcg
+VER	vertical	jo7340
+VF	maintaining visual flight (special vfr)	jo7340
+VFLT	visual flight	jo7340
+VFPR	via flight planned route	jo7340
+VFR	visual flight rules	pcg
+VFRSA	vfr restrictions still apply	jo7340
+VFY	verify	jo7340
+VHF	very high frequency	pcg
+VIP	visual integrated presentation	jo7340
+VIS	visibility	jo7340
+VLF	very low frequency	pcg
+VLFD	via low frequency direct	jo7340
+VLOS	visual line of sight	pcg
+VLR	very long range	jo7340
+VM	voice modulation	jo7340
+VMC	visual meteorological conditions	pcg
+VNAV	vertical navigation	pcg
+VO	visual observer	pcg
+VOD	via omni direct	jo7340
+VOL	volume	jo7340
+VOLMET	meteorological information for aircraft in flight	jo7340
+VOPR	voice operated relay	jo7340
+VOR	vhf omni-directional radio range	jo7340
+VORTAC	vor and tacan (collocated)	jo7340
+VOU	voucher	jo7340
+VR	vfr military training routes	pcg
+VRB	variable	jo7340
+VRBL	variable	jo7340
+VRG	visual reference gate	jo7340
+VSA	by visual reference to the ground	jo7340
+VSB	visible	jo7340
+VSCS	voice switching and control system	pcg
+VSL	vessel 2−1−37	jo7340
+VSP	vertical speed	jo7340
+VSPI	visual glide path indicator	jo7340
+VSTOL	vertical/short take-off and landing	jo7340
+VTOL	vertical takeoff and landing aircraft	pcg
+WA	airmet	pcg
+WAAS	wide-area augmentation system	pcg
+WAC	world aeronautical chart - icao 1:1 000 000(followed by name/title)	jo7340
+WAFC	world area forecast center	jo7340
+WAIOP	will accept, if offered, the position	jo7340
+WAM	wide area multilateration	pcg
+WB	westbound	jo7340
+WBAR	wing bar lights	jo7340
+WBND	westbound	jo7340
+WBRBN	will be reported by notam	jo7340
+WBRH	weather bureau regional headquar- ters	jo7340
+WBTS	whereabouts	jo7340
+WCLC	watch check list completed	jo7340
+WDI	wind direction indicator	jo7340
+WDSPR	widespread	jo7340
+WED	wednesday	jo7340
+WEF	with effect from, or effective from	jo7340
+WFO	weather forecast office	jo7340
+WG	working group	jo7340
+WGS	world geodetic system	jo7340
+WI	within	jo7340
+WIBIS	will be issued	jo7340
+WICA	while in control area	jo7340
+WICZ	while in control zone	jo7340
+WID	width or wide	jo7340
+WIE	with immediate effect or effective immediately	jo7340
+WILCO	will comply	jo7340
+WINTEM	forecast upper wind and temperature for aviation	jo7340
+WIP	work in progress	jo7340
+WK	weak	jo7340
+WKDAY	weekday	jo7340
+WKEND	weekend	jo7340
+WKN	weaken	jo7340
+WL	will	jo7340
+WLAV	will advise	jo7340
+WMO	world meteorological organization	jo7340
+WMSC	weather message switching center	jo7340
+WNW	west-north west	jo7340
+WP	waypoint	jo7340
+WPM	words per minute	jo7340
+WPRT	waypoint report	jo7340
+WPT	waypoint	jo7340
+WRA	weather reconnaissance area	pcg
+WRC	well to right of course	jo7340
+WRS	worse	jo7340
+WS	sigmet	pcg
+WSCMO	weather service contract meteorological observatory	jo7340
+WSO	weather service office	jo7340
+WSP	weather system processor (replacement for llwas)	jo7340
+WSSF	national weather service support facility	jo7340
+WSSU	national weather service support unit	jo7340
+WST	convective sigmet	pcg
+WSW	west-south west	jo7340
+WT	weight	jo7340
+WTR	well to right	jo7340
+WU	western union telegraph company	jo7340
+WV	wind at altitude (pirep only)	jo7340
+WWW	world wide web	jo7340
+WX	weather at altitude (pirep only) decode	jo7340
+WYAIO	will you accept, if offered, the position of x	jo7340
+XBAR	crossbar	jo7340
+XFSS	auxiliary flight service station	jo7340
+XH	special handling service for aircraft	jo7340
+XNG	crossing	jo7340
+XPLOS	explosive	jo7340
+XREP	auxiliary report	jo7340
+XS	atmospherics	jo7340
+XTAL	crystal	jo7340
+XTLK	cross talk	jo7340
+XW	crosswind xxra - heavy rain) y	jo7340
+YCZ	yellow caution zone (runway lighting)	jo7340
+YD	yards	jo7340
+YDA	yesterday	jo7340
+YES	yes (affirmative)	jo7340
+YL	approach light lane	jo7340
+YMSG	your message	jo7340
+YMSGD	your message date	jo7340
+YR	your z	jo7340
+ZM	z marker (vhf station location marker)	jo7340

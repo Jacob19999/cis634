@@ -1,0 +1,226 @@
+{
+  "asrsbench_version": "0.1.0",
+  "python": "3.13.11",
+  "platform": "Linux-5.15.0-202-generic-x86_64-with-glibc2.35",
+  "n_reports": 47723,
+  "n_units": {
+    "chunk_max": 136842
+  },
+  "device": "cuda",
+  "systems": {
+    "bm25": {
+      "name": "bm25",
+      "class": "BM25Retriever",
+      "doc_mode": "chunk_max",
+      "k1": 1.2,
+      "b": 0.75,
+      "stopwords": "english",
+      "stem": true
+    },
+    "bm25-rw-append": {
+      "name": "bm25-rw-append",
+      "class": "BM25Retriever",
+      "doc_mode": "chunk_max",
+      "query_rewrites": "data/queries/rewrites/qwen3-8b_pcg_v1.jsonl",
+      "rewrite_mode": "append",
+      "k1": 1.2,
+      "b": 0.75,
+      "stopwords": "english",
+      "stem": true
+    },
+    "bm25-rw-replace": {
+      "name": "bm25-rw-replace",
+      "class": "BM25Retriever",
+      "doc_mode": "chunk_max",
+      "query_rewrites": "data/queries/rewrites/qwen3-8b_pcg_v1.jsonl",
+      "rewrite_mode": "replace",
+      "k1": 1.2,
+      "b": 0.75,
+      "stopwords": "english",
+      "stem": true
+    },
+    "e5-small": {
+      "name": "e5-small",
+      "class": "DenseRetriever",
+      "doc_mode": "chunk_max",
+      "model": "intfloat/e5-small-v2",
+      "query_prefix": "query: ",
+      "passage_prefix": "passage: ",
+      "max_seq_length": 512,
+      "device": "cuda",
+      "dtype": "float32",
+      "encode_seconds": null
+    },
+    "e5-small-rw-append": {
+      "name": "e5-small-rw-append",
+      "class": "DenseRetriever",
+      "doc_mode": "chunk_max",
+      "query_rewrites": "data/queries/rewrites/qwen3-8b_pcg_v1.jsonl",
+      "rewrite_mode": "append",
+      "model": "intfloat/e5-small-v2",
+      "query_prefix": "query: ",
+      "passage_prefix": "passage: ",
+      "max_seq_length": 512,
+      "device": "cuda",
+      "dtype": "float32",
+      "encode_seconds": null
+    },
+    "e5-small-rw-replace": {
+      "name": "e5-small-rw-replace",
+      "class": "DenseRetriever",
+      "doc_mode": "chunk_max",
+      "query_rewrites": "data/queries/rewrites/qwen3-8b_pcg_v1.jsonl",
+      "rewrite_mode": "replace",
+      "model": "intfloat/e5-small-v2",
+      "query_prefix": "query: ",
+      "passage_prefix": "passage: ",
+      "max_seq_length": 512,
+      "device": "cuda",
+      "dtype": "float32",
+      "encode_seconds": null
+    },
+    "qwen3-0.6b": {
+      "name": "qwen3-0.6b",
+      "class": "DenseRetriever",
+      "doc_mode": "chunk_max",
+      "model": "Qwen/Qwen3-Embedding-0.6B",
+      "query_prefix": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+      "passage_prefix": "",
+      "max_seq_length": 512,
+      "device": "cuda",
+      "dtype": "float16",
+      "encode_seconds": null
+    },
+    "qwen3-0.6b-rw-append": {
+      "name": "qwen3-0.6b-rw-append",
+      "class": "DenseRetriever",
+      "doc_mode": "chunk_max",
+      "query_rewrites": "data/queries/rewrites/qwen3-8b_pcg_v1.jsonl",
+      "rewrite_mode": "append",
+      "model": "Qwen/Qwen3-Embedding-0.6B",
+      "query_prefix": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+      "passage_prefix": "",
+      "max_seq_length": 512,
+      "device": "cuda",
+      "dtype": "float16",
+      "encode_seconds": null
+    },
+    "qwen3-0.6b-rw-replace": {
+      "name": "qwen3-0.6b-rw-replace",
+      "class": "DenseRetriever",
+      "doc_mode": "chunk_max",
+      "query_rewrites": "data/queries/rewrites/qwen3-8b_pcg_v1.jsonl",
+      "rewrite_mode": "replace",
+      "model": "Qwen/Qwen3-Embedding-0.6B",
+      "query_prefix": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+      "passage_prefix": "",
+      "max_seq_length": 512,
+      "device": "cuda",
+      "dtype": "float16",
+      "encode_seconds": null
+    },
+    "qwen3-8b": {
+      "name": "qwen3-8b",
+      "class": "DenseRetriever",
+      "doc_mode": "chunk_max",
+      "model": "Qwen/Qwen3-Embedding-8B",
+      "query_prefix": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+      "passage_prefix": "",
+      "max_seq_length": 512,
+      "device": "cuda",
+      "dtype": "float16",
+      "encode_seconds": null
+    },
+    "qwen3-8b-rw-append": {
+      "name": "qwen3-8b-rw-append",
+      "class": "DenseRetriever",
+      "doc_mode": "chunk_max",
+      "query_rewrites": "data/queries/rewrites/qwen3-8b_pcg_v1.jsonl",
+      "rewrite_mode": "append",
+      "model": "Qwen/Qwen3-Embedding-8B",
+      "query_prefix": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+      "passage_prefix": "",
+      "max_seq_length": 512,
+      "device": "cuda",
+      "dtype": "float16",
+      "encode_seconds": null
+    },
+    "qwen3-8b-rw-replace": {
+      "name": "qwen3-8b-rw-replace",
+      "class": "DenseRetriever",
+      "doc_mode": "chunk_max",
+      "query_rewrites": "data/queries/rewrites/qwen3-8b_pcg_v1.jsonl",
+      "rewrite_mode": "replace",
+      "model": "Qwen/Qwen3-Embedding-8B",
+      "query_prefix": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+      "passage_prefix": "",
+      "max_seq_length": 512,
+      "device": "cuda",
+      "dtype": "float16",
+      "encode_seconds": null
+    }
+  },
+  "timings": {
+    "bm25": {
+      "index_seconds": 29.08,
+      "query_seconds_synopsis": 8.09,
+      "query_seconds_topical": 0.14
+    },
+    "bm25-rw-append": {
+      "index_seconds": 28.27,
+      "query_seconds_synopsis": 9.4,
+      "query_seconds_topical": 0.18
+    },
+    "bm25-rw-replace": {
+      "index_seconds": 28.33,
+      "query_seconds_synopsis": 8.98,
+      "query_seconds_topical": 0.17
+    },
+    "e5-small": {
+      "index_seconds": 11.73,
+      "query_seconds_synopsis": 6.84,
+      "query_seconds_topical": 0.14
+    },
+    "e5-small-rw-append": {
+      "index_seconds": 0.09,
+      "query_seconds_synopsis": 7.09,
+      "query_seconds_topical": 0.13
+    },
+    "e5-small-rw-replace": {
+      "index_seconds": 0.09,
+      "query_seconds_synopsis": 6.45,
+      "query_seconds_topical": 0.12
+    },
+    "qwen3-0.6b": {
+      "index_seconds": 2.96,
+      "query_seconds_synopsis": 9.68,
+      "query_seconds_topical": 0.19
+    },
+    "qwen3-0.6b-rw-append": {
+      "index_seconds": 0.24,
+      "query_seconds_synopsis": 11.68,
+      "query_seconds_topical": 0.23
+    },
+    "qwen3-0.6b-rw-replace": {
+      "index_seconds": 0.24,
+      "query_seconds_synopsis": 9.84,
+      "query_seconds_topical": 0.22
+    },
+    "qwen3-8b": {
+      "index_seconds": 11.76,
+      "query_seconds_synopsis": 26.69,
+      "query_seconds_topical": 0.52
+    },
+    "qwen3-8b-rw-append": {
+      "index_seconds": 0.99,
+      "query_seconds_synopsis": 43.57,
+      "query_seconds_topical": 0.8
+    },
+    "qwen3-8b-rw-replace": {
+      "index_seconds": 0.99,
+      "query_seconds_synopsis": 32.52,
+      "query_seconds_topical": 0.71
+    },
+    "_total_index_seconds": 114.78
+  }
+}

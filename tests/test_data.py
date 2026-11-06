@@ -60,3 +60,26 @@ def test_placeholder_narratives_detected():
         assert is_placeholder(t)
     assert not is_placeholder("We had no additional information about the traffic, so we climbed.")
     assert not is_placeholder("")
+
+
+def test_summary_units_sort_first_and_require_every_report(tmp_path):
+    import json
+
+    import pytest
+
+    from asrsbench.data import load_summaries, summary_units
+    from asrsbench.retrievers import Units
+
+    (tmp_path / "s_v1.0.jsonl").write_text(json.dumps({"acn": "1", "summary": "A"}) + "\n{broken")
+    (tmp_path / "s_v1.1.jsonl").write_text(json.dumps({"acn": "2", "summary": "B"}) + "\n")
+    summ = load_summaries(tmp_path / "s_v1.jsonl")  # reads both shards, skips the broken line
+    assert summ == {"1": "A", "2": "B"}
+
+    reports = pd.DataFrame({"acn": ["1", "2"]})
+    chunks = pd.DataFrame({"chunk_id": ["1_1_0", "2_1_0", "2_1_1"], "acn": ["1", "2", "2"],
+                           "narrative_idx": 1, "chunk_idx": [0, 0, 1], "text": ["a", "b", "c"]})
+    u = Units.from_chunks(pd.concat([summary_units(reports, summ), chunks]), "t")
+    assert u.texts == ["A", "a", "B", "b", "c"]  # each summary leads its report's units
+    assert list(u.doc_starts) == [0, 2]
+    with pytest.raises(ValueError):
+        summary_units(pd.DataFrame({"acn": ["1", "3"]}), summ)
