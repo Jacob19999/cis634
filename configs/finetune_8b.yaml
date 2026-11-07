@@ -1,0 +1,24 @@
+# Approved 8B-only run. The fixed mixture is defined in the sealed corpus manifest.
+name: qwen3_8b_aviation_lora_v1
+model: Qwen/Qwen3-Embedding-8B
+model_revision: 1d8ad4ca9b3dd8059ad90a75d4983776a23d44af
+data: data/finetuning/aviation_embedding_v1
+output: models/finetuning/qwen3-8b-aviation-v1
+results: results/finetune_8b_v1
+seed: 634
+epochs: 3
+max_seq_length: 512
+learning_rate: 0.00002
+warmup_ratio: 0.05
+weight_decay: 0.01
+batch_size: 32
+mini_batch_size: 8
+smoke_tag: smoke-m8
+gradient_accumulation_steps: 1
+lora: {r: 16, alpha: 32, dropout: 0.05, target_modules: [q_proj, k_proj, v_proj, o_proj]}
+evaluation:
+  synopsis_queries: 1000
+  ntsb_queries: 1000
+  topical_splits: [dev]
+  selection_metric: synopsis_dev_MRR@10
+  # The contrast and official test tracks are excluded from checkpoint selection.

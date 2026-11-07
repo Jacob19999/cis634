@@ -153,3 +153,26 @@ Does a knowledge graph over the ASRS anomaly codes help? Each report links to it
 - [x] Larger encoders, BGE/E5 size ladders and Qwen3-0.6B (`configs/large.yaml`); taxonomy-graph rerank (`scripts/taxonomy_graph.py`)
 - [ ] Qwen3-4B/8B and whole-report Qwen3 on a CUDA GPU (`configs/large_gpu.yaml`)
 - [x] Milestone report (`reports/milestone/phase 2 jacob tang Aarambh.pdf`, built from `main.tex`)
+
+## Unified ASRS + NTSB explorer
+
+The UI lives in `Jacob19999/triaggent_consulting`, under
+`portfolio/asrs-precedent-graph/`. Corpus v2 is separate from the benchmark corpus and its
+reported results. To export the combined catalogue once summaries and narrative embeddings
+are cached:
+
+```bash
+.venv/bin/python scripts/export_precedent_graph_v2.py /path/to/staging-page --without-graph
+```
+
+`--without-graph` supports UI development before the separate LLM knowledge graph is ready.
+The export includes searchable summaries, source-qualified IDs, original coded factors,
+explicit synopsis provenance and a separate shortlist of six ASRS ↔ NTSB narrative neighbours.
+Cross-source links use cosine similarity of mean Qwen3-Embedding-8B chunk vectors; they do not
+establish that reports describe the same incident. The page aligns identical coded factor
+labels within a category while retaining their ASRS/NTSB provenance.
+
+The browser searches summaries and metadata by keyword; semantic report-to-report links are
+precomputed. Live semantic query retrieval remains available through
+`asrsbench search configs/corpus_v2.yaml hybrid-bm25-qwen3-8b "query text"` on the machine
+holding the models and caches. No v1 evaluation files or reported metrics change.

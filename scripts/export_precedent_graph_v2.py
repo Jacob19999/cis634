@@ -4,6 +4,7 @@ usage: python scripts/export_precedent_graph_v2.py <triaggent_consulting>/portfo
            [--config configs/corpus_v2.yaml]
            [--graph data/graph/qwen3-8b_v1_corpus_v2.jsonl]
            [--summaries data/summaries/qwen3.5-27b-q6k_v1.jsonl]
+           [--without-graph]
 
 Same page model as ``scripts/export_precedent_graph.py`` (whose helpers it reuses), extended
 to three sources (``src``): 0 = ASRS with analyst codes (2012–2022), 1 = NTSB (2010–2026),
@@ -19,6 +20,12 @@ to three sources (``src``): 0 = ASRS with analyst codes (2012–2022), 1 = NTSB 
 * The map is openTSNE on the Qwen3-8B report vectors; regions are HDBSCAN clusters.
 * ``synopsis`` is the ASRS synopsis, the NTSB probable cause, or (newer ASRS) the Qwen3.5-27B
   summary; narrative shards hold ``{"n": narrative, "s": Qwen3.5-27B summary}``.
+  ``synopsis_kind`` marks generated fallbacks, including NTSB events without a probable cause.
+* ``summary`` is searchable for every source; ``cross`` keeps six other-source narrative
+  neighbours by cosine, separately from the calibrated ``nar`` scores. ASRS and ASRSN
+  count as one reporting system. Neither kind of similarity establishes incident identity.
+* ``--without-graph`` exports before LLM graph extraction, without loading MPNet. Narrative
+  embeddings must already exist; this exporter never starts an uncached corpus encoding.
 
 Writes ``data/graph.json`` (meta and factors), ``data/reports/<k>.json`` (reports in shards of
 ``REPORT_SHARD``, so no file nears GitHub's 100 MB limit) and ``data/narratives/<k>.json``.
@@ -39,6 +46,7 @@ import pandas as pd
 from asrsbench.benchmark import _unit_sets, load_config
 from asrsbench.data import HF_DATASET, load_reports, load_summaries
 from asrsbench.retrievers import DenseRetriever
+from asrsbench.retrievers.base import Units
 
 _spec = importlib.util.spec_from_file_location(
     "export_v1", Path(__file__).resolve().parent / "export_precedent_graph.py")
@@ -133,12 +141,50 @@ def report_vectors(cfg_path: str, reports: pd.DataFrame) -> np.ndarray:
     cfg["systems"] = [spec]
     units = _unit_sets(cfg, reports)["chunk_max"]
     d = DenseRetriever("qwen3-8b", device="cpu", cache_dir=cfg["cache_dir"], **params)
+    for start, end in d.segments(units):
+        sub = Units(units.texts[start:end], units.unit_ids[start:end],
+                    units.unit_ids[start:start + 1], np.zeros(1, dtype=int), units.tag)
+        if not d._cache_path(sub).exists():
+            raise RuntimeError("Qwen3-8B embeddings are missing; export never encodes the corpus")
     d.index(units)  # loads the cached blocks; encoding here would mean the cache is missing
     if d.encode_seconds is not None:
         raise RuntimeError("Qwen3-8B embeddings were not cached; run configs/corpus_v2.yaml first")
     assert list(units.doc_ids) == reports["acn"].tolist(), "unit order differs from the reports"
     sums = np.add.reduceat(d.E, units.doc_starts, axis=0)
     return (sums / np.linalg.norm(sums, axis=1, keepdims=True)).astype(np.float32)
+
+
+def cross_source_neighbours(vectors: np.ndarray, sources: np.ndarray,
+                            k: int = 6) -> tuple[np.ndarray, np.ndarray]:
+    """Cosine neighbours from the other reporting system (ASRS includes ASRSN).
+
+    Keep a separate shortlist so a dense within-source neighbourhood cannot hide
+    cross-source analogues. These are similarities, never incident-identity links.
+    """
+    import torch
+
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    x = torch.from_numpy(vectors).to(device)
+    family = torch.from_numpy(np.asarray(sources) == 1).to(device)
+    width = min(k, len(vectors))
+    indices = np.full((len(vectors), width), -1, dtype=np.int32)
+    scores = np.zeros((len(vectors), width), dtype=np.float32)
+    for start in range(0, len(vectors), 256):
+        end = min(start + 256, len(vectors))
+        sim = x[start:end] @ x.T
+        sim.masked_fill_(family[start:end, None] == family[None, :], -torch.inf)
+        values, ids = torch.topk(sim, width, dim=1)
+        valid = torch.isfinite(values) & (values > 0)
+        indices[start:end] = torch.where(valid, ids, -1).cpu().numpy()
+        scores[start:end] = torch.where(valid, values, 0).cpu().numpy()
+    return indices, scores
+
+
+def synopsis_kind(source: int, synopsis: str) -> str:
+    """Identify original text separately from generated fallback summaries."""
+    if not synopsis:
+        return "generated"
+    return "probable_cause" if source == 1 else "analyst"
 
 
 def tod_bucket(src: int, raw_tod: str, ev_time) -> int | None:
@@ -152,15 +198,52 @@ def tod_bucket(src: int, raw_tod: str, ev_time) -> int | None:
     return None if not 0 < hhmm <= 2400 else min(3, (hhmm - 1) // 600)
 
 
+def fatality_count(value) -> int | None:
+    """Non-negative NTSB event fatality count; preserve missing/invalid values as unknown."""
+    if isinstance(value, (bool, np.bool_)):
+        return None
+    try:
+        n = float(value)
+    except (TypeError, ValueError):
+        return None
+    return int(n) if np.isfinite(n) and n >= 0 and n.is_integer() else None
+
+
+def update_fatalities(page: Path, events: pd.DataFrame) -> None:
+    """Refresh only fatality metadata in existing v2 shards, retaining report ordering."""
+    counts = events.set_index("ev_id")["inj_tot_f"]
+    paths = sorted((page / "data" / "reports").glob("*.json"))
+    if not paths:
+        raise ValueError(f"No existing v2 report shards in {page}")
+    for path in paths:
+        rows = json.loads(path.read_text(encoding="utf-8"))
+        for r in rows:
+            sid = r.get("id", "").removeprefix("NTSB:")
+            n = fatality_count(counts.get(sid)) if r.get("src") == 1 else None
+            if n is None:
+                r.pop("fatalities", None)
+            else:
+                r["fatalities"] = n
+        path.write_text(json.dumps(rows, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+
+
 def main() -> None:
+    """Export the unified report catalogue and its precomputed similarity links."""
     ap = argparse.ArgumentParser()
     ap.add_argument("page", help="the asrs-precedent-graph folder of triaggent_consulting")
     ap.add_argument("--config", default="configs/corpus_v2.yaml")
     ap.add_argument("--graph", default="data/graph/qwen3-8b_v1_corpus_v2.jsonl")
+    ap.add_argument("--without-graph", action="store_true",
+                    help="export coded factors and narrative links before LLM graphs exist")
     ap.add_argument("--summaries", default="data/summaries/qwen3.5-27b-q6k_v1.jsonl")
     ap.add_argument("--ntsb", default="data/external/ntsb")
+    ap.add_argument("--fatalities-only", action="store_true",
+                    help="refresh NTSB fatality counts in existing report shards; no encoding")
     args = ap.parse_args()
     out = Path(args.page)
+    if args.fatalities_only:
+        update_fatalities(out, pd.read_parquet(Path(args.ntsb) / "events.parquet"))
+        return
 
     from datasets import load_dataset
     from sklearn.cluster import HDBSCAN
@@ -177,17 +260,20 @@ def main() -> None:
     if missing:
         raise SystemExit(f"{missing} reports have no Qwen3.5-27B summary yet")
     llm = {}
-    with open(args.graph, encoding="utf-8") as f:
-        for line in f:
-            rec = json.loads(line)
-            if "graph" in rec:
-                llm[rec["acn"]] = rec["graph"]
+    if not args.without_graph:
+        with open(args.graph, encoding="utf-8") as f:
+            for line in f:
+                rec = json.loads(line)
+                if "graph" in rec:
+                    llm[rec["acn"]] = rec["graph"]
     print(f"{n} reports ({Counter(src.tolist())}), {len(llm)} with an LLM graph", flush=True)
 
     # ASRS v1 raw rows (analyst codes, time of day) and NTSB event times.
     raw = pd.concat([d.to_pandas() for d in load_dataset(HF_DATASET).values()])
     raw = raw.astype({"acn_num_ACN": str}).set_index("acn_num_ACN")
-    ev_time = pd.read_parquet(Path(args.ntsb) / "events.parquet").set_index("ev_id")["ev_time"]
+    ntsb_events = pd.read_parquet(Path(args.ntsb) / "events.parquet").set_index("ev_id")
+    ev_time = ntsb_events["ev_time"]
+    fatalities = ntsb_events["inj_tot_f"]
 
     # ---- factors
     facet_id: dict[tuple[str, str, str], int] = {}
@@ -205,12 +291,12 @@ def main() -> None:
         elif lab in HF_PROBLEM:
             rep_f[i].add(fid("context", f"Primary problem: {HF_PROBLEM[lab]}", "asrs"))
 
-    model = v1.encoder()
+    model = v1.encoder() if llm else None
     acns = reports["acn"].tolist()
     for field, prefix in {"events": "Event", "causes": "Cause", "equipment": "Equipment"}.items():
         cnt = Counter(p for g in llm.values() for p in {v1.norm(x) for x in g[field]} if p)
         keep = [p for p, c in cnt.items() if c >= v1.LLM_MIN_DF and p not in v1.LLM_STOP]
-        canon = v1.merge_phrases(keep, cnt, model)
+        canon = v1.merge_phrases(keep, cnt, model) if keep else {}
         for i, acn in enumerate(acns):
             for p in {v1.norm(x) for x in llm.get(acn, {}).get(field, [])}:
                 if p in canon:
@@ -247,6 +333,7 @@ def main() -> None:
         v1.CACHE.mkdir(parents=True, exist_ok=True)
         np.save(lsa_path, L)
     nar_i, nar_v, nar_cal = v1.neighbours([E, L], sib, v1.TOPK)
+    cross_i, cross_v = cross_source_neighbours(E, src)
     print("narrative neighbours done", flush=True)
 
     # ---- sequence similarity: the LLM's cause/effect triples (MPNet, as in v1)
@@ -260,10 +347,13 @@ def main() -> None:
         events.append(list(dict.fromkeys(ev))[:5] if g else None)
     seq_text = ["; ".join(e) if e else "" for e in events]
     has_seq = np.array([bool(t) for t in seq_text])
-    E_seq = v1.embed(seq_text, "mpnet_sequence_v2", model)
-    E_seq[~has_seq] = 0
-    seq_i, seq_v, seq_cal = v1.neighbours([E_seq], sib, v1.TOPK)
-    print("sequence neighbours done", flush=True)
+    seq_cal = None
+    if has_seq.any():
+        E_seq = v1.embed(seq_text, "mpnet_sequence_v2", model)
+        E_seq[~has_seq] = 0
+        seq_i, seq_v, seq_cal = v1.neighbours([E_seq], sib, v1.TOPK)
+    print("sequence neighbours done" if has_seq.any() else "sequence links omitted (no graph)",
+          flush=True)
 
     # ---- map and regions
     xy = v1.tsne_xy(E)
@@ -304,8 +394,12 @@ def main() -> None:
     rows = []
     for i in range(n):
         d = str(reports["date"][i])
-        r = {"acn": disp[i], "src": int(src[i]), "date": f"{d[:4]}-{d[4:6]}",
+        r = {"acn": disp[i], "id": acns[i], "src": int(src[i]), "date": f"{d[:4]}-{d[4:6]}",
              "aircraft": str(reports["aircraft"][i] or ""), "synopsis": syn[i], "f": rep_f[i],
+             "synopsis_kind": synopsis_kind(int(src[i]), reports["synopsis"][i]),
+             "summary": summ[acns[i]],
+             "cross": [[int(j), round(float(v), 4)]
+                       for j, v in zip(cross_i[i], cross_v[i]) if j >= 0],
              "nar": [[int(j), round(float(v), 2)] for j, v in zip(nar_i[i], nar_v[i]) if v > 0],
              "xy": [round(float(xy[i, 0]), 4), round(float(xy[i, 1]), 4)]}
         if reports["date_estimated"][i]:
@@ -316,6 +410,9 @@ def main() -> None:
             r["events"] = events[i]
         if tod[i] is not None:
             r["t"] = tod[i]
+        deaths = fatality_count(fatalities.get(reports["source_id"][i])) if src[i] == 1 else None
+        if deaths is not None:
+            r["fatalities"] = deaths
         if state[i]:
             r["st"] = state[i]
         if loc[i]:
@@ -343,6 +440,9 @@ def main() -> None:
     states_n = Counter(x for x in state if x)
     meta = {
         "n_reports": n, "n_llm_coded": int(has_seq.sum()),
+        "n_summaries": len(set(acns) & summ.keys()),
+        "summary_model": "Qwen3.5-27B (Q6_K)",
+        "cross_method": "Cosine of mean Qwen3-Embedding-8B narrative chunk vectors; other reporting system only",
         "sources": [{**s, "n": int((src == s["id"]).sum())} for s in SOURCES],
         "layers": [{"id": "event", "label": "Event type"}, {"id": "phase", "label": "Flight phase"},
                    {"id": "human", "label": "Human factors & CRM"},
@@ -355,8 +455,10 @@ def main() -> None:
                    "and sookiemonster/asrs-narratives; NTSB aviation accident database (avall, "
                    "data.ntsb.gov, 2026-11-01)"),
         "scope": f"{n:,} reports: ASRS 2012–2025 and NTSB 2010–2026",
-        "llm": "Qwen3-8B knowledge graph and Qwen3.5-27B (Q6_K) summaries, run locally on the narrative only",
-        "embeddings": "Qwen3-Embedding-8B (fp16) for narratives, fused with TF-IDF LSA; all-mpnet-base-v2 for cause/effect links",
+        "llm": ("Qwen3-8B knowledge graph; " if llm else "No LLM graph; ")
+               + "Qwen3.5-27B (Q6_K) summaries, run locally on the narrative only",
+        "embeddings": "Qwen3-Embedding-8B (fp16) for narratives, fused with TF-IDF LSA"
+                      + ("; all-mpnet-base-v2 for cause/effect links" if has_seq.any() else ""),
         "examples": [x for x in examples if x["acn"]],
         "clusters": clusters, "shard": v1.SHARD, "report_shard": REPORT_SHARD,
         "n_report_shards": (n + REPORT_SHARD - 1) // REPORT_SHARD,
@@ -376,7 +478,8 @@ def main() -> None:
                       separators=(",", ":"))
     for k in range(0, n, v1.SHARD):
         with open(data / "narratives" / f"{k // v1.SHARD}.json", "w", encoding="utf-8") as f:
-            json.dump({disp[i]: {"n": narr[i], "s": summ[acns[i]]} for i in range(k, min(n, k + v1.SHARD))},
+            json.dump({acns[i]: {"n": narr[i], "s": summ[acns[i]]}
+                       for i in range(k, min(n, k + v1.SHARD))},
                       f, ensure_ascii=False, separators=(",", ":"))
     sizes = {p.name: round(p.stat().st_size / 1e6, 1) for p in sorted((data / "reports").glob("*.json"))}
     print(f"wrote {n} reports, {len(facets)} factors; report shards (MB): {sizes}; "

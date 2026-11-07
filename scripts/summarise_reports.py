@@ -23,6 +23,10 @@ Volta GPUs, where Ollama's bundled CUDA 13 build has no kernels), with ``--per-h
 in flight on each. Corpus v2
 (``--data-dir data/processed_v2``) keys reports by document id (``NTSB:<ev_id>`` etc.), and
 ``--order`` sets which sources go first.
+
+``--redo FILE`` (one doc id per line) summarises those reports again even if they have a
+summary, e.g. with a larger ``--max-new-tokens`` for summaries cut off at the cap. The new
+records are appended and, being last, replace the old ones in ``load_summaries``.
 """
 
 from __future__ import annotations
@@ -89,7 +93,8 @@ def run_ollama(todo, out: Path, args) -> int:
         for k, fut in enumerate(as_completed(futs), 1):
             i = futs[fut]
             rec = {"acn": acns[i], "model": args.model, "backend": args.backend,
-                   "prompt_version": PROMPT_VERSION, "truncated": len(nars[i].split()) > MAX_WORDS}
+                   "prompt_version": PROMPT_VERSION, "max_new_tokens": args.max_new_tokens,
+                   "truncated": len(nars[i].split()) > MAX_WORDS}
             try:
                 rec["summary"] = " ".join(fut.result().split())
                 n_ok += bool(rec["summary"])
@@ -122,6 +127,8 @@ def main() -> None:
     ap.add_argument("--per-host", type=int, default=8, help="requests in flight per Ollama server")
     ap.add_argument("--data-dir", default="data/processed")
     ap.add_argument("--order", default="", help="comma-separated id prefixes to summarise first")
+    ap.add_argument("--redo", default=None,
+                    help="file of doc ids (one per line) to summarise again even if done")
     args = ap.parse_args()
 
     slug = args.model.split("/")[-1].lower()
@@ -140,7 +147,10 @@ def main() -> None:
 
     reports = load_reports(args.data_dir)
     reports = reports.iloc[args.shard :: args.n_shards]
-    todo = reports[~reports["acn"].isin(done)]
+    redo = set(Path(args.redo).read_text().split()) if args.redo else set()
+    if redo - set(reports["acn"]):
+        sys.exit(f"--redo: {len(redo - set(reports['acn']))} ids are not in {args.data_dir}")
+    todo = reports[reports["acn"].isin(redo) if redo else ~reports["acn"].isin(done)]
     if args.order:
         prefixes = args.order.split(",")
         rank = todo["acn"].map(lambda a: next((i for i, p in enumerate(prefixes) if a.startswith(p)),
