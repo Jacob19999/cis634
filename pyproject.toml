@@ -20,6 +20,8 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8", "bm25s>=0.2", "matplotlib>=3.8", "openTSNE>=1.0"]
+finetune = ["sentence-transformers==6.2.0", "transformers==5.22.1", "peft==0.20.0",
+            "accelerate==1.12.0", "beautifulsoup4>=4.12", "truststore>=0.10"]
 
 [project.scripts]
 asrsbench = "asrsbench.cli:main"

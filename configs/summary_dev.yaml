@@ -1,0 +1,42 @@
+# Do LLM summaries of the narratives help? Dev-split comparison: chunks only, summaries only,
+# and chunks + summary (each report's summary as one more unit, MaxP over both).
+# Summaries: scripts/summarise_reports.py (Qwen3-8B, narrative only, prompt v1).
+# Same dev queries as configs/expand_dev.yaml: topical dev split, synopsis queries from train.
+# For dense models "chunks + summary" is a `max` hybrid of the chunk and summary systems,
+# which equals MaxP over the union of units and reuses both embedding caches.
+name: summary_dev
+data_dir: data/processed
+cache_dir: cache
+results_dir: results
+device: auto
+depth: 100
+chunking: {max_words: 150, overlap_sentences: 1, min_tail_words: 40}
+summaries: data/summaries/qwen3-8b_v1.jsonl
+
+systems:
+  - {name: bm25, type: bm25, params: &bm25 {k1: 1.2, b: 0.75, stopwords: english}}
+  - {name: bm25-sum, type: bm25, params: {<<: *bm25, doc_mode: summary}}
+  - {name: bm25-chunk-sum, type: bm25, params: {<<: *bm25, doc_mode: chunk_summary}}
+
+  - name: qwen3-0.6b
+    type: dense
+    params: &q06 {model: Qwen/Qwen3-Embedding-0.6B, max_seq_length: 512, batch_size: 32, dtype: float16,
+                  query_prefix: "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+                  pair_prefix: "Instruct: Retrieve semantically similar text\nQuery:"}
+  - {name: qwen3-0.6b-sum, type: dense, params: {<<: *q06, doc_mode: summary}}
+  - {name: qwen3-0.6b-chunk-sum, type: hybrid, params: {components: [qwen3-0.6b, qwen3-0.6b-sum], method: max, depth: 1000}}
+
+  - {name: qwen3-8b, type: dense, params: &q8 {<<: *q06, model: Qwen/Qwen3-Embedding-8B, batch_size: 16}}
+  - {name: qwen3-8b-sum, type: dense, params: {<<: *q8, doc_mode: summary}}
+  - {name: qwen3-8b-chunk-sum, type: hybrid, params: {components: [qwen3-8b, qwen3-8b-sum], method: max, depth: 1000}}
+
+  - {name: hybrid-bm25-qwen3-8b, type: hybrid, params: {components: [bm25, qwen3-8b], method: rrf, k: 60, depth: 1000}}
+  - {name: hybrid-bm25-qwen3-8b-chunk-sum, type: hybrid,
+     params: {components: [bm25-chunk-sum, qwen3-8b-chunk-sum], method: rrf, k: 60, depth: 1000}}
+
+evaluation:
+  synopsis: {split: train, n_queries: 1000, seed: 13}
+  topical:
+    queries: data/queries/topical_v1.yaml
+    splits: [dev]
+  contrast: {path: data/contrast/contrast_v1.jsonl}

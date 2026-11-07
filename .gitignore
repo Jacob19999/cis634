@@ -14,6 +14,12 @@ __pycache__/
 data/raw/
 data/processed/
 data/graph/
+# LLM report summaries (scripts/summarise_reports.py, ~3 GPU-hours) and the downloaded
+# FAA PDFs (scripts/build_faa_glossary.py records their URLs and checksums)
+data/summaries/
+data/external/
+# Corpus v2 (ASRS + NTSB, scripts/build_corpus_v2.py) and its Qwen3.5-27B / Qwen3-8B outputs
+data/processed_v2/
 cache/
 
 # Per-run raw outputs (summary tables in results/ are committed)
@@ -28,3 +34,11 @@ reports/**/*.fdb_latexmk
 reports/**/*.fls
 reports/**/*.out
 reports/**/page-*.png
+data/audit/
+
+# Regenerable embedding training pairs and local adapter checkpoints
+data/finetuning/
+models/finetuning/
+# Raw rankings from the initial fine-tuning evaluator preflight (later runs use runs/)
+results/finetune_8b_v1/**/*_runs.json
+results/finetune_8b_v1/**/*_queries.json

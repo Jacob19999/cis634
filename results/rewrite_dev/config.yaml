@@ -1,0 +1,155 @@
+name: rewrite_dev
+data_dir: data/processed
+cache_dir: cache
+results_dir: results
+device: auto
+depth: 100
+chunking:
+  max_words: 150
+  overlap_sentences: 1
+  min_tail_words: 40
+systems:
+- name: bm25
+  type: bm25
+  params:
+    k1: 1.2
+    b: 0.75
+    stopwords: english
+- name: bm25-rw-append
+  type: bm25
+  params:
+    k1: 1.2
+    b: 0.75
+    stopwords: english
+    query_rewrites: data/queries/rewrites/qwen3-8b_pcg_v1.jsonl
+- name: bm25-rw-replace
+  type: bm25
+  params:
+    k1: 1.2
+    b: 0.75
+    stopwords: english
+    query_rewrites: data/queries/rewrites/qwen3-8b_pcg_v1.jsonl
+    rewrite_mode: replace
+- name: e5-small
+  type: dense
+  params:
+    model: intfloat/e5-small-v2
+    query_prefix: 'query: '
+    passage_prefix: 'passage: '
+    max_seq_length: 512
+- name: e5-small-rw-append
+  type: dense
+  params:
+    model: intfloat/e5-small-v2
+    query_prefix: 'query: '
+    passage_prefix: 'passage: '
+    max_seq_length: 512
+    query_rewrites: data/queries/rewrites/qwen3-8b_pcg_v1.jsonl
+- name: e5-small-rw-replace
+  type: dense
+  params:
+    model: intfloat/e5-small-v2
+    query_prefix: 'query: '
+    passage_prefix: 'passage: '
+    max_seq_length: 512
+    query_rewrites: data/queries/rewrites/qwen3-8b_pcg_v1.jsonl
+    rewrite_mode: replace
+- name: qwen3-0.6b
+  type: dense
+  params:
+    model: Qwen/Qwen3-Embedding-0.6B
+    max_seq_length: 512
+    batch_size: 32
+    dtype: float16
+    query_prefix: 'Instruct: Given a web search query, retrieve relevant passages
+      that answer the query
+
+      Query:'
+    pair_prefix: 'Instruct: Retrieve semantically similar text
+
+      Query:'
+- name: qwen3-0.6b-rw-append
+  type: dense
+  params:
+    model: Qwen/Qwen3-Embedding-0.6B
+    max_seq_length: 512
+    batch_size: 32
+    dtype: float16
+    query_prefix: 'Instruct: Given a web search query, retrieve relevant passages
+      that answer the query
+
+      Query:'
+    pair_prefix: 'Instruct: Retrieve semantically similar text
+
+      Query:'
+    query_rewrites: data/queries/rewrites/qwen3-8b_pcg_v1.jsonl
+- name: qwen3-0.6b-rw-replace
+  type: dense
+  params:
+    model: Qwen/Qwen3-Embedding-0.6B
+    max_seq_length: 512
+    batch_size: 32
+    dtype: float16
+    query_prefix: 'Instruct: Given a web search query, retrieve relevant passages
+      that answer the query
+
+      Query:'
+    pair_prefix: 'Instruct: Retrieve semantically similar text
+
+      Query:'
+    query_rewrites: data/queries/rewrites/qwen3-8b_pcg_v1.jsonl
+    rewrite_mode: replace
+- name: qwen3-8b
+  type: dense
+  params:
+    model: Qwen/Qwen3-Embedding-8B
+    max_seq_length: 512
+    batch_size: 16
+    dtype: float16
+    query_prefix: 'Instruct: Given a web search query, retrieve relevant passages
+      that answer the query
+
+      Query:'
+    pair_prefix: 'Instruct: Retrieve semantically similar text
+
+      Query:'
+- name: qwen3-8b-rw-append
+  type: dense
+  params:
+    model: Qwen/Qwen3-Embedding-8B
+    max_seq_length: 512
+    batch_size: 16
+    dtype: float16
+    query_prefix: 'Instruct: Given a web search query, retrieve relevant passages
+      that answer the query
+
+      Query:'
+    pair_prefix: 'Instruct: Retrieve semantically similar text
+
+      Query:'
+    query_rewrites: data/queries/rewrites/qwen3-8b_pcg_v1.jsonl
+- name: qwen3-8b-rw-replace
+  type: dense
+  params:
+    model: Qwen/Qwen3-Embedding-8B
+    max_seq_length: 512
+    batch_size: 16
+    dtype: float16
+    query_prefix: 'Instruct: Given a web search query, retrieve relevant passages
+      that answer the query
+
+      Query:'
+    pair_prefix: 'Instruct: Retrieve semantically similar text
+
+      Query:'
+    query_rewrites: data/queries/rewrites/qwen3-8b_pcg_v1.jsonl
+    rewrite_mode: replace
+evaluation:
+  synopsis:
+    split: train
+    n_queries: 1000
+    seed: 13
+  topical:
+    queries: data/queries/topical_v1.yaml
+    splits:
+    - dev

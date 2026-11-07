@@ -1,0 +1,108 @@
+name: expand_dev
+data_dir: data/processed
+cache_dir: cache
+results_dir: results
+device: auto
+depth: 100
+chunking:
+  max_words: 150
+  overlap_sentences: 1
+  min_tail_words: 40
+systems:
+- name: bm25
+  type: bm25
+  params:
+    k1: 1.2
+    b: 0.75
+    stopwords: english
+- name: bm25-acro
+  type: bm25
+  params:
+    k1: 1.2
+    b: 0.75
+    stopwords: english
+    expand: data/glossary/asrs_acronyms_v1.tsv
+- name: minilm
+  type: dense
+  params:
+    model: sentence-transformers/all-MiniLM-L6-v2
+    max_seq_length: 256
+- name: minilm-acro
+  type: dense
+  params:
+    model: sentence-transformers/all-MiniLM-L6-v2
+    max_seq_length: 256
+    expand: data/glossary/asrs_acronyms_v1.tsv
+- name: e5-small
+  type: dense
+  params:
+    model: intfloat/e5-small-v2
+    query_prefix: 'query: '
+    passage_prefix: 'passage: '
+    max_seq_length: 512
+- name: e5-small-acro
+  type: dense
+  params:
+    model: intfloat/e5-small-v2
+    query_prefix: 'query: '
+    passage_prefix: 'passage: '
+    max_seq_length: 512
+    expand: data/glossary/asrs_acronyms_v1.tsv
+- name: qwen3-0.6b
+  type: dense
+  params:
+    model: Qwen/Qwen3-Embedding-0.6B
+    max_seq_length: 512
+    batch_size: 32
+    dtype: float16
+    query_prefix: 'Instruct: Given a web search query, retrieve relevant passages
+      that answer the query
+
+      Query:'
+    pair_prefix: 'Instruct: Retrieve semantically similar text
+
+      Query:'
+- name: qwen3-0.6b-acro
+  type: dense
+  params:
+    model: Qwen/Qwen3-Embedding-0.6B
+    max_seq_length: 512
+    batch_size: 32
+    dtype: float16
+    query_prefix: 'Instruct: Given a web search query, retrieve relevant passages
+      that answer the query
+
+      Query:'
+    pair_prefix: 'Instruct: Retrieve semantically similar text
+
+      Query:'
+    expand: data/glossary/asrs_acronyms_v1.tsv
+- name: hybrid-bm25-e5
+  type: hybrid
+  params:
+    components:
+    - bm25
+    - e5-small
+    method: rrf
+    k: 60
+    depth: 1000
+- name: hybrid-bm25-e5-acro
+  type: hybrid
+  params:
+    components:
+    - bm25-acro
+    - e5-small-acro
+    method: rrf
+    k: 60
+    depth: 1000
+evaluation:
+  synopsis:
+    split: train
+    n_queries: 1000
+    seed: 13
+  topical:
+    queries: data/queries/topical_v1.yaml
+    splits:
+    - dev
+  contrast:
+    path: data/contrast/contrast_v1.jsonl

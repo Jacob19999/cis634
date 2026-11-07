@@ -1,0 +1,40 @@
+# Reported run for LLM summaries: chunks + each report's Qwen3-8B summary, against chunks
+# alone. The setting was chosen on dev queries (configs/summary_dev.yaml); this run uses the
+# reported evaluation of configs/large_gpu.yaml (validation synopses, all 40 topical queries).
+# Needs data/summaries/qwen3-8b_v1*.jsonl (scripts/summarise_reports.py) and a CUDA GPU; the
+# Qwen3 chunk and summary embeddings are cached by large_gpu.yaml and summary_dev.yaml.
+name: summaries
+data_dir: data/processed
+cache_dir: cache
+results_dir: results
+device: auto
+depth: 100
+chunking: {max_words: 150, overlap_sentences: 1, min_tail_words: 40}
+summaries: data/summaries/qwen3-8b_v1.jsonl
+
+systems:
+  - {name: bm25, type: bm25, params: &bm25 {k1: 1.2, b: 0.75, stopwords: english}}
+  - {name: bm25-chunk-sum, type: bm25, params: {<<: *bm25, doc_mode: chunk_summary}}
+
+  - name: qwen3-0.6b
+    type: dense
+    params: &q06 {model: Qwen/Qwen3-Embedding-0.6B, max_seq_length: 512, batch_size: 32, dtype: float16,
+                  query_prefix: "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+                  pair_prefix: "Instruct: Retrieve semantically similar text\nQuery:"}
+  - {name: qwen3-0.6b-sum, type: dense, params: {<<: *q06, doc_mode: summary}}
+  - {name: qwen3-0.6b-chunk-sum, type: hybrid, params: {components: [qwen3-0.6b, qwen3-0.6b-sum], method: max, depth: 1000}}
+
+  - {name: qwen3-8b, type: dense, params: &q8 {<<: *q06, model: Qwen/Qwen3-Embedding-8B, batch_size: 16}}
+  - {name: qwen3-8b-sum, type: dense, params: {<<: *q8, doc_mode: summary}}
+  - {name: qwen3-8b-chunk-sum, type: hybrid, params: {components: [qwen3-8b, qwen3-8b-sum], method: max, depth: 1000}}
+
+  - {name: hybrid-bm25-qwen3-8b, type: hybrid, params: {components: [bm25, qwen3-8b], method: rrf, k: 60, depth: 1000}}
+  - {name: hybrid-bm25-qwen3-8b-chunk-sum, type: hybrid,
+     params: {components: [bm25-chunk-sum, qwen3-8b-chunk-sum], method: rrf, k: 60, depth: 1000}}
+
+evaluation:
+  synopsis: {split: validation, n_queries: 1000, seed: 13}
+  topical:
+    queries: data/queries/topical_v1.yaml
+    human_qrels: [data/qrels/human_v1.tsv]
+  contrast: {path: data/contrast/contrast_v1.jsonl}

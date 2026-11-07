@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from asrsbench.retrievers import BM25Retriever, HybridRetriever, Units
+from asrsbench.retrievers import BM25Retriever, HybridRetriever, Retriever, Units
 from asrsbench.retrievers.base import SearchResult
 
 DOCS = [
@@ -95,3 +95,65 @@ def test_rrf_fusion():
     assert set(res.doc_ids[:2]) == {"x", "y"}
     assert res.scores[0] == pytest.approx(1 / 61 + 1 / 62)
     assert list(res.doc_ids[2:]) == ["z", "w"]
+
+
+class _CountX(Retriever):  # a unit's score = its number of "x"
+    def build(self, units):
+        self.E = np.array([t.count("x") for t in units.texts], dtype=np.float32)
+
+    def score_units(self, queries):
+        return np.tile(self.E, (len(queries), 1))
+
+
+def test_max_fusion_equals_maxp_over_the_union_of_units():
+    chunks = pd.DataFrame({"chunk_id": ["1_1_0", "1_1_1", "2_1_0", "3_1_0"],
+                           "acn": ["1", "1", "2", "3"], "narrative_idx": 1, "chunk_idx": [0, 1, 0, 0],
+                           "text": ["x", "xxx", "xx", ""]})
+    summ = pd.DataFrame({"chunk_id": ["1_s", "2_s", "3_s"], "acn": ["1", "2", "3"],
+                         "narrative_idx": 0, "chunk_idx": 0, "text": ["xx", "xxxx", "x"]})
+    a, b, union = _CountX("a"), _CountX("b"), _CountX("u")
+    a.index(Units.from_chunks(chunks, "c"))
+    b.index(Units.from_chunks(summ, "s"))
+    union.index(Units.from_chunks(pd.concat([summ, chunks]), "cs"))
+    h = HybridRetriever("h", [a, b], method="max", depth=10)
+    h.index(a.units)
+    [got] = h.search(["q"], k=3)
+    [want] = union.search(["q"], k=3)
+    assert list(got.doc_ids) == list(want.doc_ids) == ["2", "1", "3"]
+    assert np.allclose(got.scores, want.scores)
+    assert list(got.best_units) == list(want.best_units) == ["2_s", "1_1_1", "3_s"]
+
+
+def test_dense_cache_is_per_source_block(tmp_path, monkeypatch):
+    from asrsbench.retrievers import DenseRetriever
+
+    calls = []
+
+    def vec(texts):
+        v = np.array([[len(t), sum(map(ord, t)) % 97, 1.0] for t in texts], dtype=np.float32)
+        return v / np.linalg.norm(v, axis=1, keepdims=True)
+
+    def fake_encode(self, texts, prefix="", show_progress=False):
+        calls.append(len(texts))
+        return vec(texts)
+
+    def units(ntsb_text):
+        rows = [("ASRS:1_1_0", "ASRS:1", 1, 0, "asrs one"), ("ASRS:2_1_0", "ASRS:2", 1, 0, "asrs two"),
+                ("NTSB:9_1_0", "NTSB:9", 1, 0, ntsb_text)]
+        df = pd.DataFrame(rows, columns=["chunk_id", "acn", "narrative_idx", "chunk_idx", "text"])
+        return Units.from_chunks(df, "t")
+
+    monkeypatch.setattr(DenseRetriever, "encode", fake_encode)
+    d = DenseRetriever("d", model="fake/model", max_seq_length=64, cache_dir=str(tmp_path), device="cpu")
+    assert DenseRetriever.segments(units("ntsb")) == [(0, 2), (2, 3)]
+    d.index(units("ntsb"))
+    assert calls == [3] and len(list((tmp_path / "embeddings").glob("*.npy"))) == 2
+    assert np.allclose(d.E, vec(["asrs one", "asrs two", "ntsb"]))
+
+    d2 = DenseRetriever("d2", model="fake/model", max_seq_length=64, cache_dir=str(tmp_path), device="cpu")
+    d2.index(units("ntsb changed"))  # only the NTSB block is new
+    assert calls == [3, 1]
+    assert np.allclose(d2.E[:2], d.E[:2])
+
+    # Ids without a source prefix (corpus v1) are one block, as before.
+    assert DenseRetriever.segments(Units.from_chunks(_chunks(DOCS), "t")) == [(0, 10)]

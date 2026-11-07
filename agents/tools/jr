@@ -1,0 +1,3 @@
+#!/bin/zsh
+source ~/.zshrc >/dev/null 2>&1
+exec uv run -q --no-project --with websocket-client --with truststore python "${0:A:h}/jrun.py" "$@"

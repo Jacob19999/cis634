@@ -343,6 +343,42 @@ def load_reports(data_dir: str | Path = "data/processed") -> pd.DataFrame:
     return pd.read_parquet(Path(data_dir) / "reports.parquet")
 
 
+def load_summaries(path: str | Path) -> dict[str, str]:
+    """ACN -> LLM summary from ``scripts/summarise_reports.py`` output.
+
+    Reads ``path`` and/or its shards (``<stem>.<k>.jsonl`` next to it); the last non-empty
+    summary of a report wins.
+    """
+    path = Path(path)
+    files = ([path] if path.exists() else []) + sorted(path.parent.glob(f"{path.stem}.*.jsonl"))
+    if not files:
+        raise FileNotFoundError(f"no summaries at {path} (or its shards)")
+    out: dict[str, str] = {}
+    for f in files:
+        for line in f.read_text(encoding="utf-8").splitlines():
+            try:
+                rec = json.loads(line)
+            except json.JSONDecodeError:  # half-written last line of a killed run
+                continue
+            if rec.get("summary"):
+                out[rec["acn"]] = rec["summary"]
+    return out
+
+
+def summary_units(reports: pd.DataFrame, summaries: dict[str, str]) -> pd.DataFrame:
+    """Summaries as chunk-table rows (``chunk_id`` = ``<acn>_s``), sorting before the chunks.
+
+    Every report must have a summary: a partial set would make the summary systems search a
+    smaller corpus than the others.
+    """
+    missing = (~reports["acn"].isin(summaries)).sum()
+    if missing:
+        raise ValueError(f"{missing} of {len(reports)} reports have no summary")
+    acn = reports["acn"].tolist()
+    return pd.DataFrame({"chunk_id": [f"{a}_s" for a in acn], "acn": acn, "narrative_idx": 0,
+                         "chunk_idx": 0, "text": [summaries[a] for a in acn]})
+
+
 def load_chunks(cfg: ChunkConfig, data_dir: str | Path = "data/processed",
                 reports: pd.DataFrame | None = None) -> pd.DataFrame:
     """Load the chunks for one chunking setting, building and saving them on first use."""
